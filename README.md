@@ -14,7 +14,8 @@ L1  Deterministic gates     verify-decisions · verify-doc-links · verify-place
 L2  Unified decision log    MADR records + Class extension in docs/decisions/,
                             enforced by verify-decisions (Proposed → Accepted →
                             Superseded by NNNN; a superseded record is never rewritten)
-L3  In-repo skills          .agents/skills/repo-review (semantic review procedure)
+L3  In-repo skills          .agents/skills/repo-review (instantiated per project:
+                            blocking + checks derived from this project's rules)
                             .agents/skills/repo-decisions (decision-log authoring)
 L4  Process memory          docs/testing.md policy · docs/postmortems/ · PR template
 Upgrade channel             .repo-seed/manifest.json records seeded-file hashes;
@@ -38,10 +39,9 @@ Invoke explicitly: *"initialize this repository with repo-seed"* or *"make this 
 The skill runs five steps:
 
 1. **Analyze** — detect stack manifests, existing files at seeded paths, git state (read-only; never reads `.env`).
-2. **Interview** — ask only what detection cannot answer (project one-liner, license, branch convention, test/lint commands, conflicts, monorepo).
+2. **Interview** — ask only what detection cannot answer (project one-liner, license, branch convention, test/lint commands, conflicts, monorepo, review policy input).
 3. **Scaffold** — `node <repo-seed>/scripts/scaffold.mjs <target> --templates <repo-seed>/references/templates` (deterministic: skeleton, seeded files, manifest, hook). Use `--dry-run` first.
-4. **Instantiate** — the model replaces every `__TOKEN__` fill-in with content from the analysis and interview.
-5. **Record and verify** — `scaffold.mjs --record-only`, then the four gates; review and commit (the skill never commits or pushes without your explicit request).
+4. **Instantiate** — the model composes architecture, testing, and the repo-review policy from the analysis and interview, then resolves every `__TOKEN__` fill-in.
 
 ## Update mode
 
@@ -49,8 +49,8 @@ Re-run the same skill on an already-seeded repository:
 
 - Untouched seeded files refresh to the latest templates (upstream evolution).
 - Files you modified are preserved by default; the manifest marks them `userModified` so the gates check existence only.
+- Instantiated policy (repo-review) is marked user-owned at seed time and is never refreshed; the template stays structure-only guidance.
 - Files you created are never deleted.
-- A re-run that would regress instantiated content back to unresolved placeholders is refused (the scaffold reports it as skipped).
 
 The authoritative semantics live in `references/update-strategy.md`.
 

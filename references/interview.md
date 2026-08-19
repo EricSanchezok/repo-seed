@@ -32,6 +32,12 @@ The generator asks the minimum necessary questions before scaffolding. Every que
 - **Ask when**: repository has multiple package manifests at top level.
 - **Options**: root-only seed (default) / also generate a subtree AGENTS.md per package.
 
+### Q8. Review policy input
+- **Ask when**: always; it feeds the project-specific half of the repo-review skill.
+- **Prompt**: "Known pitfalls, review red lines, or invariants this project must not regress — anything a reviewer must check that is not already in the detected stack or the repository docs? For example: deployment must follow PR review and merge before server changes; a forbidden tool; a schema that must keep its SDK mirrors in sync."
+- **Default**: none — only the universal repo-review core ships; the two project tokens resolve to "None beyond the universal requirements/checks."
+- **Use**: compose `__REVIEW_PROJECT_BLOCKING__` and `__REVIEW_PROJECT_CHECKS__` per [review-standard.md](review-standard.md).
+
 ## Interview protocol
 
 1. Detect: stack manifests, existing files, git state, repo size (sample if large; do not enumerate the whole tree).

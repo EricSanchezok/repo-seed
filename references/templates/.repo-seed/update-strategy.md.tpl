@@ -10,7 +10,7 @@ repo-seed records every file it seeds in `.repo-seed/manifest.json` with:
 - `sha256` — the file's content hash at seed time.
 - `category` — one of `instruction` (AGENTS.md, CLAUDE.md), `docs` (docs/**), `skill` (.agents/skills/repo-review, .agents/skills/repo-decisions), `gate` (scripts/**), `github` (.github/**), `meta` (CONTRIBUTING.md, LICENSE, .editorconfig, .gitattributes, .repo-seed/**).
 
-A file is *untouched* if its current sha256 equals the recorded one. A file is *user-modified* if it differs. User-created files (anything not in the manifest) are always preserved.
+A file is *untouched* if its current sha256 equals the recorded one. A file is *user-modified* if it differs. A file is *user-owned* if the seed marked it instantiated at seed time (`--user-owned`, manifest `userModified: true`): its content is the project's policy and its recorded hash is informational. User-created files (anything not in the manifest) are always preserved.
 
 ## Re-run semantics (update mode)
 
@@ -21,6 +21,15 @@ For each manifest entry:
 3. **Missing file**: the file was deleted by the user. Ask: restore from template (default in non-interactive: no) / leave deleted. Never silently restore a file the user deleted.
 4. **New file in a seeded directory** (e.g., a new ADR, a new postmortem): never delete, never move. Leave it alone; it is user content.
 5. After the run, re-record the manifest: new hashes for refreshed files, same hashes for preserved files, entries removed only for files the user deleted and chose not to restore.
+
+## User-owned files (instantiated policy)
+
+Some seeded files are instantiated at seed time from project-specific input, not written verbatim from a template — notably `.agents/skills/repo-review/SKILL.md`, whose blocking requirements and manual checks are composed per project. Once instantiated, the content is the project's policy:
+
+- The seed marks such a file user-owned (`--user-owned <path>`, recorded as `userModified: true` in the manifest).
+- A re-run never refreshes a user-owned file from the template; the template is structure-only guidance.
+- `verify-manifest` checks existence only for user-owned files, never the hash.
+- If the user later overwrites a user-owned file deliberately, the marker stays: the project owns that policy.
 
 ## What never happens
 
@@ -39,7 +48,7 @@ If a template's target path is a user-created file (not in the manifest), the se
 ```json
 {
   "version": 1,
-  "repoSeedVersion": "0.1.0",
+  "repoSeedVersion": "0.2.0",
   "lastSyncCommit": "<git hash or null>",
   "config": { "license": "MIT", "branchConvention": "main", "monorepo": false },
   "files": [

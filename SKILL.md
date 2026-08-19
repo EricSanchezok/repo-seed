@@ -43,6 +43,7 @@ Ask only the questions whose answers are not detectable and that materially chan
 4. Test command / lint command — only when not detectable.
 5. Existing-file conflict resolution — preserve-and-merge (default) / overwrite-with-backup / skip.
 6. Monorepo — root-only seed (default) or also subtree AGENTS.md per package.
+7. Review policy input — known pitfalls, review red lines, and invariants this project must not regress (default: none; only the universal repo-review core).
 
 ### 3. Scaffold (deterministic)
 
@@ -51,10 +52,10 @@ Run the scaffold against the target directory. The scaffold creates the director
 ```sh
 node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
   --templates <path-to-repo-seed>/references/templates \
-  --repo-seed-version 0.1.0
+  --repo-seed-version 0.2.0
 ```
 
-Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--values k=v` (repeatable; pre-fill tokens), `--record-only` (recompute hashes after the model refines content, without touching files).
+Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--values k=v` (repeatable; pre-fill tokens), `--user-owned <path>` (repeatable; mark a seeded file instantiated at seed time so re-runs never refresh it), `--record-only` (recompute hashes after the model refines content, without touching files).
 
 Use `--dry-run` first and show the user the plan.
 
@@ -62,12 +63,19 @@ Use `--dry-run` first and show the user the plan.
 
 For every seeded file that contains fill-in tokens (`__UPPERCASE__`), replace the tokens with content derived from the analysis and interview: project one-liner, real test/lint commands, stack description, architecture content for `docs/architecture.md`, and a testing policy tailored to the detected stack in `docs/testing.md`. Resolve every token — the placeholder gate fails on any survivor. Do not invent commands: if a command cannot be resolved, omit that line rather than fabricate it.
 
+Three files need composition, not string replacement:
+
+- `docs/architecture.md` — write the target's real module map and seams; never ship the placeholder skeleton.
+- `docs/testing.md` — state the project's actual test tiers and entry paths from the analysis.
+- `.agents/skills/repo-review/SKILL.md` — compose `__REVIEW_PROJECT_BLOCKING__` from AGENTS.md hard rules, interview Q7 red lines, and architecture seams, and `__REVIEW_PROJECT_CHECKS__` from the stack risk catalog in [references/review-standard.md](references/review-standard.md). Procedure skills (repo-decisions) ship static; review policy is instantiated per project. Keep the universal core verbatim; replace an empty token with "None beyond the universal requirements/checks."
+
 ### 5. Record and verify
 
-After refining, re-record the manifest so it matches the shipped state, then run the gates and report.
+After refining, re-record the manifest so it matches the shipped state, then run the gates and report. Mark the instantiated repo-review policy user-owned in the same step so a later re-run never refreshes it from the structure-only template.
 
 ```sh
-node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> --record-only
+node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> --record-only \
+  --user-owned .agents/skills/repo-review/SKILL.md
 node scripts/verify-decisions.mjs
 node scripts/verify-doc-links.mjs
 node scripts/verify-placeholders.mjs
@@ -83,7 +91,7 @@ The seeded file set is the single source of truth in `scripts/scaffold.mjs` (`se
 
 - `AGENTS.md` (resident agent instructions with the governance loop and security rules), `CLAUDE.md` (`@AGENTS.md` import — no symlink, Windows-safe).
 - `docs/AGENTS.md` (documentation standard), `docs/architecture.md`, `docs/development.md`, `docs/testing.md`, `docs/postmortems/README.md`.
-- `docs/decisions/` — the unified MADR decision log with three seed records and an index.
+- `docs/decisions/` — the unified MADR decision log with four seed records and an index.
 - `.agents/skills/repo-review` and `.agents/skills/repo-decisions` — the two in-repo skills.
 - `scripts/` — the four verifier gates plus `install-hooks.mjs` (copied verbatim from repo-seed so the seeded repo runs the same code).
 - `CONTRIBUTING.md`, `LICENSE`, `.editorconfig`, `.gitattributes`, `.github/` (PR + issue templates), `.repo-seed/update-strategy.md`.
@@ -102,5 +110,5 @@ The seeded file set is the single source of truth in `scripts/scaffold.mjs` (`se
 - [references/interview.md](references/interview.md) — question bank.
 - [references/update-strategy.md](references/update-strategy.md) — ownership, conflicts, preservation, manifest schema.
 - [references/decision-standard.md](references/decision-standard.md) — the MADR + Class extension standard.
+- [references/review-standard.md](references/review-standard.md) — how to derive the project-specific repo-review policy.
 - [references/doc-standard.md](references/doc-standard.md) — the documentation standard the seed writes.
-- [references/templates/](references/templates/) — the full template set.

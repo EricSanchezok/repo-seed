@@ -11,6 +11,7 @@ import {
   instantiate,
   planRun,
   applyPlan,
+  recordOnly,
   defaultManifest,
 } from './scaffold.mjs';
 import { installHook, hookScript, HOOK_NAME } from './install-hooks.mjs';
@@ -267,4 +268,94 @@ test('verifyDecisions: a real seeded repo passes the decision gate', async () =>
   const repoRoot = path.resolve(process.cwd());
   const errors = await verifyDir(path.join(repoRoot, 'docs', 'decisions'));
   assert.deepEqual(errors, []);
+});
+
+test('repo-review template carries the two instantiation tokens', async () => {
+  const repoRoot = path.resolve(process.cwd());
+  const tpl = await readFile(
+    path.join(repoRoot, 'references/templates/.agents/skills/repo-review/SKILL.md.tpl'),
+    'utf8'
+  );
+  assert.ok(tpl.includes('__REVIEW_PROJECT_BLOCKING__'), 'blocking token missing');
+  assert.ok(tpl.includes('__REVIEW_PROJECT_CHECKS__'), 'checks token missing');
+  assert.ok(!tpl.includes('guidance, not a complete checklist'), 'stale disclaimer must be gone');
+});
+
+test('seededFiles includes the repo-review instantiation decision record', () => {
+  assert.ok(
+    seededFiles().some(([p]) => p === 'docs/decisions/0003-repo-review-instantiated-per-project.md')
+  );
+});
+
+test('user-owned: instantiated repo-review is never refreshed and stays manifest-marked', async () => {
+  const target = await tmpdir();
+  const templates = await tmpdir();
+  try {
+    const rel = '.agents/skills/repo-review/SKILL.md';
+    await mkdir(path.join(templates, '.agents/skills/repo-review'), { recursive: true });
+    await writeFile(
+      path.join(templates, '.agents/skills/repo-review', 'SKILL.md.tpl'),
+      '# Review\n\n__REVIEW_PROJECT_BLOCKING__\n\n__REVIEW_PROJECT_CHECKS__\n',
+      'utf8'
+    );
+
+    // 1. First seed: the template ships with tokens.
+    const manifest = defaultManifest();
+    const first = await planRun({
+      targetDir: target,
+      templatesRoot: templates,
+      manifest,
+      values: {},
+      noInterview: true,
+      userOwned: [],
+    });
+    const reviewAction = first.actions.find((a) => a.rel === rel);
+    assert.equal(reviewAction.action, 'create');
+    await applyPlan({ targetDir: target, actions: first.actions, manifest, dryRun: false });
+
+    // 2. The model instantiates the policy (tokens resolved to project content).
+    const instantiated =
+      '# Review\n\n## Project blocking\n\n1. PR before deploy.\n\n## Checks\n\n- tx boundary.\n';
+    await writeFile(path.join(target, rel), instantiated, 'utf8');
+
+    // 3. recordOnly --user-owned marks it in the manifest.
+    const recorded = await recordOnly({ targetDir: target, manifest, userOwned: [rel] });
+    assert.equal(recorded.files.find((f) => f.path === rel).userModified, true);
+
+    // 4. Re-run: user-owned file is skipped, never refreshed; marker preserved.
+    const second = await planRun({
+      targetDir: target,
+      templatesRoot: templates,
+      manifest: recorded,
+      values: {},
+      noInterview: true,
+      userOwned: [rel],
+    });
+    const secondAction = second.actions.find((a) => a.rel === rel);
+    assert.equal(secondAction.action, 'skip');
+    assert.ok(secondAction.reason.includes('user-owned'));
+    await applyPlan({ targetDir: target, actions: second.actions, manifest: recorded, dryRun: false });
+    const onDisk = await readFile(path.join(target, rel), 'utf8');
+    assert.equal(onDisk, instantiated, 'user-owned content must stay byte-identical');
+    assert.equal(recorded.files.find((f) => f.path === rel).userModified, true);
+  } finally {
+    await rm(target, { recursive: true, force: true });
+    await rm(templates, { recursive: true, force: true });
+  }
+});
+
+test('verifyPlaceholders flags an un-instantiated repo-review', async () => {
+  const target = await tmpdir();
+  try {
+    await mkdir(path.join(target, '.agents/skills/repo-review'), { recursive: true });
+    await writeFile(
+      path.join(target, '.agents/skills/repo-review', 'SKILL.md'),
+      '# Review\n__REVIEW_PROJECT_BLOCKING__\n',
+      'utf8'
+    );
+    const { errors } = await verifyPlaceholders(target);
+    assert.ok(errors.some((e) => e.includes('__REVIEW_PROJECT_BLOCKING__')));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
 });
