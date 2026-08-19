@@ -15,6 +15,10 @@ export const SCOPED_PATHS = [
   'CONTRIBUTING.md',
   '.agents/skills/repo-review/SKILL.md',
   '.agents/skills/repo-decisions/SKILL.md',
+  'SECURITY.md',
+  'CODE_OF_CONDUCT.md',
+  'CODEOWNERS',
+  '.github/workflows',
 ];
 
 const TOKEN_RE = /__[A-Z][A-Z0-9_]*__/g;
@@ -46,7 +50,7 @@ export async function collectScopedFiles(repoRoot) {
       const full = path.join(dir, e.name);
       if (e.isDirectory()) {
         await walk(full, path.join(prefix, e.name));
-      } else if (e.name.endsWith('.md')) {
+      } else if (e.name.endsWith('.md') || e.name.endsWith('.yml') || e.name.endsWith('.yaml')) {
         files.push(path.join(prefix, e.name));
       }
     }

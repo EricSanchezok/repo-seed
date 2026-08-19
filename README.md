@@ -51,6 +51,27 @@ Re-run the same skill on an already-seeded repository:
 - Files you modified are preserved by default; the manifest marks them `userModified` so the gates check existence only.
 - Instantiated policy (repo-review) is marked user-owned at seed time and is never refreshed; the template stays structure-only guidance.
 - Files you created are never deleted.
+- Previously-seeded extension files are never auto-deleted when a pack is later omitted; removal is an explicit user action.
+
+## Optional extension packs
+
+repo-seed ships six optional packs that grow outer-loop governance **only when you choose them**. The default seed is the core 27-file baseline; a non-interactive run or a skipped extension question adds nothing. Ask during the interview, or enable at any time by re-running with `--extensions`:
+
+| Pack | Adds | When to choose |
+|---|---|---|
+| `ci` | `.github/workflows/ci.yml` running the four gates + tests | Any GitHub repository |
+| `release` | `docs/release-policy.md` + `verify-commit-msg.mjs` + commit-msg hook | Repositories that release |
+| `community` | `SECURITY.md` + `CODE_OF_CONDUCT.md` | Public repositories |
+| `codeowners` | `CODEOWNERS` per-path owners | Multi-owner repositories |
+| `spec` | `docs/specs/` lightweight spec lifecycle | Feature-heavy projects |
+| `ai-disclosure` | `docs/ai-disclosure.md` AI participation policy | AI-assisted repositories |
+
+```
+node <repo-seed>/scripts/scaffold.mjs <target> --templates <repo-seed>/references/templates \
+  --extensions ci,release
+```
+
+The scaffold registry (`extensionPacks()` in `scripts/scaffold.mjs`) is the single source of truth; each enabled pack's files carry an `extension` manifest field and are upgraded by re-running with the pack enabled.
 
 The authoritative semantics live in `references/update-strategy.md`.
 

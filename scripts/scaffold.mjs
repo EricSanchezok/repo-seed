@@ -51,10 +51,78 @@ export function defaultManifest({ repoSeedVersion = '0.2.0' } = {}) {
   };
 }
 
+// The six optional extension packs. Each pack is opt-in: nothing is enabled by
+// default, and a non-interactive run seeds only the core files. The registry is
+// the single source of truth for what an enabled pack adds.
+export const EXTENSION_PACKS = {
+  ci: {
+    id: 'ci',
+    title: 'CI workflow',
+    files: [['.github/workflows/ci.yml', SEEDED_CATEGORY.github]],
+    agentsLine: '- CI runs the gates on every push/PR: [.github/workflows/ci.yml](.github/workflows/ci.yml).',
+  },
+  release: {
+    id: 'release',
+    title: 'Release policy',
+    files: [
+      ['docs/release-policy.md', SEEDED_CATEGORY.docs],
+      ['scripts/verify-commit-msg.mjs', SEEDED_CATEGORY.gate],
+    ],
+    agentsLine: '- Commit messages follow conventional commits; see [docs/release-policy.md](docs/release-policy.md).',
+  },
+  community: {
+    id: 'community',
+    title: 'Community health files',
+    files: [
+      ['SECURITY.md', SEEDED_CATEGORY.meta],
+      ['CODE_OF_CONDUCT.md', SEEDED_CATEGORY.meta],
+    ],
+    agentsLine: '- Security vulnerabilities are reported per [SECURITY.md](SECURITY.md).',
+  },
+  codeowners: {
+    id: 'codeowners',
+    title: 'CODEOWNERS',
+    files: [['CODEOWNERS', SEEDED_CATEGORY.meta]],
+    agentsLine: '- Path-level owners live in [CODEOWNERS](CODEOWNERS); branch protection should require owner review.',
+  },
+  spec: {
+    id: 'spec',
+    title: 'Spec contract layer',
+    files: [['docs/specs/README.md', SEEDED_CATEGORY.docs]],
+    agentsLine: '- Non-trivial features start with a spec in [docs/specs/](docs/specs/README.md).',
+  },
+  'ai-disclosure': {
+    id: 'ai-disclosure',
+    title: 'AI disclosure policy',
+    files: [['docs/ai-disclosure.md', SEEDED_CATEGORY.docs]],
+    agentsLine: '- AI-assisted commits/PRs disclose participation per [docs/ai-disclosure.md](docs/ai-disclosure.md).',
+  },
+};
+
+export function extensionPacks() {
+  return Object.values(EXTENSION_PACKS);
+}
+
+// Resolve a comma/space-separated extension list into validated pack ids.
+export function resolveExtensions(input = []) {
+  const ids = new Set();
+  for (const item of input) {
+    for (const part of String(item).split(/[, ]+/)) {
+      if (part === '') continue;
+      if (!EXTENSION_PACKS[part]) {
+        throw new Error(`unknown extension pack: ${part}`);
+      }
+      ids.add(part);
+    }
+  }
+  return [...ids];
+}
+
 // The seeded file set: relative path -> category. This is the single source of
-// truth for what repo-seed owns in a target repository.
-export function seededFiles() {
-  return [
+// truth for what repo-seed owns in a target repository. Pass the enabled
+// extension pack ids to include their files; the default is core only.
+export function seededFiles(extensions = []) {
+  const files = [
     ['AGENTS.md', SEEDED_CATEGORY.instruction],
     ['CLAUDE.md', SEEDED_CATEGORY.instruction],
     ['docs/AGENTS.md', SEEDED_CATEGORY.docs],
@@ -83,6 +151,12 @@ export function seededFiles() {
     ['.github/ISSUE_TEMPLATE/bug.md', SEEDED_CATEGORY.github],
     ['.github/ISSUE_TEMPLATE/feature.md', SEEDED_CATEGORY.github],
   ];
+  for (const id of extensions) {
+    const pack = EXTENSION_PACKS[id];
+    if (!pack) throw new Error(`unknown extension pack: ${id}`);
+    for (const [rel, category] of pack.files) files.push([rel, category]);
+  }
+  return files;
 }
 
 // Built-in defaults for files that are generated even without a template set.
@@ -216,9 +290,13 @@ async function fileSha256(abs) {
 }
 
 // Plan a seed/update run. Returns { actions, manifest }.
-export async function planRun({ targetDir, templatesRoot, manifest, values, noInterview, userOwned = [] }) {
+export async function planRun({ targetDir, templatesRoot, manifest, values, noInterview, userOwned = [], extensions = [] }) {
   const actions = [];
-  const files = seededFiles();
+  const files = seededFiles(extensions);
+  const extOf = new Map();
+  for (const id of extensions) {
+    for (const [rel] of EXTENSION_PACKS[id].files) extOf.set(rel, id);
+  }
   const existing = new Map();
   for (const [rel] of files) {
     const abs = path.join(targetDir, rel);
@@ -232,6 +310,7 @@ export async function planRun({ targetDir, templatesRoot, manifest, values, noIn
   const templateMap = templatesRoot ? await collectTemplates(templatesRoot) : new Map();
 
   for (const [rel, category] of files) {
+    const extension = extOf.get(rel);
     let content = templateMap.get(rel) ?? null;
     if (content === null) content = builtinDefault(rel);
     if (content === null) content = await gateScriptContent(rel);
@@ -244,19 +323,18 @@ export async function planRun({ targetDir, templatesRoot, manifest, values, noIn
     const hash = sha256(content);
     const ex = existing.get(rel);
     if (!ex.exists) {
-      actions.push({ rel, action: 'create', category, content, hash });
+      actions.push({ rel, action: 'create', category, content, hash, extension });
       continue;
     }
     const currentHash = await fileSha256(path.join(targetDir, rel));
     if (currentHash === hash) {
-      actions.push({ rel, action: 'keep', category, content, hash, currentHash });
+      actions.push({ rel, action: 'keep', category, content, hash, currentHash, extension });
       continue;
     }
     // Refuse to regress instantiated content with unresolved placeholders.
     // A re-run that omits --values a previous run supplied would overwrite
     // the shipped, instantiated file with raw fill-in tokens. When the file
     // on disk is the recorded seeded version (unmodified) and the template
-    // still carries tokens, keep the on-disk content and report the skip.
     const hasUnresolvedTokens = /__[A-Z][A-Z0-9_]*__/.test(content);
     if (hasUnresolvedTokens) {
       const recorded = manifest?.files?.find((f) => f.path === rel);
@@ -269,6 +347,7 @@ export async function planRun({ targetDir, templatesRoot, manifest, values, noIn
           hash,
           currentHash,
           reason: 'template has unresolved placeholders; refusing to regress instantiated content',
+          extension,
         });
         continue;
       }
@@ -287,6 +366,7 @@ export async function planRun({ targetDir, templatesRoot, manifest, values, noIn
         currentHash,
         reason: 'user-owned: instantiated at seed time; never refreshed from the template',
         userOwned: true,
+        extension,
       });
       continue;
     }
@@ -302,12 +382,29 @@ export async function planRun({ targetDir, templatesRoot, manifest, values, noIn
         hash,
         currentHash,
         reason: 'existing file not in manifest (user file)',
+        extension,
       });
       continue;
     }
     if (recorded.sha256 === currentHash) {
-      // Untouched since seed: refresh.
-      actions.push({ rel, action: 'update', category, content, hash, currentHash });
+      // Untouched since seed: refresh. Exception: a user-modified (user-owned)
+      // file stays untouched even when the recorded hash matches — the user
+      // took it over; only existence is verified for it.
+      if (recorded.userModified) {
+        actions.push({
+          rel,
+          action: 'skip',
+          category,
+          content,
+          hash,
+          currentHash,
+          reason: 'user-modified since seed',
+          userModified: true,
+          extension,
+        });
+      } else {
+        actions.push({ rel, action: 'update', category, content, hash, currentHash, extension });
+      }
     } else {
       // User-modified since seed: preserve by default and mark the manifest
       // entry so verify-manifest checks existence only, never the hash.
@@ -320,7 +417,31 @@ export async function planRun({ targetDir, templatesRoot, manifest, values, noIn
         currentHash,
         reason: 'user-modified since seed',
         userModified: true,
+        extension,
       });
+    }
+  }
+  // Preservation semantics for previously-seeded extension files whose pack is
+  // not enabled in this run: keep them on disk and in the manifest untouched.
+  // Never auto-delete an extension file the user already has.
+  const enabledRels = new Set(files.map(([rel]) => rel));
+  for (const entry of manifest?.files ?? []) {
+    if (entry.extension && !enabledRels.has(entry.path)) {
+      const abs = path.join(targetDir, entry.path);
+      try {
+        const st = await stat(abs);
+        if (st.isFile()) {
+          actions.push({
+            rel: entry.path,
+            action: 'skip',
+            category: entry.category,
+            reason: 'extension not enabled; preserved',
+            extension: entry.extension,
+          });
+        }
+      } catch {
+        // file absent; nothing to preserve
+      }
     }
   }
   return { actions, manifest };
@@ -342,9 +463,12 @@ export async function applyPlan({ targetDir, actions, manifest, dryRun }) {
         if (entry) {
           entry.sha256 = a.hash;
           entry.category = a.category;
+          if (a.extension) entry.extension = a.extension;
           delete entry.userModified; // instantiated content was replaced; clear the marker
         } else {
-          manifest.files.push({ path: a.rel, sha256: a.hash, category: a.category });
+          const ne = { path: a.rel, sha256: a.hash, category: a.category };
+          if (a.extension) ne.extension = a.extension;
+          manifest.files.push(ne);
         }
       }
     } else if (a.action === 'skip' || a.action === 'conflict') {
@@ -358,22 +482,23 @@ export async function applyPlan({ targetDir, actions, manifest, dryRun }) {
   return { written, skipped };
 }
 
-// Record-only: recompute hashes of existing seeded files and rewrite the
-// manifest without touching any file. Used after the model refines generated
-// content so the manifest matches the shipped state.
+// Record-only: recompute hashes from the existing manifest entries (core and
+// extension files alike) and rewrite the manifest without touching any file.
+// Entries whose file no longer exists are dropped; userModified and extension
+// markers are preserved. Used after the model refines generated content so the
+// manifest matches the shipped state.
 export async function recordOnly({ targetDir, manifest, userOwned = [] }) {
-  const files = seededFiles();
   const out = [];
-  for (const [rel, category] of files) {
-    const abs = path.join(targetDir, rel);
+  for (const entry of manifest?.files ?? []) {
+    const abs = path.join(targetDir, entry.path);
     try {
       const st = await stat(abs);
       if (!st.isFile()) continue;
       const hash = await fileSha256(abs);
-      const prev = manifest?.files?.find((f) => f.path === rel);
-      const entry = { path: rel, sha256: hash, category };
-      if (userOwned.includes(rel) || prev?.userModified) entry.userModified = true; // user-owned content: hash is informational
-      out.push(entry);
+      const ne = { path: entry.path, sha256: hash, category: entry.category };
+      if (entry.extension) ne.extension = entry.extension;
+      if (userOwned.includes(entry.path) || entry.userModified) ne.userModified = true; // user-owned content: hash is informational
+      out.push(ne);
     } catch {
       // file absent: leave it out of the manifest
     }
@@ -381,6 +506,7 @@ export async function recordOnly({ targetDir, manifest, userOwned = [] }) {
   manifest.files = out;
   return manifest;
 }
+
 
 function parseValues(flags) {
   const values = {};
@@ -438,7 +564,7 @@ async function main() {
   const args = process.argv.slice(2);
   const targetDir = args[0];
   if (!targetDir) {
-    console.error('usage: scaffold.mjs <target-dir> [--templates <dir>] [--dry-run] [--no-interview] [--record-only] [--values k=v] [--user-owned <path>] [--repo-seed-version <v>]');
+    console.error('usage: scaffold.mjs <target-dir> [--templates <dir>] [--dry-run] [--no-interview] [--record-only] [--values k=v] [--extensions ci,release] [--user-owned <path>] [--repo-seed-version <v>]');
     process.exit(2);
   }
   const flags = parseFlags(args);
@@ -447,7 +573,8 @@ async function main() {
   const noInterview = flags.has('no-interview');
   const record = flags.has('record-only');
   const userOwned = parseListFlag(flags.get('user-owned'));
-  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.2.0';
+  const extensions = resolveExtensions(parseListFlag(flags.get('extensions')));
+  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.3.0';
 
   let manifest = defaultManifest({ repoSeedVersion });
   try {
@@ -468,7 +595,10 @@ async function main() {
     return;
   }
 
-  const values = parseValues(flags);
+  // The AGENTS.md extension section defaults to empty so a core-only run never
+  // leaves a placeholder; the model fills it via --values when extensions are
+  // enabled.
+  const values = { AGENTS_EXTENSION_SECTION: '', ...parseValues(flags) };
   const { actions, manifest: m } = await planRun({
     targetDir,
     templatesRoot,
@@ -476,6 +606,7 @@ async function main() {
     values,
     noInterview,
     userOwned,
+    extensions,
   });
   const { written, skipped } = await applyPlan({ targetDir, actions, manifest: m, dryRun });
 

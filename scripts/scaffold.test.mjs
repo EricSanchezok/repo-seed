@@ -13,6 +13,8 @@ import {
   applyPlan,
   recordOnly,
   defaultManifest,
+  extensionPacks,
+  resolveExtensions,
 } from './scaffold.mjs';
 import { installHook, hookScript, HOOK_NAME } from './install-hooks.mjs';
 import { verifyManifest } from './verify-manifest.mjs';
@@ -23,6 +25,9 @@ import { verifyDir } from './verify-decisions.mjs';
 async function tmpdir() {
   return mkdtemp(path.join(os.tmpdir(), 'seed-test-'));
 }
+
+// The real template set; extension pack files only have template sources there.
+const REPO_TEMPLATES = path.join(process.cwd(), 'references', 'templates');
 
 test('sha256 is deterministic and hex', () => {
   const a = sha256('hello');
@@ -355,6 +360,160 @@ test('verifyPlaceholders flags an un-instantiated repo-review', async () => {
     );
     const { errors } = await verifyPlaceholders(target);
     assert.ok(errors.some((e) => e.includes('__REVIEW_PROJECT_BLOCKING__')));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+// --- Optional extension packs (v0.3.0) ---
+
+test('extensionPacks returns six packs with files and agentsLine', () => {
+  const packs = extensionPacks();
+  assert.equal(packs.length, 6);
+  const ids = packs.map((p) => p.id);
+  assert.deepEqual(ids.sort(), ['ai-disclosure', 'ci', 'codeowners', 'community', 'release', 'spec']);
+  for (const p of packs) {
+    assert.ok(p.files.length >= 1, `${p.id} has files`);
+    assert.ok(p.agentsLine.startsWith('- '), `${p.id} has an AGENTS.md line`);
+  }
+});
+
+test('seededFiles(extensions) adds pack files to core', () => {
+  const core = seededFiles();
+  const all = seededFiles(['ci', 'release', 'community', 'codeowners', 'spec', 'ai-disclosure']);
+  assert.equal(core.length, 27);
+  assert.ok(all.length > core.length);
+  assert.ok(all.some(([p]) => p === '.github/workflows/ci.yml'));
+  assert.ok(all.some(([p]) => p === 'SECURITY.md'));
+  assert.ok(all.some(([p]) => p === 'docs/specs/README.md'));
+  // core files still present
+  assert.ok(all.some(([p]) => p === 'AGENTS.md'));
+});
+
+test('resolveExtensions validates ids and rejects unknown', () => {
+  assert.deepEqual(resolveExtensions(['ci,release', 'community']), ['ci', 'release', 'community']);
+  assert.deepEqual(resolveExtensions([]), []);
+  assert.throws(() => resolveExtensions(['bogus']), /unknown extension pack/);
+});
+
+test('planRun with extensions creates extension files and records extension field', async () => {
+  const target = await tmpdir();
+  try {
+    const manifest = defaultManifest();
+    const { actions } = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: {},
+      dryRun: false,
+      noInterview: true,
+      extensions: ['ci', 'release'],
+    });
+    const ciCreate = actions.find((a) => a.rel === '.github/workflows/ci.yml');
+    assert.equal(ciCreate.action, 'create');
+    assert.equal(ciCreate.extension, 'ci');
+    await applyPlan({ targetDir: target, actions, manifest, dryRun: false });
+    await mkdir(path.join(target, '.repo-seed'), { recursive: true });
+    await writeFile(path.join(target, '.repo-seed', 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+    const ciEntry = manifest.files.find((f) => f.path === '.github/workflows/ci.yml');
+    assert.equal(ciEntry.extension, 'ci');
+    const relEntry = manifest.files.find((f) => f.path === 'docs/release-policy.md');
+    assert.equal(relEntry.extension, 'release');
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+test('re-run without extensions preserves previously-seeded extension files', async () => {
+  const target = await tmpdir();
+  try {
+    // First seed with ci+release
+    const manifest = defaultManifest();
+    const first = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: {},
+      dryRun: false,
+      noInterview: true,
+      extensions: ['ci', 'release'],
+    });
+    await applyPlan({ targetDir: target, actions: first.actions, manifest, dryRun: false });
+    await mkdir(path.join(target, '.repo-seed'), { recursive: true });
+    await writeFile(path.join(target, '.repo-seed', 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+
+    // Second run WITHOUT extensions: extension files preserved, not deleted, not refreshed
+    const second = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: {},
+      dryRun: false,
+      noInterview: true,
+      extensions: [],
+    });
+    const ciAction = second.actions.find((a) => a.rel === '.github/workflows/ci.yml');
+    assert.equal(ciAction.action, 'skip');
+    assert.ok(ciAction.reason.includes('extension not enabled'));
+    // File still on disk, manifest entry still present
+    const ciAbs = path.join(target, '.github/workflows/ci.yml');
+    assert.ok((await stat(ciAbs)).isFile());
+    assert.ok(manifest.files.some((f) => f.path === '.github/workflows/ci.yml'));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+test('default core-only seed has no extension files and empty extension section', async () => {
+  const target = await tmpdir();
+  try {
+    const manifest = defaultManifest();
+    const { actions } = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: { AGENTS_EXTENSION_SECTION: '' },
+      dryRun: false,
+      noInterview: true,
+      extensions: [],
+    });
+    assert.ok(!actions.some((a) => a.rel === '.github/workflows/ci.yml'));
+    assert.ok(!actions.some((a) => a.rel === 'SECURITY.md'));
+    assert.ok(!actions.some((a) => a.rel === 'docs/specs/README.md'));
+    // AGENTS.md content has no extension section token residue when instantiated with empty value
+    const agents = actions.find((a) => a.rel === 'AGENTS.md');
+    assert.ok(!agents.content.includes('__AGENTS_EXTENSION_SECTION__'));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+test('recordOnly preserves extension and userModified markers', async () => {
+  const target = await tmpdir();
+  try {
+    const manifest = defaultManifest();
+    const { actions } = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: {},
+      dryRun: false,
+      noInterview: true,
+      extensions: ['ci'],
+    });
+    await applyPlan({ targetDir: target, actions, manifest, dryRun: false });
+    await mkdir(path.join(target, '.repo-seed'), { recursive: true });
+    await writeFile(path.join(target, '.repo-seed', 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+    // mark repo-review user-owned like the skill flow does
+    const updated = await recordOnly({ targetDir: target, manifest, userOwned: ['.agents/skills/repo-review/SKILL.md'] });
+    const ciEntry = updated.files.find((f) => f.path === '.github/workflows/ci.yml');
+    assert.equal(ciEntry.extension, 'ci');
+    const reviewEntry = updated.files.find((f) => f.path === '.agents/skills/repo-review/SKILL.md');
+    assert.equal(reviewEntry.userModified, true);
+    // entry whose file was deleted is dropped
+    await rm(path.join(target, 'docs', 'architecture.md'));
+    const after = await recordOnly({ targetDir: target, manifest: updated });
+    assert.ok(!after.files.some((f) => f.path === 'docs/architecture.md'));
   } finally {
     await rm(target, { recursive: true, force: true });
   }

@@ -44,3 +44,9 @@ The generator asks the minimum necessary questions before scaffolding. Every que
 2. Ask only the questions above whose answer is not detectable and that the user did not already answer.
 3. Record answers; pass them to the scaffold step. Never block on a question whose default is acceptable.
 4. Never read `.env` files or other secrets during detection.
+
+### Q9. Optional extension packs
+- **Ask when**: always; it decides whether the seed stays core-only or grows outer-loop governance.
+- **Prompt**: "Optional extensions (default: none — core only): 1) CI workflow (GitHub Actions running the gates + tests) 2) Release policy (conventional commits + commit-msg hook + CHANGELOG division) 3) Community health files (SECURITY.md + CODE_OF_CONDUCT, recommended for public repos) 4) CODEOWNERS per-path owners 5) Spec contract layer (docs/specs/ lifecycle) 6) AI disclosure policy (Assisted-by trailer). Which do you want? (multi-select; skip = core only)"
+- **Default**: none — only the core 27-file seed ships; extension files are added only when explicitly chosen.
+- **Use**: pass the chosen pack ids to the scaffold `--extensions` flag; the model fills the AGENTS.md extension section with each pack's link line.

@@ -2,6 +2,7 @@
 name: repo-seed
 description: "Seed an agent-native, self-governing repository — initialize a new repo or upgrade an existing one with AGENTS.md, CLAUDE.md, documentation standards, a MADR decision log, in-repo skills, deterministic gates, and a pre-commit hook. Use when the user asks to initialize a repository, make a repo agent-native, set up docs and ADR for vibe coding, prepare a project for AI development, or refresh an existing seed. Keywords: initialize repo, seed repository, agent-native, vibe coding, AGENTS.md, ADR, decision log, governance, scaffold docs."
 license: MIT
+version: 0.3.0
 compatibility: Node >= 18; works in any repository regardless of language or framework
 metadata:
   generator: true
@@ -40,6 +41,7 @@ Ask only the questions whose answers are not detectable and that materially chan
 5. Existing-file conflict resolution — preserve-and-merge (default) / overwrite-with-backup / skip.
 6. Monorepo — root-only seed (default) or also subtree AGENTS.md per package.
 7. Review policy input — known pitfalls, review red lines, and invariants this project must not regress (default: none; only the universal repo-review core).
+8. Optional extension packs — which outer-loop governance to add (default: none; see the Optional extensions section below).
 
 ### 3. Scaffold (deterministic)
 
@@ -48,12 +50,13 @@ Run the scaffold against the target directory. The scaffold creates the director
 ```sh
 node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
   --templates <path-to-repo-seed>/references/templates \
-  --repo-seed-version 0.2.0
+  --extensions ci,release \
+  --repo-seed-version 0.3.0
 ```
 
-Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--values k=v` (repeatable; pre-fill tokens), `--user-owned <path>` (repeatable; mark a seeded file instantiated at seed time so re-runs never refresh it), `--record-only` (recompute hashes after the model refines content, without touching files).
+Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--values k=v` (repeatable; pre-fill tokens), `--extensions <ids>` (comma/space-separated; opt-in extension packs), `--user-owned <path>` (repeatable; mark a seeded file instantiated at seed time so re-runs never refresh it), `--record-only` (recompute hashes after the model refines content, without touching files).
 
-Use `--dry-run` first and show the user the plan.
+Use `--dry-run` first and show the user the plan. Extensions are never enabled implicitly: a non-interactive run seeds only the core files.
 
 ### 4. Instantiate (model)
 
@@ -100,6 +103,32 @@ The seeded file set is the single source of truth in `scripts/scaffold.mjs` (`se
 - Never delete a file repo-seed did not create.
 - Never overwrite a user-modified seeded file without asking (default: preserve).
 - The authority for update semantics is [references/update-strategy.md](references/update-strategy.md).
+
+## Optional extensions
+
+Six optional packs extend the core seed; **none are enabled by default**. A non-interactive run or a skipped extension question seeds only the core files. Each pack is a small, self-contained addition; the scaffold registry (`extensionPacks()` in `scripts/scaffold.mjs`) is the single source of truth for their file sets.
+
+| Pack | Adds | When to choose |
+|---|---|---|
+| `ci` | `.github/workflows/ci.yml` running the four gates + tests (minimal permissions + SHA pinning notes) | Any repository on GitHub |
+| `release` | `docs/release-policy.md` (conventional commits, decision-log/CHANGELOG/RFC division) + `scripts/verify-commit-msg.mjs` + commit-msg hook (`install-hooks.mjs --with-commit-msg`) | Repositories that release versions |
+| `community` | `SECURITY.md` + `CODE_OF_CONDUCT.md` | Public repositories |
+| `codeowners` | `CODEOWNERS` per-path owners | Multi-owner repositories |
+| `spec` | `docs/specs/README.md` lightweight spec lifecycle (Draft → Approved → Implemented → Superseded) | Feature-heavy projects |
+| `ai-disclosure` | `docs/ai-disclosure.md` AI participation policy (`Assisted-by:` trailer) | Repositories accepting AI-assisted contributions |
+
+Enable packs with the `--extensions` flag (comma/space-separated), e.g. `--extensions ci,release`. When enabled, the model fills the AGENTS.md "Optional extensions" section (the `__AGENTS_EXTENSION_SECTION__` fill-in) with one link line per pack; a core-only seed leaves that section empty.
+
+**Add and remove semantics**: extensions can be added anytime by re-running with new `--extensions`. Previously-seeded extension files are never auto-deleted when a pack is later omitted — re-running without a pack preserves its files and manifest entries; removing a pack's files is an explicit user action.
+
+## Authoring rules
+
+These rules govern repo-seed's own instruction files (SKILL.md, templates, in-repo skill templates) and keep the skill portable across agent tools:
+
+- Use tool-agnostic wording for actions: "ask the user", "read the repository", "write files", "run a command" — never name a specific tool or function (e.g. no "use the question tool", "call read_file").
+- Describe intent and outcome, not the mechanism; each agent maps the wording to its own tools.
+- Keep commands that are genuinely cross-tool (shell snippets, node scripts) as literal code blocks; they are tool-independent.
+- The `allowed-tools` frontmatter field is a declarative permission list per the agentskills.io spec, not an instruction; keep it minimal.
 
 ## References
 

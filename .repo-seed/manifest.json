@@ -10,7 +10,7 @@
   "files": [
     {
       "path": "AGENTS.md",
-      "sha256": "c8fcf5bc5823a5cd2750fa2a3c01977da1e66abed80791f1d2e4f85a5de74d60",
+      "sha256": "cbca4a3dea0d1b7040e2b1b9343ccad1f3b2c27a3ecc1693168b363ce6a89feb",
       "category": "instruction"
     },
     {
@@ -86,12 +86,12 @@
     },
     {
       "path": "scripts/verify-doc-links.mjs",
-      "sha256": "78e59e8f482bb2f2ebc179e7077eef679419b5fd1c41cf7a2918e6cf9ff8daf6",
+      "sha256": "ce47fd7c7aee5bb568fea27ea2983c23b80701c06e5d2bb9d9d2f86b8e9c3240",
       "category": "gate"
     },
     {
       "path": "scripts/verify-placeholders.mjs",
-      "sha256": "1b1c5e30be8eab9b5fea7d9231253c384edefc47219a18ec0a847473e07b14e5",
+      "sha256": "912a7b98e53c487f0a96a01f22d729548f175d15317459c684d4a7c6ee283ca2",
       "category": "gate"
     },
     {
@@ -101,7 +101,7 @@
     },
     {
       "path": "scripts/install-hooks.mjs",
-      "sha256": "74f2be4dd2e24a983dbde062ab1390ccaf8c86beb96db58a5c8633d3f19e0f47",
+      "sha256": "c608a7a0ffd8c02311843b600af1aa145ffc8e9547b027179d27a324932a4214",
       "category": "gate"
     },
     {
@@ -143,6 +143,18 @@
       "path": ".github/ISSUE_TEMPLATE/feature.md",
       "sha256": "328dc950ab01003d7e41495f37407eb07f6828f9bc5ffe6053590f2a6f7d53eb",
       "category": "github"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "aeafcfa84ca835c4d05b85f1d5d6ff8ebb289d25f0463a8686ff6bd08598ab5c",
+      "category": "github",
+      "extension": "ci"
+    },
+    {
+      "path": "docs/ai-disclosure.md",
+      "sha256": "067aff30bb6e208c26e7d40677a7fe23b1c054f0b00c7744f6b5c62631feeaa0",
+      "category": "docs",
+      "extension": "ai-disclosure"
     }
   ]
 }

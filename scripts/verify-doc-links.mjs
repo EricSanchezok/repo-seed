@@ -9,7 +9,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { pathToFileURL } from 'node:url';
 
-export const SCOPED_PATHS = ['AGENTS.md', 'CLAUDE.md', 'docs', 'CONTRIBUTING.md'];
+export const SCOPED_PATHS = ['AGENTS.md', 'CLAUDE.md', 'docs', 'CONTRIBUTING.md', 'SECURITY.md', 'CODE_OF_CONDUCT.md'];
 
 // Links inside fenced code blocks and inline code are examples, not real
 // links (e.g. `[0001](0001-title.md)` in a format description); strip them

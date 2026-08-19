@@ -43,3 +43,8 @@ Follow [docs/testing.md](docs/testing.md). Test the real entry path; verify the 
 
 - [`.agents/skills/repo-review`](.agents/skills/repo-review/SKILL.md) — semantic review policy (instantiated per project) before merging.
 - [`.agents/skills/repo-decisions`](.agents/skills/repo-decisions/SKILL.md) — how to write and update decision records.
+
+## Optional extensions
+
+- CI runs the gates on every push/PR: [.github/workflows/ci.yml](.github/workflows/ci.yml).
+- AI-assisted commits/PRs disclose participation per [docs/ai-disclosure.md](docs/ai-disclosure.md).

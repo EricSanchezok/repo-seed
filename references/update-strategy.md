@@ -58,3 +58,12 @@ If a template's target path is a user-created file (not in the manifest), the se
 ```
 
 `version` is the manifest schema version; a future breaking schema change prompts a re-seed instead of a silent migration. `repoSeedVersion` tracks the skill version that produced the seed; it is informational for now.
+
+## Extension packs and preservation
+
+Optional extension packs (see SKILL.md "Optional extensions") are recorded in the manifest with an `extension` field. Rules:
+
+- **Adding**: re-run with `--extensions <ids>`; new pack files are created like any seeded file and their manifest entries carry the pack id.
+- **Removing**: re-running without a previously-enabled pack **never deletes** its files or manifest entries. The files are preserved untouched (reason: "extension not enabled; preserved"). Removing a pack's files is an explicit user action.
+- **Refreshing**: a re-run with the pack enabled refreshes its untouched files from the current templates, exactly like core files; user-modified extension files are preserved like any user-modified file.
+- The AGENTS.md extension section (the `__AGENTS_EXTENSION_SECTION__` fill-in) defaults to empty; the model fills it with one link line per enabled pack. A core-only run leaves it empty.
