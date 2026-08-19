@@ -1,0 +1,106 @@
+---
+name: repo-seed
+description: Seed an agent-native, self-governing repository — initialize a new repo or upgrade an existing one with AGENTS.md, CLAUDE.md, documentation standards, a MADR decision log, in-repo skills, deterministic gates, and a pre-commit hook. Use when the user asks to initialize a repository, make a repo agent-native, set up docs and ADR for vibe coding, prepare a project for AI development, or refresh an existing seed. Keywords: initialize repo, seed repository, agent-native, vibe coding, AGENTS.md, ADR, decision log, governance, scaffold docs.
+license: MIT
+compatibility: Node >= 18; works in any repository regardless of language or framework
+metadata:
+  generator: true
+  category: scaffolding
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+---
+
+# repo-seed: seed an agent-native, self-governing repository
+
+repo-seed turns a traditional repository — empty or existing, any technology stack — into an agent-native repository ready for vibe coding: resident agent instructions, a documentation standard, a unified MADR decision log, two in-repo skills, deterministic gates, a pre-commit hook, and an ownership manifest that makes the whole seed upgradeable without overwriting the user's work.
+
+**repo-seed is a generator, not a template.** It writes a governance baseline into the target repository; the user reviews and commits it. Re-running repo-seed is the upgrade channel: untouched seeded files refresh to the latest templates, user-modified files are preserved by default, and user-created files are never deleted.
+
+## Workflow
+
+Run the five steps in order. Steps 1-3 are the model's job; steps 3-5 are deterministic scripts.
+
+### 1. Analyze
+
+Inspect the target repository (read-only):
+
+- Stack manifests: `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `requirements.txt`, `Gemfile`, etc. Detect the test command and lint command when derivable.
+- Existing files at seeded paths (see the file list in step 4). List every conflict: a file already exists where repo-seed wants to write.
+- Git state: is it a git repository? Is the working tree clean? What is the default branch?
+- Repository size: for large repositories, sample (directory-depth limit and file-count cap); never enumerate the whole tree.
+- Never read `.env` files or other secrets.
+
+### 2. Interview
+
+Ask only the questions whose answers are not detectable and that materially change the output. The question bank lives in [references/interview.md](references/interview.md). Every question has a default; never block on a question whose default is acceptable. Minimal set:
+
+1. Project one-liner (always; fills the AGENTS.md opening line).
+2. License — default MIT; skip if a LICENSE exists.
+3. Branch convention — default `main` with short-lived feature branches.
+4. Test command / lint command — only when not detectable.
+5. Existing-file conflict resolution — preserve-and-merge (default) / overwrite-with-backup / skip.
+6. Monorepo — root-only seed (default) or also subtree AGENTS.md per package.
+
+### 3. Scaffold (deterministic)
+
+Run the scaffold against the target directory. The scaffold creates the directory skeleton, writes seeded files from the template set, records `.repo-seed/manifest.json` with sha256 of every seeded file, and installs the pre-commit hook.
+
+```sh
+node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
+  --templates <path-to-repo-seed>/references/templates \
+  --repo-seed-version 0.1.0
+```
+
+Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--values k=v` (repeatable; pre-fill tokens), `--record-only` (recompute hashes after the model refines content, without touching files).
+
+Use `--dry-run` first and show the user the plan.
+
+### 4. Instantiate (model)
+
+For every seeded file that contains fill-in tokens (`__UPPERCASE__`), replace the tokens with content derived from the analysis and interview: project one-liner, real test/lint commands, stack description, architecture content for `docs/architecture.md`, and a testing policy tailored to the detected stack in `docs/testing.md`. Resolve every token — the placeholder gate fails on any survivor. Do not invent commands: if a command cannot be resolved, omit that line rather than fabricate it.
+
+### 5. Record and verify
+
+After refining, re-record the manifest so it matches the shipped state, then run the gates and report.
+
+```sh
+node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> --record-only
+node scripts/verify-decisions.mjs
+node scripts/verify-doc-links.mjs
+node scripts/verify-placeholders.mjs
+node scripts/verify-manifest.mjs
+git diff --cached --check
+```
+
+The gates run from the target directory. Verify the hook is installed (`.git/hooks/pre-commit`). Then tell the user to review and commit. **Never commit or push unless the user explicitly asks.**
+
+## What gets seeded
+
+The seeded file set is the single source of truth in `scripts/scaffold.mjs` (`seededFiles()`). It includes:
+
+- `AGENTS.md` (resident agent instructions with the governance loop and security rules), `CLAUDE.md` (`@AGENTS.md` import — no symlink, Windows-safe).
+- `docs/AGENTS.md` (documentation standard), `docs/architecture.md`, `docs/development.md`, `docs/testing.md`, `docs/postmortems/README.md`.
+- `docs/decisions/` — the unified MADR decision log with three seed records and an index.
+- `.agents/skills/repo-review` and `.agents/skills/repo-decisions` — the two in-repo skills.
+- `scripts/` — the four verifier gates plus `install-hooks.mjs` (copied verbatim from repo-seed so the seeded repo runs the same code).
+- `CONTRIBUTING.md`, `LICENSE`, `.editorconfig`, `.gitattributes`, `.github/` (PR + issue templates), `.repo-seed/update-strategy.md`.
+
+## Security and ownership rules
+
+- Write only the seeded paths. Never touch anything outside them without asking.
+- Never `git commit` or `git push` unless the user explicitly asks.
+- Never read `.env` files or secrets.
+- Never delete a file repo-seed did not create.
+- Never overwrite a user-modified seeded file without asking (default: preserve).
+- The authority for update semantics is [references/update-strategy.md](references/update-strategy.md).
+
+## References
+
+- [references/interview.md](references/interview.md) — question bank.
+- [references/update-strategy.md](references/update-strategy.md) — ownership, conflicts, preservation, manifest schema.
+- [references/decision-standard.md](references/decision-standard.md) — the MADR + Class extension standard.
+- [references/doc-standard.md](references/doc-standard.md) — the documentation standard the seed writes.
+- [references/templates/](references/templates/) — the full template set.
