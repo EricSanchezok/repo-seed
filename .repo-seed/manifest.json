@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "repoSeedVersion": "0.1.0",
+  "repoSeedVersion": "0.2.0",
   "lastSyncCommit": null,
   "config": {
     "license": "MIT",
@@ -10,7 +10,7 @@
   "files": [
     {
       "path": "AGENTS.md",
-      "sha256": "72cc91b9ba6271bd8c357a8262bf89a78a0d28f3515bd4ca6189cd05938d5960",
+      "sha256": "c8fcf5bc5823a5cd2750fa2a3c01977da1e66abed80791f1d2e4f85a5de74d60",
       "category": "instruction"
     },
     {
@@ -40,7 +40,7 @@
     },
     {
       "path": "docs/decisions/README.md",
-      "sha256": "ea2625a217008de2f07e582f1099d7bd734fb9a41e944a68fe3e8040c44bd0fc",
+      "sha256": "7250e3b075380211d720f67a6b1303bc6fc2ebb73b83b0a1d4fbcadcbedabdc5",
       "category": "docs"
     },
     {
@@ -55,7 +55,12 @@
     },
     {
       "path": "docs/decisions/0002-self-governing-repository-design.md",
-      "sha256": "256ad62964d04b3b0c34976ed08f2150746ba0c7b55b7e8cc9d96e47d2fb15f6",
+      "sha256": "a2bd54113634251008f2f9aec940a53c68f6f2d12bda06238c6f6e05474dd29f",
+      "category": "docs"
+    },
+    {
+      "path": "docs/decisions/0003-repo-review-instantiated-per-project.md",
+      "sha256": "daa4cbd699e1a68136dcf9dbe30b7e4228859bff3d4f8213f81745a919088230",
       "category": "docs"
     },
     {
@@ -65,8 +70,9 @@
     },
     {
       "path": ".agents/skills/repo-review/SKILL.md",
-      "sha256": "35d283501c9aa102b72973e1845f19d246bc6cfef7d64552bd6c3be48e4a15f0",
-      "category": "skill"
+      "sha256": "cb8acc264b6601abbf7668b0395199df244016bdd71616c1f1c013303a5a96fc",
+      "category": "skill",
+      "userModified": true
     },
     {
       "path": ".agents/skills/repo-decisions/SKILL.md",
@@ -120,7 +126,7 @@
     },
     {
       "path": ".repo-seed/update-strategy.md",
-      "sha256": "31847cb70ace2f17675c88a8eaaca826328249bdce5e9040126730d0fef7c730",
+      "sha256": "1f476eeafc2b245a053bb477a28a92f8d2ac1c35166e6ca73da3f2bf3e5fd47f",
       "category": "meta"
     },
     {

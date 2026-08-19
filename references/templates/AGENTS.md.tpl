@@ -41,5 +41,5 @@ Follow [docs/testing.md](docs/testing.md). Test the real entry path; verify the 
 
 ## Skills
 
-- [`.agents/skills/repo-review`](.agents/skills/repo-review/SKILL.md) — semantic review procedure before merging.
+- [`.agents/skills/repo-review`](.agents/skills/repo-review/SKILL.md) — semantic review policy (instantiated per project) before merging.
 - [`.agents/skills/repo-decisions`](.agents/skills/repo-decisions/SKILL.md) — how to write and update decision records.

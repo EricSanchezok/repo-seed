@@ -26,7 +26,7 @@ The generated repository is governed by **five layers plus an upgrade channel**:
 - **L0 — resident instructions**: root `AGENTS.md` (soft budget of 100 lines) plus `CLAUDE.md` that imports it via `@AGENTS.md`. Carries the governance loop hard rules and the security rules (never commit/push without explicit request).
 - **L1 — deterministic gates and hook**: five zero-dependency verifiers (`verify-decisions`, `verify-doc-links`, `verify-placeholders`, `verify-manifest`, whitespace via `git diff --cached --check`) installed as a pre-commit hook by `scripts/install-hooks.mjs`.
 - **L2 — unified decision log**: MADR records with the `Class:` extension (see [ADR 0000](0000-use-markdown-architectural-decision-records.md)), enforced by `verify-decisions`.
-- **L3 — in-repo skills**: `repo-review` (semantic review procedure) and `repo-decisions` (decision-log authoring procedure), placed in `.agents/skills/`, discovered by all major agent tools.
+- **L3 — in-repo skills**: `repo-review` (per-project review policy: universal core plus blocking requirements and manual checks instantiated at seed time) and `repo-decisions` (decision-log authoring procedure), placed in `.agents/skills/`, discovered by all major agent tools.
 - **L4 — process memory**: `docs/testing.md` policy, `docs/postmortems/` guidance and template, PR template checklist.
 - **Upgrade channel**: `.repo-seed/manifest.json` records seeded-file hashes; re-running repo-seed refreshes untouched seeded files, preserves user edits, and never deletes user files.
 

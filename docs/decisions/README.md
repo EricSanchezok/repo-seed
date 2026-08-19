@@ -69,3 +69,4 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 - [0000 — Use Markdown Architectural Decision Records](0000-use-markdown-architectural-decision-records.md)
 - [0001 — repo-seed is a skill that seeds a self-governing repository, not a static template](0001-repo-seed-is-a-skill-not-a-template.md)
 - [0002 — Self-governing repository design](0002-self-governing-repository-design.md)
+- [0003 — repo-review is instantiated per project, not shipped statically](0003-repo-review-instantiated-per-project.md)

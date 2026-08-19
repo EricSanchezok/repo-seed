@@ -14,6 +14,8 @@
 //                        files and rewrite the manifest (used after the model
 //                        refines generated content)
 //   --values k=v         repeatable; instantiate __K__ tokens with v
+//   --user-owned <path>  mark the seeded file at <path> user-owned (instantiated
+//                        at seed time); re-runs never refresh it
 //   --repo-seed-version <v>  version recorded in the manifest
 // Zero dependencies; Node >= 18. Exits non-zero on error.
 import { mkdir, writeFile, readFile, readdir, stat } from 'node:fs/promises';
@@ -39,7 +41,7 @@ export function sha256(text) {
   return createHash('sha256').update(text).digest('hex');
 }
 
-export function defaultManifest({ repoSeedVersion = '0.1.0' } = {}) {
+export function defaultManifest({ repoSeedVersion = '0.2.0' } = {}) {
   return {
     version: MANIFEST_VERSION,
     repoSeedVersion,
@@ -63,6 +65,7 @@ export function seededFiles() {
     ['docs/decisions/0000-use-markdown-architectural-decision-records.md', SEEDED_CATEGORY.docs],
     ['docs/decisions/0001-repo-seed-is-a-skill-not-a-template.md', SEEDED_CATEGORY.docs],
     ['docs/decisions/0002-self-governing-repository-design.md', SEEDED_CATEGORY.docs],
+    ['docs/decisions/0003-repo-review-instantiated-per-project.md', SEEDED_CATEGORY.docs],
     ['docs/postmortems/README.md', SEEDED_CATEGORY.docs],
     ['.agents/skills/repo-review/SKILL.md', SEEDED_CATEGORY.skill],
     ['.agents/skills/repo-decisions/SKILL.md', SEEDED_CATEGORY.skill],
@@ -213,7 +216,7 @@ async function fileSha256(abs) {
 }
 
 // Plan a seed/update run. Returns { actions, manifest }.
-export async function planRun({ targetDir, templatesRoot, manifest, values, noInterview }) {
+export async function planRun({ targetDir, templatesRoot, manifest, values, noInterview, userOwned = [] }) {
   const actions = [];
   const files = seededFiles();
   const existing = new Map();
@@ -270,6 +273,23 @@ export async function planRun({ targetDir, templatesRoot, manifest, values, noIn
         continue;
       }
     }
+    // User-owned (instantiated at seed time, e.g. the project's repo-review):
+    // the template is structure-only guidance; the on-disk content is the
+    // policy the user owns. Never refresh it from the template, and mark the
+    // manifest entry so verify-manifest checks existence only.
+    if (userOwned.includes(rel)) {
+      actions.push({
+        rel,
+        action: 'skip',
+        category,
+        content,
+        hash,
+        currentHash,
+        reason: 'user-owned: instantiated at seed time; never refreshed from the template',
+        userOwned: true,
+      });
+      continue;
+    }
     // Content differs from what we would write.
     const recorded = manifest?.files?.find((f) => f.path === rel);
     if (!recorded) {
@@ -322,15 +342,16 @@ export async function applyPlan({ targetDir, actions, manifest, dryRun }) {
         if (entry) {
           entry.sha256 = a.hash;
           entry.category = a.category;
+          delete entry.userModified; // instantiated content was replaced; clear the marker
         } else {
           manifest.files.push({ path: a.rel, sha256: a.hash, category: a.category });
         }
       }
     } else if (a.action === 'skip' || a.action === 'conflict') {
       skipped.push({ rel: a.rel, reason: a.reason ?? a.action });
-      if (!dryRun && a.userModified) {
+      if (!dryRun && (a.userModified || a.userOwned)) {
         const entry = manifest.files.find((f) => f.path === a.rel);
-        if (entry) entry.userModified = true;
+        if (entry) entry.userModified = true; // ownership marker; verify-manifest checks existence only
       }
     }
   }
@@ -340,7 +361,7 @@ export async function applyPlan({ targetDir, actions, manifest, dryRun }) {
 // Record-only: recompute hashes of existing seeded files and rewrite the
 // manifest without touching any file. Used after the model refines generated
 // content so the manifest matches the shipped state.
-export async function recordOnly({ targetDir, manifest }) {
+export async function recordOnly({ targetDir, manifest, userOwned = [] }) {
   const files = seededFiles();
   const out = [];
   for (const [rel, category] of files) {
@@ -349,7 +370,10 @@ export async function recordOnly({ targetDir, manifest }) {
       const st = await stat(abs);
       if (!st.isFile()) continue;
       const hash = await fileSha256(abs);
-      out.push({ path: rel, sha256: hash, category });
+      const prev = manifest?.files?.find((f) => f.path === rel);
+      const entry = { path: rel, sha256: hash, category };
+      if (userOwned.includes(rel) || prev?.userModified) entry.userModified = true; // user-owned content: hash is informational
+      out.push(entry);
     } catch {
       // file absent: leave it out of the manifest
     }
@@ -368,6 +392,10 @@ function parseValues(flags) {
     if (eq > 0) values[item.slice(0, eq)] = item.slice(eq + 1);
   }
   return values;
+}
+function parseListFlag(value) {
+  if (value === undefined) return [];
+  return Array.isArray(value) ? value : [value];
 }
 
 // Parse flags supporting both `--key value` and `--key=value` forms.
@@ -410,7 +438,7 @@ async function main() {
   const args = process.argv.slice(2);
   const targetDir = args[0];
   if (!targetDir) {
-    console.error('usage: scaffold.mjs <target-dir> [--templates <dir>] [--dry-run] [--no-interview] [--record-only] [--values k=v] [--repo-seed-version <v>]');
+    console.error('usage: scaffold.mjs <target-dir> [--templates <dir>] [--dry-run] [--no-interview] [--record-only] [--values k=v] [--user-owned <path>] [--repo-seed-version <v>]');
     process.exit(2);
   }
   const flags = parseFlags(args);
@@ -418,7 +446,8 @@ async function main() {
   const dryRun = flags.has('dry-run');
   const noInterview = flags.has('no-interview');
   const record = flags.has('record-only');
-  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.1.0';
+  const userOwned = parseListFlag(flags.get('user-owned'));
+  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.2.0';
 
   let manifest = defaultManifest({ repoSeedVersion });
   try {
@@ -429,7 +458,8 @@ async function main() {
   }
 
   if (record) {
-    const updated = await recordOnly({ targetDir, manifest });
+    const updated = await recordOnly({ targetDir, manifest, userOwned });
+    if (flags.has('repo-seed-version')) updated.repoSeedVersion = repoSeedVersion;
     if (!dryRun) {
       await mkdir(path.join(targetDir, '.repo-seed'), { recursive: true });
       await writeFile(path.join(targetDir, '.repo-seed', 'manifest.json'), JSON.stringify(updated, null, 2) + '\n', 'utf8');
@@ -445,6 +475,7 @@ async function main() {
     manifest,
     values,
     noInterview,
+    userOwned,
   });
   const { written, skipped } = await applyPlan({ targetDir, actions, manifest: m, dryRun });
 
