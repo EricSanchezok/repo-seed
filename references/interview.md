@@ -50,3 +50,9 @@ The generator asks the minimum necessary questions before scaffolding. Every que
 - **Prompt**: "Optional extensions (default: none — core only): 1) CI workflow (GitHub Actions running the gates + tests) 2) Release policy (conventional commits + commit-msg hook + CHANGELOG division) 3) Community health files (SECURITY.md + CODE_OF_CONDUCT, recommended for public repos) 4) CODEOWNERS per-path owners 5) Spec contract layer (docs/specs/ lifecycle) 6) AI disclosure policy (Assisted-by trailer). Which do you want? (multi-select; skip = core only)"
 - **Default**: none — only the core 27-file seed ships; extension files are added only when explicitly chosen.
 - **Use**: pass the chosen pack ids to the scaffold `--extensions` flag; the model fills the AGENTS.md extension section with each pack's link line.
+
+### Q10. CODEOWNERS owner handle
+- **Ask when**: the user selected the `codeowners` extension pack in Q9.
+- **Prompt**: "Which GitHub handle or team should own the seeded paths (docs/, scripts/, .agents/, .github/)? For example `@alice` or `@acme/platform`. If you do not provide one, the placeholder `@TODO-OWNER` is generated and you must replace it before enabling branch protection."
+- **Default**: none — the scaffold generates `@TODO-OWNER`; the model tells the user to replace it.
+- **Use**: pass the handle to the scaffold as `--values CODEOWNER_HANDLE=<handle>`; without it the scaffold falls back to `TODO-OWNER`.

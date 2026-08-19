@@ -284,6 +284,18 @@ export function instantiate(content, values = {}) {
   return out;
 }
 
+// Deterministic default fill-in values. Keeps a token-less run functional:
+// the AGENTS.md extension section defaults to empty (no residue), and
+// CODEOWNER_HANDLE defaults to TODO-OWNER so ext-codeowners always ships a
+// valid CODEOWNERS (the model asks the user for the real handle; see
+// references/interview.md Q9-Q10).
+export function baseValues() {
+  return {
+    AGENTS_EXTENSION_SECTION: '',
+    CODEOWNER_HANDLE: 'TODO-OWNER',
+  };
+}
+
 async function fileSha256(abs) {
   const buf = await readFile(abs);
   return sha256(buf.toString('utf8'));
@@ -595,10 +607,12 @@ async function main() {
     return;
   }
 
-  // The AGENTS.md extension section defaults to empty so a core-only run never
-  // leaves a placeholder; the model fills it via --values when extensions are
-  // enabled.
-  const values = { AGENTS_EXTENSION_SECTION: '', ...parseValues(flags) };
+  // Defaults keep a token-less run deterministic: the AGENTS.md extension
+  // section defaults to empty (no residue), and CODEOWNER_HANDLE defaults to
+  // the TODO-OWNER placeholder so ext-codeowners always ships a valid
+  // CODEOWNERS (the model asks the user for the real handle; see
+  // references/interview.md Q9).
+  const values = { ...baseValues(), ...parseValues(flags) };
   const { actions, manifest: m } = await planRun({
     targetDir,
     templatesRoot,

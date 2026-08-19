@@ -1,8 +1,10 @@
 # Path-level owners
 
 # Each line maps a path to the GitHub user/team that must review changes to it.
-# Replace __CODEOWNER_HANDLE__ with the actual owner handle (e.g. @alice) or a
-# team (e.g. @acme/platform). Branch protection should require owner review.
+# The owner handle is filled from the interview (Q9): ask the user for their
+# GitHub handle or team before seeding. If no handle was provided, the
+# TODO-OWNER fallback ships instead — replace it before enabling branch
+# protection that requires owner review.
 
 *                       @__CODEOWNER_HANDLE__
 /docs/                  @__CODEOWNER_HANDLE__

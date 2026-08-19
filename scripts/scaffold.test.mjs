@@ -15,6 +15,7 @@ import {
   defaultManifest,
   extensionPacks,
   resolveExtensions,
+  baseValues,
 } from './scaffold.mjs';
 import { installHook, hookScript, HOOK_NAME } from './install-hooks.mjs';
 import { verifyManifest } from './verify-manifest.mjs';
@@ -514,6 +515,88 @@ test('recordOnly preserves extension and userModified markers', async () => {
     await rm(path.join(target, 'docs', 'architecture.md'));
     const after = await recordOnly({ targetDir: target, manifest: updated });
     assert.ok(!after.files.some((f) => f.path === 'docs/architecture.md'));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+// --- Review fixes (ext-codeowners TODO-OWNER fallback + user-modified regression) ---
+
+test('ext-codeowners without a handle ships @TODO-OWNER placeholder', async () => {
+  const target = await tmpdir();
+  try {
+    // No CODEOWNER_HANDLE value passed: scaffold default 'TODO-OWNER' applies.
+    const manifest = defaultManifest();
+    const { actions } = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: baseValues(),
+      dryRun: false,
+      noInterview: true,
+      extensions: ['codeowners'],
+    });
+    const co = actions.find((a) => a.rel === 'CODEOWNERS');
+    assert.equal(co.action, 'create');
+    assert.ok(co.content.includes('@TODO-OWNER'), 'CODEOWNERS must fall back to @TODO-OWNER');
+    assert.ok(!co.content.includes('__CODEOWNER_HANDLE__'), 'no raw token may remain');
+    // And with an explicit handle the placeholder is replaced.
+    const { actions: actions2 } = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: { ...baseValues(), CODEOWNER_HANDLE: 'alice' },
+      dryRun: false,
+      noInterview: true,
+      extensions: ['codeowners'],
+    });
+    const co2 = actions2.find((a) => a.rel === 'CODEOWNERS');
+    assert.ok(co2.content.includes('@alice'));
+    assert.ok(!co2.content.includes('@TODO-OWNER'));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+test('user-modified seeded file is never refreshed even when disk hash matches manifest', async () => {
+  const target = await tmpdir();
+  try {
+    // Seed core files, then mark AGENTS.md userModified in the manifest with
+    // its current (matching) hash — the recorded-hash-equals-disk case.
+    const manifest = defaultManifest();
+    const first = await planRun({
+      targetDir: target,
+      templatesRoot: null,
+      manifest,
+      values: {},
+      dryRun: false,
+      noInterview: true,
+    });
+    await applyPlan({ targetDir: target, actions: first.actions, manifest, dryRun: false });
+    const agentsEntry = manifest.files.find((f) => f.path === 'AGENTS.md');
+    agentsEntry.userModified = true; // user took it over; hash stays the same on disk
+
+    // Template now differs from the seeded content (simulate upstream change).
+    const templates = await tmpdir();
+    try {
+      await writeFile(path.join(templates, 'AGENTS.md.tpl'), '# New upstream AGENTS\n', 'utf8');
+      const second = await planRun({
+        targetDir: target,
+        templatesRoot: templates,
+        manifest,
+        values: {},
+        dryRun: false,
+        noInterview: true,
+      });
+      const agentsAction = second.actions.find((a) => a.rel === 'AGENTS.md');
+      assert.equal(agentsAction.action, 'skip', 'user-modified file must skip, not update');
+      assert.ok(agentsAction.reason.includes('user-modified'));
+      // On-disk content untouched
+      const onDisk = await readFile(path.join(target, 'AGENTS.md'), 'utf8');
+      assert.ok(!onDisk.includes('New upstream'));
+    } finally {
+      await rm(templates, { recursive: true, force: true });
+    }
   } finally {
     await rm(target, { recursive: true, force: true });
   }

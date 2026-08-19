@@ -121,6 +121,8 @@ Enable packs with the `--extensions` flag (comma/space-separated), e.g. `--exten
 
 **Add and remove semantics**: extensions can be added anytime by re-running with new `--extensions`. Previously-seeded extension files are never auto-deleted when a pack is later omitted — re-running without a pack preserves its files and manifest entries; removing a pack's files is an explicit user action.
 
+**CODEOWNERS handle**: when the `codeowners` pack is enabled, ask the user for the GitHub handle or team to own the seeded paths (see interview Q10). Never invent a handle. If the user provides none, the scaffold generates `@TODO-OWNER` (the `CODEOWNER_HANDLE` default) and you must tell the user to replace it before enabling branch protection that requires owner review.
+
 ## Authoring rules
 
 These rules govern repo-seed's own instruction files (SKILL.md, templates, in-repo skill templates) and keep the skill portable across agent tools:
