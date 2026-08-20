@@ -2,11 +2,11 @@
 name: repo-seed
 description: "Seed an agent-native, self-governing repository — initialize a new repo or upgrade an existing one with AGENTS.md, CLAUDE.md, documentation standards, a MADR decision log, in-repo skills, deterministic gates, and a pre-commit hook. Use when the user asks to initialize a repository, make a repo agent-native, set up docs and ADR for vibe coding, prepare a project for AI development, or refresh an existing seed. Keywords: initialize repo, seed repository, agent-native, vibe coding, AGENTS.md, ADR, decision log, governance, scaffold docs."
 license: MIT
-version: 0.3.0
 compatibility: Node >= 18; works in any repository regardless of language or framework
 metadata:
   generator: true
   category: scaffolding
+  version: 0.3.0
 allowed-tools: Read Write Edit Bash
 ---
 
