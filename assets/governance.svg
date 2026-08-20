@@ -1,75 +1,76 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
-  <defs>
-    <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0b1220"/>
-      <stop offset="1" stop-color="#0f1a2e"/>
-    </linearGradient>
-    <linearGradient id="l0g" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#132a44"/><stop offset="1" stop-color="#16324f"/>
-    </linearGradient>
-    <linearGradient id="l1g" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#1e2a44"/><stop offset="1" stop-color="#243356"/>
-    </linearGradient>
-    <linearGradient id="l2g" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#242144"/><stop offset="1" stop-color="#2c2557"/>
-    </linearGradient>
-    <linearGradient id="l3g" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#1c2c44"/><stop offset="1" stop-color="#21395c"/>
-    </linearGradient>
-    <linearGradient id="l4g" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#2a2a3f"/><stop offset="1" stop-color="#33334d"/>
-    </linearGradient>
-    <linearGradient id="upg" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#38bdf8"/>
-    </linearGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+  <title id="title">Five layers of repository governance and an upgrade channel</title>
+  <desc id="desc">Resident instructions, deterministic gates, a decision log, in-repo skills, and process memory connect to a safe re-run upgrade channel.</desc>
+  <style>
+    text { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2.4px; }
+    .title { font-size: 38px; font-weight: 750; letter-spacing: -1.2px; }
+    .layer { font-size: 15px; font-weight: 750; letter-spacing: 1.2px; }
+    .name { font-size: 21px; font-weight: 700; }
+    .copy { font-size: 16px; }
+    .path { font-size: 14px; font-weight: 650; }
+  </style>
 
-  <rect width="1200" height="560" fill="url(#bg2)"/>
+  <rect width="1200" height="660" fill="#070d0f"/>
+  <path d="M0 0H1200V8H0Z" fill="#9bd86b"/>
 
-  <text x="600" y="54" font-size="32" font-weight="800" fill="#f8fafc" text-anchor="middle" letter-spacing="-0.5">A seed that keeps governing</text>
-  <text x="600" y="84" font-size="18" fill="#94a3b8" text-anchor="middle">five layers + an upgrade channel — mechanical, not aspirational</text>
+  <text x="64" y="66" class="eyebrow" fill="#9bd86b">SYSTEM MAP / 05 LAYERS</text>
+  <text x="64" y="112" class="title" fill="#f4f6ec">Governance that lives with the code.</text>
+  <text x="1136" y="88" text-anchor="end" class="copy" fill="#7f8d86">mechanical, discoverable, durable</text>
 
-  <!-- L0 -->
-  <rect x="80" y="112" width="1040" height="70" rx="14" fill="url(#l0g)" stroke="#2d5a8a" stroke-width="1.5"/>
-  <rect x="104" y="126" width="86" height="42" rx="10" fill="#16324f"/>
-  <text x="147" y="153" font-size="20" font-weight="800" fill="#38bdf8" text-anchor="middle">L0</text>
-  <text x="214" y="143" font-size="19" font-weight="700" fill="#e2e8f0">Resident instructions</text>
-  <text x="214" y="166" font-size="15.5" fill="#94a3b8">AGENTS.md (≤ 100 lines) + CLAUDE.md via @AGENTS.md import — the standing orders every session sees</text>
-  <text x="1066" y="154" font-size="16" fill="#64748b" text-anchor="end" font-family="monospace">AGENTS.md</text>
+  <line x1="117" y1="172" x2="117" y2="512" stroke="#33423d" stroke-width="2"/>
 
-  <!-- L1 -->
-  <rect x="80" y="196" width="1040" height="70" rx="14" fill="url(#l1g)" stroke="#3b5b8a" stroke-width="1.5"/>
-  <rect x="104" y="210" width="86" height="42" rx="10" fill="#243356"/>
-  <text x="147" y="237" font-size="20" font-weight="800" fill="#34d399" text-anchor="middle">L1</text>
-  <text x="214" y="227" font-size="19" font-weight="700" fill="#e2e8f0">Deterministic gates</text>
-  <text x="214" y="250" font-size="15.5" fill="#94a3b8">verify-decisions · verify-doc-links · verify-placeholders · verify-manifest · whitespace, enforced by a pre-commit hook</text>
-  <text x="1066" y="238" font-size="16" fill="#64748b" text-anchor="end" font-family="monospace">hooks/</text>
+  <g>
+    <line x1="64" y1="152" x2="1136" y2="152" stroke="#26332f"/>
+    <circle cx="117" cy="187" r="8" fill="#9bd86b"/>
+    <text x="64" y="192" class="layer mono" fill="#9bd86b">L0</text>
+    <text x="164" y="187" class="name" fill="#f4f6ec">Resident instructions</text>
+    <text x="472" y="187" class="copy" fill="#9aa69f">Standing orders every agent session can discover.</text>
+    <text x="1136" y="187" text-anchor="end" class="path mono" fill="#62c7d8">AGENTS.md</text>
+  </g>
 
-  <!-- L2 -->
-  <rect x="80" y="280" width="1040" height="70" rx="14" fill="url(#l2g)" stroke="#5b4a9a" stroke-width="1.5"/>
-  <rect x="104" y="294" width="86" height="42" rx="10" fill="#2c2557"/>
-  <text x="147" y="321" font-size="20" font-weight="800" fill="#a78bfa" text-anchor="middle">L2</text>
-  <text x="214" y="311" font-size="19" font-weight="700" fill="#e2e8f0">Unified decision log</text>
-  <text x="214" y="334" font-size="15.5" fill="#94a3b8">MADR records + Class extension — Proposed → Accepted → Superseded by NNNN; never rewritten</text>
-  <text x="1066" y="322" font-size="16" fill="#64748b" text-anchor="end" font-family="monospace">docs/decisions/</text>
+  <g>
+    <line x1="64" y1="222" x2="1136" y2="222" stroke="#26332f"/>
+    <circle cx="117" cy="257" r="8" fill="#62c7d8"/>
+    <text x="64" y="262" class="layer mono" fill="#62c7d8">L1</text>
+    <text x="164" y="257" class="name" fill="#f4f6ec">Deterministic gates</text>
+    <text x="472" y="257" class="copy" fill="#9aa69f">Decisions, links, placeholders &amp; manifest verified before commit.</text>
+    <text x="1136" y="257" text-anchor="end" class="path mono" fill="#62c7d8">scripts/verify-*</text>
+  </g>
 
-  <!-- L3 -->
-  <rect x="80" y="364" width="1040" height="70" rx="14" fill="url(#l3g)" stroke="#2d6a8a" stroke-width="1.5"/>
-  <rect x="104" y="378" width="86" height="42" rx="10" fill="#21395c"/>
-  <text x="147" y="405" font-size="20" font-weight="800" fill="#38bdf8" text-anchor="middle">L3</text>
-  <text x="214" y="395" font-size="19" font-weight="700" fill="#e2e8f0">In-repo skills</text>
-  <text x="214" y="418" font-size="15.5" fill="#94a3b8">repo-review (instantiated per project) · repo-decisions — procedures live where agents find them</text>
-  <text x="1066" y="406" font-size="16" fill="#64748b" text-anchor="end" font-family="monospace">.agents/skills/</text>
+  <g>
+    <line x1="64" y1="292" x2="1136" y2="292" stroke="#26332f"/>
+    <circle cx="117" cy="327" r="8" fill="#e9e4d5"/>
+    <text x="64" y="332" class="layer mono" fill="#e9e4d5">L2</text>
+    <text x="164" y="327" class="name" fill="#f4f6ec">Unified decision log</text>
+    <text x="472" y="327" class="copy" fill="#9aa69f">MADR records preserve rationale and explicit succession.</text>
+    <text x="1136" y="327" text-anchor="end" class="path mono" fill="#62c7d8">docs/decisions/</text>
+  </g>
 
-  <!-- L4 -->
-  <rect x="80" y="448" width="1040" height="70" rx="14" fill="url(#l4g)" stroke="#5b5b8a" stroke-width="1.5"/>
-  <rect x="104" y="462" width="86" height="42" rx="10" fill="#33334d"/>
-  <text x="147" y="489" font-size="20" font-weight="800" fill="#f472b6" text-anchor="middle">L4</text>
-  <text x="214" y="479" font-size="19" font-weight="700" fill="#e2e8f0">Process memory</text>
-  <text x="214" y="502" font-size="15.5" fill="#94a3b8">testing policy · postmortems · PR template — lessons outlive the session that learned them</text>
-  <text x="1066" y="490" font-size="16" fill="#64748b" text-anchor="end" font-family="monospace">docs/</text>
+  <g>
+    <line x1="64" y1="362" x2="1136" y2="362" stroke="#26332f"/>
+    <circle cx="117" cy="397" r="8" fill="#9bd86b"/>
+    <text x="64" y="402" class="layer mono" fill="#9bd86b">L3</text>
+    <text x="164" y="397" class="name" fill="#f4f6ec">In-repo skills</text>
+    <text x="472" y="397" class="copy" fill="#9aa69f">Review and decision procedures live beside the code.</text>
+    <text x="1136" y="397" text-anchor="end" class="path mono" fill="#62c7d8">.agents/skills/</text>
+  </g>
 
-  <!-- upgrade channel bar -->
-  <rect x="300" y="530" width="600" height="18" rx="9" fill="url(#upg)"/>
-  <text x="600" y="556" font-size="14" fill="#64748b" text-anchor="middle" font-weight="600" letter-spacing="1">UPGRADE CHANNEL — re-run repo-seed; your edits always survive</text>
+  <g>
+    <line x1="64" y1="432" x2="1136" y2="432" stroke="#26332f"/>
+    <circle cx="117" cy="467" r="8" fill="#62c7d8"/>
+    <text x="64" y="472" class="layer mono" fill="#62c7d8">L4</text>
+    <text x="164" y="467" class="name" fill="#f4f6ec">Process memory</text>
+    <text x="472" y="467" class="copy" fill="#9aa69f">Tests, postmortems &amp; PR policy outlive the session.</text>
+    <text x="1136" y="467" text-anchor="end" class="path mono" fill="#62c7d8">docs/</text>
+    <line x1="64" y1="502" x2="1136" y2="502" stroke="#26332f"/>
+  </g>
+
+  <path d="M117 512V565H164" fill="none" stroke="#9bd86b" stroke-width="2"/>
+  <rect x="164" y="540" width="972" height="74" rx="4" fill="#101a18" stroke="#33423d"/>
+  <rect x="164" y="540" width="8" height="74" fill="#9bd86b"/>
+  <text x="198" y="570" class="eyebrow" fill="#9bd86b">UPGRADE CHANNEL</text>
+  <text x="198" y="596" class="copy" fill="#d9ded5">Re-run repo-seed  ·  untouched files refresh  ·  user edits survive</text>
+  <text x="1106" y="584" text-anchor="end" class="path mono" fill="#62c7d8">.repo-seed/manifest.json</text>
 </svg>

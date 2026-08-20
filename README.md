@@ -1,6 +1,8 @@
 <div align="center">
 
-![repo-seed](assets/hero.svg)
+![A seed becoming an ordered, self-governing repository system](assets/hero.webp)
+
+<h1>repo-seed</h1>
 
 **Make any repository agent-native — docs, decisions, gates & hooks, seeded in one pass.**
 
@@ -96,7 +98,7 @@ repo-seed/
 ├── references/               templates/ · interview.md · decision-standard.md
 │                             doc-standard.md · review-standard.md · update-strategy.md
 ├── scripts/                  scaffold.mjs · 4 verifiers · verify-commit-msg · install-hooks · tests
-├── assets/                   hero.svg · governance.svg · workflow.svg
+├── assets/                   hero.webp · governance.svg · workflow.svg
 ├── AGENTS.md  CLAUDE.md      this repo's own resident instructions (dogfood)
 ├── docs/                     decisions/ · specs/ · postmortems/ · policies
 └── .agents/skills/           repo-review · repo-decisions (dogfood copies)

@@ -1,81 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
-  <defs>
-    <linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0b1220"/>
-      <stop offset="1" stop-color="#0f1a2e"/>
-    </linearGradient>
-    <linearGradient id="stepg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#16324f"/>
-      <stop offset="1" stop-color="#101f33"/>
-    </linearGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470" role="img" aria-labelledby="title desc">
+  <title id="title">The five-step repo-seed workflow</title>
+  <desc id="desc">Analyze, interview, scaffold, instantiate, and verify, with a safe re-run loop for future upgrades.</desc>
+  <style>
+    text { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 2.4px; }
+    .title { font-size: 38px; font-weight: 750; letter-spacing: -1.2px; }
+    .number { font-size: 17px; font-weight: 750; }
+    .name { font-size: 23px; font-weight: 700; }
+    .copy { font-size: 15px; }
+  </style>
 
-  <rect width="1200" height="300" fill="url(#bg3)"/>
-  <text x="600" y="52" font-size="30" font-weight="800" fill="#f8fafc" text-anchor="middle" letter-spacing="-0.5">Seed a repo in five steps</text>
+  <rect width="1200" height="470" fill="#070d0f"/>
+  <path d="M0 0H1200V8H0Z" fill="#62c7d8"/>
 
-  <!-- step 1 -->
+  <text x="64" y="66" class="eyebrow" fill="#62c7d8">CONTROLLED SEQUENCE / 05 MOVES</text>
+  <text x="64" y="112" class="title" fill="#f4f6ec">One seed. Five controlled moves.</text>
+  <text x="1136" y="88" text-anchor="end" class="copy" fill="#7f8d86">detect first · write second · verify last</text>
+
+  <line x1="110" y1="175" x2="1090" y2="175" stroke="#33423d" stroke-width="2"/>
+
   <g>
-    <rect x="52" y="86" width="196" height="150" rx="16" fill="url(#stepg)" stroke="#2d5a8a" stroke-width="1.5"/>
-    <circle cx="150" cy="124" r="24" fill="#132a44" stroke="#38bdf8" stroke-width="2"/>
-    <text x="150" y="131" font-size="22" font-weight="800" fill="#38bdf8" text-anchor="middle">1</text>
-    <text x="150" y="180" font-size="19" font-weight="700" fill="#e2e8f0" text-anchor="middle">Analyze</text>
-    <text x="150" y="204" font-size="14" fill="#94a3b8" text-anchor="middle">stack · conflicts · git state</text>
-    <text x="150" y="222" font-size="13.5" fill="#64748b" text-anchor="middle">read-only · never touches .env</text>
+    <circle cx="110" cy="175" r="22" fill="#101a18" stroke="#62c7d8" stroke-width="2"/>
+    <text x="110" y="181" text-anchor="middle" class="number mono" fill="#62c7d8">01</text>
+    <text x="64" y="230" class="name" fill="#f4f6ec">Analyze</text>
+    <text x="64" y="262" class="copy" fill="#9aa69f">stack · conflicts</text>
+    <text x="64" y="286" class="copy" fill="#9aa69f">git state</text>
+    <line x1="64" y1="316" x2="236" y2="316" stroke="#26332f"/>
+    <text x="64" y="343" class="copy mono" fill="#687770">read-only / no .env</text>
   </g>
 
-  <path d="M258 161 L 302 161" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arr3)"/>
-
-  <!-- step 2 -->
   <g>
-    <rect x="312" y="86" width="196" height="150" rx="16" fill="url(#stepg)" stroke="#2d5a8a" stroke-width="1.5"/>
-    <circle cx="410" cy="124" r="24" fill="#132a44" stroke="#a78bfa" stroke-width="2"/>
-    <text x="410" y="131" font-size="22" font-weight="800" fill="#a78bfa" text-anchor="middle">2</text>
-    <text x="410" y="180" font-size="19" font-weight="700" fill="#e2e8f0" text-anchor="middle">Interview</text>
-    <text x="410" y="204" font-size="14" fill="#94a3b8" text-anchor="middle">license · commands · review lines</text>
-    <text x="410" y="222" font-size="13.5" fill="#64748b" text-anchor="middle">every question has a default</text>
+    <circle cx="355" cy="175" r="22" fill="#101a18" stroke="#9bd86b" stroke-width="2"/>
+    <text x="355" y="181" text-anchor="middle" class="number mono" fill="#9bd86b">02</text>
+    <text x="309" y="230" class="name" fill="#f4f6ec">Interview</text>
+    <text x="309" y="262" class="copy" fill="#9aa69f">license · commands</text>
+    <text x="309" y="286" class="copy" fill="#9aa69f">review red lines</text>
+    <line x1="309" y1="316" x2="481" y2="316" stroke="#26332f"/>
+    <text x="309" y="343" class="copy mono" fill="#687770">defaults included</text>
   </g>
 
-  <path d="M518 161 L 562 161" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arr3)"/>
-
-  <!-- step 3 -->
   <g>
-    <rect x="572" y="86" width="196" height="150" rx="16" fill="url(#stepg)" stroke="#34d399" stroke-width="2"/>
-    <circle cx="670" cy="124" r="24" fill="#132a44" stroke="#34d399" stroke-width="2"/>
-    <text x="670" y="131" font-size="22" font-weight="800" fill="#34d399" text-anchor="middle">3</text>
-    <text x="670" y="180" font-size="19" font-weight="700" fill="#e2e8f0" text-anchor="middle">Scaffold</text>
-    <text x="670" y="204" font-size="14" fill="#94a3b8" text-anchor="middle">skeleton · manifest · hooks</text>
-    <text x="670" y="222" font-size="13.5" fill="#64748b" text-anchor="middle">deterministic · zero-dependency</text>
+    <rect x="532" y="145" width="210" height="214" rx="4" fill="#101a18" stroke="#9bd86b"/>
+    <circle cx="600" cy="175" r="22" fill="#9bd86b"/>
+    <text x="600" y="181" text-anchor="middle" class="number mono" fill="#070d0f">03</text>
+    <text x="554" y="230" class="name" fill="#f4f6ec">Scaffold</text>
+    <text x="554" y="262" class="copy" fill="#b8c2bb">skeleton · manifest</text>
+    <text x="554" y="286" class="copy" fill="#b8c2bb">hooks</text>
+    <line x1="554" y1="316" x2="720" y2="316" stroke="#33423d"/>
+    <text x="554" y="343" class="copy mono" fill="#9bd86b">deterministic core</text>
   </g>
 
-  <path d="M778 161 L 822 161" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arr3)"/>
-
-  <!-- step 4 -->
   <g>
-    <rect x="832" y="86" width="196" height="150" rx="16" fill="url(#stepg)" stroke="#2d5a8a" stroke-width="1.5"/>
-    <circle cx="930" cy="124" r="24" fill="#132a44" stroke="#fbbf24" stroke-width="2"/>
-    <text x="930" y="131" font-size="22" font-weight="800" fill="#fbbf24" text-anchor="middle">4</text>
-    <text x="930" y="180" font-size="19" font-weight="700" fill="#e2e8f0" text-anchor="middle">Instantiate</text>
-    <text x="930" y="204" font-size="14" fill="#94a3b8" text-anchor="middle">model fills every token</text>
-    <text x="930" y="222" font-size="13.5" fill="#64748b" text-anchor="middle">no placeholders may ship</text>
+    <circle cx="845" cy="175" r="22" fill="#101a18" stroke="#e9e4d5" stroke-width="2"/>
+    <text x="845" y="181" text-anchor="middle" class="number mono" fill="#e9e4d5">04</text>
+    <text x="799" y="230" class="name" fill="#f4f6ec">Instantiate</text>
+    <text x="799" y="262" class="copy" fill="#9aa69f">resolve every token</text>
+    <text x="799" y="286" class="copy" fill="#9aa69f">project-specific</text>
+    <line x1="799" y1="316" x2="971" y2="316" stroke="#26332f"/>
+    <text x="799" y="343" class="copy mono" fill="#687770">no placeholders</text>
   </g>
 
-  <path d="M1038 161 L 1082 161" stroke="#334155" stroke-width="3" fill="none" marker-end="url(#arr3)"/>
-
-  <!-- step 5 -->
   <g>
-    <rect x="1092" y="86" width="180" height="150" rx="16" fill="url(#stepg)" stroke="#f472b6" stroke-width="2"/>
-    <circle cx="1182" cy="124" r="24" fill="#132a44" stroke="#f472b6" stroke-width="2"/>
-    <text x="1182" y="131" font-size="22" font-weight="800" fill="#f472b6" text-anchor="middle">5</text>
-    <text x="1182" y="180" font-size="19" font-weight="700" fill="#e2e8f0" text-anchor="middle">Verify</text>
-    <text x="1182" y="204" font-size="14" fill="#94a3b8" text-anchor="middle">gates green · hooks live</text>
-    <text x="1182" y="222" font-size="13.5" fill="#64748b" text-anchor="middle">you review, then commit</text>
+    <circle cx="1090" cy="175" r="22" fill="#101a18" stroke="#62c7d8" stroke-width="2"/>
+    <path d="M1081 175l6 6 13-14" fill="none" stroke="#62c7d8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1044" y="230" class="name" fill="#f4f6ec">Verify</text>
+    <text x="1044" y="262" class="copy" fill="#9aa69f">gates green</text>
+    <text x="1044" y="286" class="copy" fill="#9aa69f">hooks live</text>
+    <line x1="1044" y1="316" x2="1136" y2="316" stroke="#26332f"/>
+    <text x="1044" y="343" class="copy mono" fill="#687770">you commit</text>
   </g>
 
-  <defs>
-    <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0 0 L7 3 L0 6 z" fill="#475569"/>
-    </marker>
-  </defs>
-
-  <text x="600" y="280" font-size="15" fill="#64748b" text-anchor="middle">Re-run any time to upgrade: untouched files refresh, your edits survive, extension packs stay opt-in.</text>
+  <path d="M1090 376v30H110V376" fill="none" stroke="#33423d" stroke-width="2"/>
+  <path d="M110 376l-7 10h14Z" fill="#9bd86b"/>
+  <text x="600" y="413" text-anchor="middle" class="eyebrow" fill="#9bd86b">SAFE RE-RUN LOOP</text>
+  <text x="600" y="441" text-anchor="middle" class="copy" fill="#9aa69f">untouched files refresh  ·  user edits survive  ·  extension packs remain opt-in</text>
 </svg>
