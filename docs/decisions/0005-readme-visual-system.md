@@ -20,7 +20,7 @@ The README needs both an identifiable first impression and precise explanations 
 - Use generated raster art for the hero and native SVG for technical diagrams — the chosen option.
 
 ## Decision Outcome
-The README uses `assets/hero.webp` as a text-free generated illustration of a seed becoming an ordered repository system. The visible project name and tagline remain semantic Markdown. `assets/governance.svg` and `assets/workflow.svg` remain hand-authored, accessible SVGs because they contain exact product terminology and structured explanations. All three assets use a near-black ink field, warm paper tones, seed green, and restrained cyan accents. Generated source is compressed to WebP for the repository-facing asset.
+The README uses `assets/hero.webp` as a text-free generated illustration of a seed becoming an ordered repository system. The visible project name and tagline remain semantic Markdown. `assets/governance-map.svg` and `assets/seed-workflow.svg` remain hand-authored, accessible SVGs because they contain exact product terminology and structured explanations. All three assets use a near-black ink field, warm paper tones, seed green, and restrained cyan accents. Generated source is compressed to WebP for the repository-facing asset. Published replacements follow the cache-safe path contract in [0006](0006-readme-image-cache-safe-paths.md).
 
 ### Consequences
 - Good: the opening image has a recognizable visual idea instead of resembling a dashboard template.
@@ -45,3 +45,4 @@ The README uses `assets/hero.webp` as a text-free generated illustration of a se
 ## Links
 - [README](../../README.md) — consumer of the visual system.
 - [0002](0002-self-governing-repository-design.md) — the five-layer model represented by the governance diagram.
+- [0006](0006-readme-image-cache-safe-paths.md) — cache-safe paths for published image replacements.

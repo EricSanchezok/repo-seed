@@ -72,3 +72,4 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 - [0003 — repo-review is instantiated per project, not shipped statically](0003-repo-review-instantiated-per-project.md)
 - [0004 — Optional extension packs: core minimal by default, explicit opt-in](0004-optional-extensions-core-minimal.md)
 - [0005 — README visuals use generated art and native diagrams](0005-readme-visual-system.md)
+- [0006 — Published README image replacements use cache-safe paths](0006-readme-image-cache-safe-paths.md)

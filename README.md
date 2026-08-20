@@ -46,7 +46,7 @@ node repo-seed/scripts/scaffold.mjs <target-dir> \
 
 ## What you get: five layers + an upgrade channel
 
-![governance](assets/governance.svg)
+![Five layers of repository governance connected to a safe upgrade channel](assets/governance-map.svg)
 
 | Layer | What it does |
 |---|---|
@@ -59,7 +59,7 @@ node repo-seed/scripts/scaffold.mjs <target-dir> \
 
 ## How it works
 
-![workflow](assets/workflow.svg)
+![The five controlled moves in the repo-seed workflow](assets/seed-workflow.svg)
 
 1. **Analyze** — detect stack, existing files at seeded paths, git state (read-only; never reads `.env`).
 2. **Interview** — ask only what detection can't answer: license, commands, review red lines, extension packs. Every question has a default.
@@ -98,7 +98,7 @@ repo-seed/
 ├── references/               templates/ · interview.md · decision-standard.md
 │                             doc-standard.md · review-standard.md · update-strategy.md
 ├── scripts/                  scaffold.mjs · 4 verifiers · verify-commit-msg · install-hooks · tests
-├── assets/                   hero.webp · governance.svg · workflow.svg
+├── assets/                   hero.webp · governance-map.svg · seed-workflow.svg
 ├── AGENTS.md  CLAUDE.md      this repo's own resident instructions (dogfood)
 ├── docs/                     decisions/ · specs/ · postmortems/ · policies
 └── .agents/skills/           repo-review · repo-decisions (dogfood copies)

@@ -19,3 +19,7 @@ Every postmortem opens with an **Executive summary**: one short paragraph a busy
 5. `## Guardrails`
 
 Name files `NNNN-short-title.md` (sequential number). Link the guardrails (tests, AGENTS.md rules, decision records) the postmortem motivated.
+
+## Index
+
+- [0000 — Stale README SVG cache](0000-stale-readme-svg-cache.md)

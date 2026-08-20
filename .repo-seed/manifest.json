@@ -40,7 +40,7 @@
     },
     {
       "path": "docs/decisions/README.md",
-      "sha256": "a53d7b0f290f1b18ebf2ec2bb60a74d786ec782771938d7bc7d255c513d1b257",
+      "sha256": "f062380350d3c9261fff9a9a2bbf7cf95977b108ae3391938f214cbaacf5dda6",
       "category": "docs"
     },
     {
@@ -65,7 +65,7 @@
     },
     {
       "path": "docs/postmortems/README.md",
-      "sha256": "489a81b6e975df149499c2463e723407d171c01d508561c3f259b10e3b1f7716",
+      "sha256": "32ec6957d58154566799515820d32e4f7ab99dbef9adb97d206388a3e955ae23",
       "category": "docs"
     },
     {
