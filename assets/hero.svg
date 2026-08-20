@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="0.55" stop-color="#0f1a2e"/>
+      <stop offset="1" stop-color="#12202e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="0.5" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="tree" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4ade80"/>
+      <stop offset="1" stop-color="#16a34a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="420" fill="url(#bg)"/>
+  <circle cx="980" cy="150" r="260" fill="url(#glow)"/>
+
+  <!-- dotted grid hint -->
+  <g stroke="#1e3a5f" stroke-width="1.5" opacity="0.5">
+    <line x1="640" y1="300" x2="1140" y2="300"/><line x1="700" y1="240" x2="700" y2="360"/>
+    <line x1="780" y1="220" x2="780" y2="380"/><line x1="860" y1="200" x2="860" y2="400"/>
+    <line x1="940" y1="180" x2="940" y2="400"/><line x1="1020" y1="180" x2="1020" y2="400"/>
+    <line x1="1100" y1="200" x2="1100" y2="380"/>
+  </g>
+  <g fill="#16324f">
+    <rect x="682" y="282" width="8" height="8" rx="2"/><rect x="762" y="262" width="8" height="8" rx="2"/>
+    <rect x="842" y="242" width="8" height="8" rx="2"/><rect x="922" y="222" width="8" height="8" rx="2"/>
+    <rect x="1002" y="222" width="8" height="8" rx="2"/><rect x="1082" y="242" width="8" height="8" rx="2"/>
+  </g>
+
+  <!-- badge -->
+  <rect x="60" y="52" width="238" height="36" rx="18" fill="none" stroke="#34d399" stroke-opacity="0.55" stroke-width="1.5"/>
+  <circle cx="82" cy="70" r="4" fill="#34d399"/>
+  <text x="98" y="76" font-size="17" fill="#6ee7b7" font-weight="600" letter-spacing="0.5">AI-NATIVE REPO GENERATOR</text>
+
+  <!-- title -->
+  <text x="58" y="160" font-size="78" font-weight="800" fill="#f8fafc" letter-spacing="-1.5">repo-seed</text>
+  <rect x="62" y="178" width="212" height="6" rx="3" fill="url(#accent)"/>
+
+  <!-- subtitle -->
+  <text x="60" y="228" font-size="24" fill="#cbd5e1" font-weight="500">Make any repository agent-native —</text>
+  <text x="60" y="260" font-size="24" fill="#94a3b8">docs, decisions, gates &amp; hooks, seeded in one pass.</text>
+
+  <!-- chips -->
+  <g font-size="15" font-weight="600">
+    <rect x="60" y="292" width="150" height="34" rx="17" fill="#132a44" stroke="#2d5a8a" stroke-width="1"/>
+    <text x="135" y="314" fill="#93c5fd" text-anchor="middle">AGENTS.md</text>
+    <rect x="224" y="292" width="158" height="34" rx="17" fill="#132a44" stroke="#2d5a8a" stroke-width="1"/>
+    <text x="303" y="314" fill="#93c5fd" text-anchor="middle">MADR decisions</text>
+    <rect x="396" y="292" width="168" height="34" rx="17" fill="#132a44" stroke="#2d5a8a" stroke-width="1"/>
+    <text x="480" y="314" fill="#93c5fd" text-anchor="middle">zero-dep gates</text>
+    <rect x="60" y="340" width="170" height="34" rx="17" fill="#132a44" stroke="#2d5a8a" stroke-width="1"/>
+    <text x="145" y="362" fill="#93c5fd" text-anchor="middle">pre-commit hooks</text>
+    <rect x="244" y="340" width="176" height="34" rx="17" fill="#132a44" stroke="#2d5a8a" stroke-width="1"/>
+    <text x="332" y="362" fill="#93c5fd" text-anchor="middle">6 optional packs</text>
+  </g>
+
+  <!-- ground -->
+  <path d="M640 372 Q 900 358 1160 372" stroke="#1e3a5f" stroke-width="2" fill="none"/>
+
+  <!-- seed -->
+  <g>
+    <ellipse cx="720" cy="340" rx="17" ry="22" fill="#a78bfa"/>
+    <path d="M720 318 q 4 -12 12 -14" stroke="#c4b5fd" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <text x="720" y="380" font-size="14" fill="#64748b" text-anchor="middle" font-weight="600">seed</text>
+  </g>
+
+  <!-- sprout -->
+  <g>
+    <path d="M880 344 q -2 -30 8 -52" stroke="#4ade80" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M888 300 q 22 -6 26 -24 q -22 2 -26 24 z" fill="#4ade80"/>
+    <path d="M882 314 q -20 -10 -20 -28 q 20 8 20 28 z" fill="#34d399"/>
+    <text x="880" y="380" font-size="14" fill="#64748b" text-anchor="middle" font-weight="600">sprout</text>
+  </g>
+
+  <!-- tree -->
+  <g>
+    <path d="M1030 344 q 0 -36 -6 -52" stroke="#94a3b8" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <circle cx="1014" cy="276" r="26" fill="#34d399"/>
+    <circle cx="1046" cy="272" r="24" fill="#4ade80"/>
+    <circle cx="1030" cy="248" r="24" fill="#4ade80"/>
+    <circle cx="1030" cy="272" r="20" fill="#6ee7b7"/>
+    <circle cx="1012" cy="262" r="7" fill="#fbbf24"/>
+    <text x="1030" y="380" font-size="14" fill="#64748b" text-anchor="middle" font-weight="600">governed repo</text>
+  </g>
+
+  <!-- arrow between stages -->
+  <g stroke="#334155" stroke-width="3" fill="none">
+    <path d="M758 330 L 838 318" marker-end="url(#arr)"/>
+    <path d="M918 318 L 986 322" marker-end="url(#arr2)"/>
+  </g>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L7 3 L0 6 z" fill="#475569"/>
+    </marker>
+    <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L7 3 L0 6 z" fill="#475569"/>
+    </marker>
+  </defs>
+</svg>

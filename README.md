@@ -1,95 +1,109 @@
-# repo-seed
+<div align="center">
 
-Seed an agent-native, self-governing repository. repo-seed turns a traditional repository — empty or existing, any technology stack — into a repository ready for vibe coding: resident agent instructions, a documentation standard, a unified MADR decision log, two in-repo skills, deterministic gates, a pre-commit hook, and an ownership manifest that makes the whole seed upgradeable without overwriting your work.
+![repo-seed](assets/hero.svg)
 
-**repo-seed is a generator, not a template.** It writes a governance baseline into your repository; you review and commit it. Re-running repo-seed is the upgrade channel: untouched seeded files refresh to the latest templates, files you modified are preserved by default, and files you created are never deleted.
+**Make any repository agent-native — docs, decisions, gates & hooks, seeded in one pass.**
 
-## What you get (five governance layers + an upgrade channel)
+`repo-seed` is a cross-tool skill that turns a traditional repository — empty or existing, any stack — into a **self-governing, vibe-coding-ready** repository. It's a generator, not a template: deterministic scripts build the skeleton, the model instantiates the content, and an ownership manifest keeps the whole seed **upgradeable without ever overwriting your work**.
 
+</div>
+
+---
+
+## Why repo-seed
+
+AI assistants are only as good as the context you give them. Most repositories drift: docs rot, decisions get re-litigated, agents re-learn the project every session, and nothing mechanically stops a bad commit.
+
+repo-seed fixes that with **mechanical governance, not more documents**:
+
+- **Agents finally understand your repo** — one `AGENTS.md`, discovered by Claude Code, Codex, Cursor, Gemini CLI, opencode, Copilot & Synergy.
+- **Decisions stop disappearing** — a unified MADR decision log that agents actually read.
+- **Drift gets caught, not noticed late** — deterministic gates enforced by a pre-commit hook.
+- **Your work is never overwritten** — the manifest remembers every seeded file; re-running refreshes only what you haven't touched.
+
+## Quick start
+
+```bash
+# Install (any one):
+ln -s /path/to/repo-seed ~/.agents/skills/repo-seed        # cross-tool path
+ln -s /path/to/repo-seed ~/.claude/skills/repo-seed        # Claude Code
+npx skills add EricSanchezok/repo-seed                     # Vercel skills
+
+# In your target repo, say to your agent:
+#   "initialize this repository with repo-seed"
 ```
-L0  Resident instructions   AGENTS.md (<= 100 lines) + CLAUDE.md (@AGENTS.md import)
-L1  Deterministic gates     verify-decisions · verify-doc-links · verify-placeholders
-                            verify-manifest · git diff --cached --check, enforced by a
-                            pre-commit hook installed into .git/hooks (never global)
-L2  Unified decision log    MADR records + Class extension in docs/decisions/,
-                            enforced by verify-decisions (Proposed → Accepted →
-                            Superseded by NNNN; a superseded record is never rewritten)
-L3  In-repo skills          .agents/skills/repo-review (instantiated per project:
-                            blocking + checks derived from this project's rules)
-                            .agents/skills/repo-decisions (decision-log authoring)
-L4  Process memory          docs/testing.md policy · docs/postmortems/ · PR template
-Upgrade channel             .repo-seed/manifest.json records seeded-file hashes;
-                            re-run repo-seed to refresh untouched files, keep yours
+
+Or run the generator directly (deterministic core, model fills content afterward):
+
+```bash
+node repo-seed/scripts/scaffold.mjs <target-dir> \
+  --templates repo-seed/references/templates --dry-run     # preview first
 ```
 
-## Install
+**Requires:** Node ≥ 18 on the machine running the skill. Works with any language, framework, or monorepo.
 
-The skill is a directory. Clone or copy this repository, then point your agent at it:
+## What you get: five layers + an upgrade channel
 
-- **Claude Code / Codex / Cursor / opencode / Gemini CLI / Copilot**: place the repository (or a symlink) under one of the discovered skill paths — `.agents/skills/repo-seed`, `.claude/skills/repo-seed`, `~/.codex/skills/repo-seed`, `.cursor/skills/repo-seed`, or the equivalent for your tool — so `SKILL.md` is found.
-- **`npx skills add` (Vercel) / `gh skill install`**: works against the GitHub URL once this repository is published.
-- **Manual**: copy `SKILL.md`, `references/`, and `scripts/` into any skill directory; the skill reads `scripts/` and `references/` relative to itself.
+![governance](assets/governance.svg)
 
-The skill targets any repository with Node >= 18 available (its own scripts are zero-dependency Node; the seeded repository only needs Node for the gates).
+| Layer | What it does |
+|---|---|
+| **L0 · Resident instructions** | `AGENTS.md` (≤ 100 lines) + `CLAUDE.md` via `@AGENTS.md` import — standing orders every session sees |
+| **L1 · Deterministic gates** | `verify-decisions` · `verify-doc-links` · `verify-placeholders` · `verify-manifest` · whitespace — enforced by a pre-commit hook |
+| **L2 · Unified decision log** | MADR records + `Class:` extension — `Proposed → Accepted → Superseded by NNNN`, never rewritten |
+| **L3 · In-repo skills** | `repo-review` (instantiated per project) · `repo-decisions` — procedures live where agents find them |
+| **L4 · Process memory** | testing policy · postmortems · PR template — lessons outlive the session |
+| **Upgrade channel** | `.repo-seed/manifest.json` records seeded-file hashes — re-run to refresh untouched files, keep yours |
 
-## Use
+## How it works
 
-Invoke explicitly: *"initialize this repository with repo-seed"* or *"make this repo agent-native"*.
+![workflow](assets/workflow.svg)
 
-The skill runs five steps:
+1. **Analyze** — detect stack, existing files at seeded paths, git state (read-only; never reads `.env`).
+2. **Interview** — ask only what detection can't answer: license, commands, review red lines, extension packs. Every question has a default.
+3. **Scaffold** — deterministic: directory skeleton, seeded files, manifest, hooks. Zero dependencies.
+4. **Instantiate** — the model resolves every token into real content; no placeholder may ship.
+5. **Verify** — gates green, hooks live; **you** review and commit — repo-seed never commits or pushes on its own.
 
-1. **Analyze** — detect stack manifests, existing files at seeded paths, git state (read-only; never reads `.env`).
-2. **Interview** — ask only what detection cannot answer (project one-liner, license, branch convention, test/lint commands, conflicts, monorepo, review policy input).
-3. **Scaffold** — `node <repo-seed>/scripts/scaffold.mjs <target> --templates <repo-seed>/references/templates` (deterministic: skeleton, seeded files, manifest, hook). Use `--dry-run` first.
-4. **Instantiate** — the model composes architecture, testing, and the repo-review policy from the analysis and interview, then resolves every `__TOKEN__` fill-in.
-
-## Update mode
-
-Re-run the same skill on an already-seeded repository:
-
-- Untouched seeded files refresh to the latest templates (upstream evolution).
-- Files you modified are preserved by default; the manifest marks them `userModified` so the gates check existence only.
-- Instantiated policy (repo-review) is marked user-owned at seed time and is never refreshed; the template stays structure-only guidance.
-- Files you created are never deleted.
-- Previously-seeded extension files are never auto-deleted when a pack is later omitted; removal is an explicit user action.
+Re-run any time to upgrade: untouched files refresh to the latest templates, **your edits survive by default**, and files you created are never deleted.
 
 ## Optional extension packs
 
-repo-seed ships six optional packs that grow outer-loop governance **only when you choose them**. The default seed is the core 27-file baseline; a non-interactive run or a skipped extension question adds nothing. Ask during the interview, or enable at any time by re-running with `--extensions`:
+**Core-minimal by default.** repo-seed ships six optional packs — none are enabled unless you choose them. A non-interactive run seeds only the 27-file core baseline.
 
-| Pack | Adds | When to choose |
+| Pack | Adds | Choose when |
 |---|---|---|
-| `ci` | `.github/workflows/ci.yml` running the four gates + tests | Any GitHub repository |
-| `release` | `docs/release-policy.md` + `verify-commit-msg.mjs` + commit-msg hook | Repositories that release |
-| `community` | `SECURITY.md` + `CODE_OF_CONDUCT.md` | Public repositories |
-| `codeowners` | `CODEOWNERS` per-path owners | Multi-owner repositories |
-| `spec` | `docs/specs/` lightweight spec lifecycle | Feature-heavy projects |
-| `ai-disclosure` | `docs/ai-disclosure.md` AI participation policy | AI-assisted repositories |
+| `ci` | `.github/workflows/ci.yml` running gates + tests | any GitHub repo |
+| `release` | conventional commits + commit-msg hook + release policy | repos that ship versions |
+| `community` | `SECURITY.md` + `CODE_OF_CONDUCT.md` | public repos |
+| `codeowners` | `CODEOWNERS` per-path owners | multi-owner repos |
+| `spec` | lightweight spec lifecycle in `docs/specs/` | feature-heavy projects |
+| `ai-disclosure` | AI participation policy (`Assisted-by:` trailer) | AI-assisted repos |
 
+```bash
+node repo-seed/scripts/scaffold.mjs <target-dir> \
+  --templates repo-seed/references/templates \
+  --extensions ci,release,community
 ```
-node <repo-seed>/scripts/scaffold.mjs <target> --templates <repo-seed>/references/templates \
-  --extensions ci,release
-```
 
-The scaffold registry (`extensionPacks()` in `scripts/scaffold.mjs`) is the single source of truth; each enabled pack's files carry an `extension` manifest field and are upgraded by re-running with the pack enabled.
-
-The authoritative semantics live in `references/update-strategy.md`.
+Extensions can be added any time; removing a pack's files is always an explicit user action — never an automatic deletion.
 
 ## Repository layout
 
 ```
-SKILL.md                          skill entry (agentskills.io spec, six standard fields)
-references/                       templates/ (full seeded file set) · interview.md ·
-                                  update-strategy.md · decision-standard.md · doc-standard.md
-scripts/                          scaffold.mjs · four verifiers · install-hooks.mjs · tests
-AGENTS.md  CLAUDE.md              this repository's own resident instructions (dogfood)
-docs/                             architecture · development · testing · decisions · postmortems
-.agents/skills/                   repo-review · repo-decisions (dogfood copies)
-.repo-seed/                       this repository's own manifest + update strategy (dogfood)
+repo-seed/
+├── SKILL.md                  skill entry (agentskills.io spec)
+├── references/               templates/ · interview.md · decision-standard.md
+│                             doc-standard.md · review-standard.md · update-strategy.md
+├── scripts/                  scaffold.mjs · 4 verifiers · verify-commit-msg · install-hooks · tests
+├── assets/                   hero.svg · governance.svg · workflow.svg
+├── AGENTS.md  CLAUDE.md      this repo's own resident instructions (dogfood)
+├── docs/                     decisions/ · specs/ · postmortems/ · policies
+└── .agents/skills/           repo-review · repo-decisions (dogfood copies)
 ```
 
-The repository dogfoods its own standard: its `AGENTS.md`, `docs/`, decision log, gates, and hooks were generated by repo-seed itself and pass their own verifiers.
+The repository **dogfoods its own standard**: its `AGENTS.md`, docs, decision log, gates, and hooks were generated by repo-seed itself and pass their own verifiers. 41 tests, 4 gates, all green.
 
 ## License
 
-MIT. The generated `LICENSE` is also MIT by default; the interview can select other options.
+MIT. The generated `LICENSE` is also MIT by default; the interview can choose other options.
