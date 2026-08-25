@@ -48,7 +48,7 @@ If a template's target path is a user-created file (not in the manifest), the se
 ```json
 {
   "version": 1,
-  "repoSeedVersion": "0.2.0",
+  "repoSeedVersion": "0.4.0",
   "lastSyncCommit": "<git hash or null>",
   "config": { "license": "MIT", "branchConvention": "main", "monorepo": false },
   "files": [

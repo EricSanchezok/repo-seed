@@ -23,6 +23,7 @@ Read the diff, the owning docs, the decision log, and enough surrounding code to
 2. **Docs match the code.** Config, defaults, errors, wire fields, events, and public behavior update the owning docs and JSDoc in the same diff.
 3. **Decisions are recorded.** A non-trivial change adds or updates a decision record in `docs/decisions/` (see the `repo-decisions` skill). Flag a missing record.
 4. **Tests exist for the behavior.** A behavior change carries a test in the same change; a fix without a regression test is a rumor.
+5. **External-source provenance is retained.** If implementation is materially derived from a paper, article, community post, benchmark, research report, or copied/adapted code, cite it at the closest stable code location or link that location to a decision record whose `## Links` cites the source. A pull request, issue, prompt, or chat-only citation does not count; copied or adapted material also preserves applicable license and NOTICE requirements.
 
 ### Project-specific (instantiated at seed time from repo-seed's own rules)
 

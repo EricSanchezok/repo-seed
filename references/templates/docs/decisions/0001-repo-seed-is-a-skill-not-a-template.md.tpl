@@ -7,7 +7,7 @@ Class: architecture
 ## Context and Problem Statement
 The goal is to let any repository — empty or existing, any technology stack — become agent-native: documented, decision-logged, and governed by mechanical checks, ready for vibe coding. Two shapes were on the table: a static template repository that users fork or clone, or a skill that generates and maintains the governance layer in place.
 
-Static templates have a known fatal flaw: a fork is a single-commit snapshot with no upstream history, so it can never receive template improvements, and it cannot adapt to the target repository's actual state. Pure runtime skills have a different flaw: skill triggering is unreliable (independent evals measured 56% of skill use-cases never triggering), and generated-but-not-committed output is invisible and unversioned.
+Static templates have a known fatal flaw: a fork is a single-commit snapshot with no upstream history, so it can never receive template improvements, and it cannot adapt to the target repository's actual state. Pure runtime skills have a different flaw: skill triggering is unreliable (Vercel's focused Next.js evals found that an available skill was never invoked in 56% of cases), and generated-but-not-committed output is invisible and unversioned.
 
 ## Decision Drivers
 - The generated repository must stay upgradeable: upstream governance improvements must reach existing seeded repositories.
@@ -46,3 +46,4 @@ repo-seed is **one generator skill** (SKILL.md + zero-dependency scripts + templ
 - [ADR 0000](0000-use-markdown-architectural-decision-records.md) — the decision log this record lives in.
 - [ADR 0002](0002-self-governing-repository-design.md) — what the generated baseline contains.
 - [.repo-seed/update-strategy.md](../../.repo-seed/update-strategy.md) — the ownership/update semantics.
+- [Vercel: “AGENTS.md outperforms skills in our agent evals”](https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals) — source for the 56% non-invocation result.

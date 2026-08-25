@@ -19,7 +19,8 @@ Run the relevant check for the surface you touched; do not default to the full s
 1. Run the gates before every commit; the pre-commit hook enforces them.
 2. Every non-trivial change adds or updates a decision record in `docs/decisions/` (see the `repo-decisions` skill and [docs/decisions/README.md](docs/decisions/README.md)).
 3. A bug that reached a user, a merged PR, or a release earns a postmortem in [docs/postmortems/](docs/postmortems/README.md).
-4. The only upgrade channel for the seeded governance layer is re-running the repo-seed skill. Never hand-edit seeded files to "match upstream"; re-run the skill instead.
+4. Implementation materially derived from an external source retains provenance at the closest stable repository location; follow [docs/development.md](docs/development.md#source-attribution).
+5. The only upgrade channel for the seeded governance layer is re-running the repo-seed skill. Never hand-edit seeded files to "match upstream"; re-run the skill instead.
 
 ## Security rules
 

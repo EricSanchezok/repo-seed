@@ -57,6 +57,7 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 
 - Every non-trivial change includes at least one new decision record or updates an existing one, in the same change. "Non-trivial" means it alters behavior, architecture, a contract shared across files, process or tooling, testing strategy, or a decision a maintainer may reasonably revisit.
 - State the decision, what it beats, and what it gives up. `## Considered Options` lists genuine alternatives; `## Pros and Cons of the Options` records why the losers lost. A decision without its alternatives invites re-litigation.
+- When a record relies on external evidence or an implementation source, cite it descriptively in `## Links` with a stable URL, DOI, or versioned permalink. Do not leave research or quantitative claims unlinked.
 - Cross-reference records with relative Markdown links (`[0001](0001-title.md)`), never bare numbers.
 - Document current reality, not change history. Put change stories in commits; the decision record states the live contract.
 
@@ -73,3 +74,4 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 - [0004 — Optional extension packs: core minimal by default, explicit opt-in](0004-optional-extensions-core-minimal.md)
 - [0005 — README visuals use generated art and native diagrams](0005-readme-visual-system.md)
 - [0006 — Published README image replacements use cache-safe paths](0006-readme-image-cache-safe-paths.md)
+- [0007 — Preserve external-source provenance beside implementation](0007-preserve-external-source-provenance.md)

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "repoSeedVersion": "0.2.0",
+  "repoSeedVersion": "0.4.0",
   "lastSyncCommit": null,
   "config": {
     "license": "MIT",
@@ -10,7 +10,7 @@
   "files": [
     {
       "path": "AGENTS.md",
-      "sha256": "cbca4a3dea0d1b7040e2b1b9343ccad1f3b2c27a3ecc1693168b363ce6a89feb",
+      "sha256": "9f8fb2a28336e4e483d82b29933fe751eb75419f8f3e5df84606dbcf8105b37c",
       "category": "instruction"
     },
     {
@@ -20,7 +20,7 @@
     },
     {
       "path": "docs/AGENTS.md",
-      "sha256": "94ee2987ae0e1ff15522172df2802941434c49fdf92f4f4ee1a18b238de8ab14",
+      "sha256": "8e051133332513a80ead8857e4ca4696ad5ea4f4686879005d16c54cbf58a100",
       "category": "docs"
     },
     {
@@ -30,7 +30,7 @@
     },
     {
       "path": "docs/development.md",
-      "sha256": "c257c371178dde40ac3a345a48bb73ff69ab3386e9456422f6629aa175d42864",
+      "sha256": "a74e220229364e1a83c7e36da7dcfcf16b1e6f40c9330a1709c5d142d8629091",
       "category": "docs"
     },
     {
@@ -40,7 +40,7 @@
     },
     {
       "path": "docs/decisions/README.md",
-      "sha256": "f062380350d3c9261fff9a9a2bbf7cf95977b108ae3391938f214cbaacf5dda6",
+      "sha256": "a43b31a09dc792d6d8220a6972cad3501196176c9663fc7084941ca5198eb7ac",
       "category": "docs"
     },
     {
@@ -50,7 +50,7 @@
     },
     {
       "path": "docs/decisions/0001-repo-seed-is-a-skill-not-a-template.md",
-      "sha256": "21dceba2c21c28a1593ca13b587083669d81a2fbc17cb908219b8136ea1d2171",
+      "sha256": "82d39f1b5df2a612487b138da8bfb7b54ac5816620a145714cabb01a8efe1894",
       "category": "docs"
     },
     {
@@ -70,13 +70,13 @@
     },
     {
       "path": ".agents/skills/repo-review/SKILL.md",
-      "sha256": "cb8acc264b6601abbf7668b0395199df244016bdd71616c1f1c013303a5a96fc",
+      "sha256": "edc738f4e553ecefba241a26dd725a4c0da5d8f96f22bd03bcea0af21d63880e",
       "category": "skill",
       "userModified": true
     },
     {
       "path": ".agents/skills/repo-decisions/SKILL.md",
-      "sha256": "00d3683b9e2d9a6750ab1a6ccccf6d349b99919677df014dfe0e5153f4c9fd75",
+      "sha256": "f7184c171f3631fbe2657ec3282dbb494305c463c91be8e88905833b79a46a8c",
       "category": "skill"
     },
     {
@@ -126,12 +126,12 @@
     },
     {
       "path": ".repo-seed/update-strategy.md",
-      "sha256": "1f476eeafc2b245a053bb477a28a92f8d2ac1c35166e6ca73da3f2bf3e5fd47f",
+      "sha256": "3aa1b0ec3199be8e1d6c9abb2b9acd2eeef179eed8555dd0028b6b1e13877cd1",
       "category": "meta"
     },
     {
       "path": ".github/pull_request_template.md",
-      "sha256": "6b62558eba0a00b212faa3fde529778ff95f9f11dfc3d9b9f8e2402a597ef40e",
+      "sha256": "5e9be8e25b301df3ccca6f5c47910ba2027342d72a3f9fce191543c45b82688f",
       "category": "github"
     },
     {

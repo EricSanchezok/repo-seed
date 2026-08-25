@@ -34,7 +34,7 @@ Classify every in-scope document as a tutorial or a reference. A tutorial follow
 - State complete contracts, not reasoning transcripts.
 - Cross-reference with machine-checkable relative Markdown links. Links must resolve.
 - No fill-in tokens may remain in any doc that ships.
-- Comments and JSDoc state contracts; do not restate code.
+- Comments and JSDoc state contracts or provenance; do not restate code.
 
 ## Hygiene checklist
 

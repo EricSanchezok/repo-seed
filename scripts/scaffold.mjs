@@ -41,7 +41,7 @@ export function sha256(text) {
   return createHash('sha256').update(text).digest('hex');
 }
 
-export function defaultManifest({ repoSeedVersion = '0.2.0' } = {}) {
+export function defaultManifest({ repoSeedVersion = '0.4.0' } = {}) {
   return {
     version: MANIFEST_VERSION,
     repoSeedVersion,
@@ -177,6 +177,7 @@ export function builtinDefault(rel) {
         '- [ ] Gates green (`node scripts/verify-decisions.mjs && node scripts/verify-doc-links.mjs && node scripts/verify-placeholders.mjs && node scripts/verify-manifest.mjs`)',
         '- [ ] Tests pass',
         '- [ ] Docs and decision records updated if non-trivial',
+        '- [ ] External sources are cited at the owning code or decision record, when applicable',
       ].join('\n') + '\n';
     case '.github/ISSUE_TEMPLATE/bug.md':
       return [
@@ -586,7 +587,7 @@ async function main() {
   const record = flags.has('record-only');
   const userOwned = parseListFlag(flags.get('user-owned'));
   const extensions = resolveExtensions(parseListFlag(flags.get('extensions')));
-  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.3.0';
+  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.4.0';
 
   let manifest = defaultManifest({ repoSeedVersion });
   try {

@@ -5,10 +5,10 @@ Accepted
 Class: architecture
 
 ## Context and Problem Statement
-repo-seed's value is a self-governing repository: resident agent instructions, a unified MADR decision log, documentation standards, in-repo skills, deterministic gates, and an upgrade channel. Research across 13 top open-source repositories and community critique (2026-08) showed two competing pressures:
+repo-seed's value is a self-governing repository: resident agent instructions, a unified MADR decision log, documentation standards, in-repo skills, deterministic gates, and an upgrade channel. The baseline has two competing pressures:
 
-- Top projects all ship outer-loop governance: CI workflows (with `permissions: {}` and SHA pinning), SECURITY.md / CODE_OF_CONDUCT (OpenSSF Scorecard checks), release policy (conventional commits + semantic-release), CODEOWNERS, and AI disclosure policies.
-- Community consensus strongly rejects "specification bloat": ETH Zurich's evaluation found context files do not improve success rates and add ~20% inference cost; "maps, not manuals" (~200-line AGENTS.md) is the accepted shape; template-heavy governance is seen as AI-slop.
+- Public repositories benefit from optional outer-loop governance such as CI workflows with least-privilege tokens and SHA-pinned actions, security and conduct policies, release policy, CODEOWNERS, and AI disclosure.
+- The mandatory instruction layer must remain small: Gloaguen et al.'s evaluation found no task-success improvement from repository context files and more than 20% higher inference cost, and recommends that human-written files contain only minimal requirements.
 
 repo-seed must be professional and complete without forcing every seeded repository to carry every mechanism. The question: how to make the outer-loop capabilities available without making them mandatory?
 
@@ -59,3 +59,5 @@ The scaffold registry (`extensionPacks()` in `scripts/scaffold.mjs`) is the sing
 - [ADR 0000](0000-use-markdown-architectural-decision-records.md) — the decision log standard.
 - [ADR 0002](0002-self-governing-repository-design.md) — five-layer governance this extends.
 - [references/update-strategy.md](../../references/update-strategy.md) — extension preservation semantics.
+- [Gloaguen et al., “Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?”](https://arxiv.org/abs/2602.11988) — evidence for the minimal mandatory instruction layer and inference-cost trade-off.
+- [OpenSSF Scorecard checks](https://github.com/ossf/scorecard/blob/d1fab88f54636ff366076edfc5c239f97b3c8e66/docs/checks.md) — versioned source for least-privilege workflow tokens and SHA-pinned dependencies.

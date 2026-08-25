@@ -23,7 +23,7 @@ Every non-trivial change adds or updates a decision record in the same change. A
    - `## Decision Outcome`
    - `## Pros and Cons of the Options`
    - `## Links`
-4. State the decision, what it beats, and what it gives up. `## Considered Options` lists genuine alternatives; `## Pros and Cons of the Options` records why the losers lost.
+4. State the decision, what it beats, and what it gives up. `## Considered Options` lists genuine alternatives; `## Pros and Cons of the Options` records why the losers lost. When the record relies on external evidence or an implementation source, cite it descriptively with a stable URL, DOI, or versioned permalink in `## Links`; do not leave research or quantitative claims unlinked.
 5. Cross-reference records with relative Markdown links (`[0001](0001-title.md)`), never bare numbers.
 6. Run `node scripts/verify-decisions.mjs`.
 

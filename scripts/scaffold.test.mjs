@@ -287,6 +287,30 @@ test('repo-review template carries the two instantiation tokens', async () => {
   assert.ok(!tpl.includes('guidance, not a complete checklist'), 'stale disclaimer must be gone');
 });
 
+test('source attribution policy ships across governance surfaces', async () => {
+  const target = await tmpdir();
+  try {
+    const { actions } = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest: defaultManifest(),
+      values: baseValues(),
+      noInterview: true,
+    });
+    const content = (rel) => actions.find((action) => action.rel === rel)?.content ?? '';
+
+    assert.match(content('AGENTS.md'), /materially derived from an external source/);
+    assert.match(content('docs/development.md'), /## Source attribution/);
+    assert.match(content('docs/AGENTS.md'), /contracts or provenance/);
+    assert.match(content('.agents/skills/repo-review/SKILL.md'), /External-source provenance is retained/);
+    assert.match(content('.agents/skills/repo-decisions/SKILL.md'), /do not leave research or quantitative claims unlinked/);
+    assert.match(content('docs/decisions/README.md'), /cite it descriptively in `## Links`/);
+    assert.match(content('.github/pull_request_template.md'), /External sources are cited/);
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
 test('seededFiles includes the repo-review instantiation decision record', () => {
   assert.ok(
     seededFiles().some(([p]) => p === 'docs/decisions/0003-repo-review-instantiated-per-project.md')

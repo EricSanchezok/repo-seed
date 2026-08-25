@@ -6,7 +6,7 @@ compatibility: Node >= 18; works in any repository regardless of language or fra
 metadata:
   generator: true
   category: scaffolding
-  version: 0.3.0
+  version: 0.4.0
 allowed-tools: Read Write Edit Bash
 ---
 
@@ -51,7 +51,7 @@ Run the scaffold against the target directory. The scaffold creates the director
 node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
   --templates <path-to-repo-seed>/references/templates \
   --extensions ci,release \
-  --repo-seed-version 0.3.0
+  --repo-seed-version 0.4.0
 ```
 
 Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--values k=v` (repeatable; pre-fill tokens), `--extensions <ids>` (comma/space-separated; opt-in extension packs), `--user-owned <path>` (repeatable; mark a seeded file instantiated at seed time so re-runs never refresh it), `--record-only` (recompute hashes after the model refines content, without touching files).
