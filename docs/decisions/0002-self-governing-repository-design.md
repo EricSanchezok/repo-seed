@@ -1,7 +1,7 @@
 # Self-governing repository design
 
 ## Status
-Accepted
+Superseded by [0010](0010-unified-gates-and-authorized-hooks.md)
 Class: architecture
 
 ## Context and Problem Statement

@@ -1,20 +1,20 @@
 ---
 name: repo-decisions
-description: Use when writing, updating, or reviewing a decision record in this repository's decision log (docs/decisions/) — creating a new MADR record, changing status, superseding an old decision, or responding to a verify-decisions failure
+description: Use when a change chooses among meaningful alternatives whose rationale may be revisited, or when writing, updating, reviewing, or superseding a MADR record
 ---
 
 # Writing and updating decision records
 
-The decision log in [docs/decisions/](../../../docs/decisions/) is the unified home for every decision — architecture and process. The standard lives in [docs/decisions/README.md](../../../docs/decisions/README.md); this skill carries the procedure.
+The decision log in [__DECISIONS_PATH__/](../../../__DECISIONS_PATH__/) is the durable home for architecture and process choices with genuine alternatives. Its directory entry defines the local or external standard; this skill carries the procedure.
 
 ## When a decision record is required
 
-Every non-trivial change adds or updates a decision record in the same change. A change is non-trivial when it alters behavior, architecture, a contract shared across files, process or tooling, testing strategy, or a decision a maintainer may reasonably revisit.
+Write or update a decision record when a change chooses among meaningful alternatives and future maintainers may reasonably revisit the rationale. Do not create an ADR for routine implementation, a mechanical refactor, an obvious fix already defined by a regression test, or work that merely follows an accepted decision. Risk-boundary feature behavior belongs in a spec; commits retain change history.
 
 ## Procedure: create a new record
 
-1. Find the next sequential number: list `docs/decisions/` and take `max + 1`, zero-padded to 4 digits. Numbers are sequential starting at 0 and never change.
-2. Create `docs/decisions/NNNN-kebab-case-title.md`.
+1. Find the next sequential number in `__DECISIONS_PATH__/` and take `max + 1`, zero-padded to 4 digits. Numbers are sequential starting at 0 and never change.
+2. Create `__DECISIONS_PATH__/NNNN-kebab-case-title.md`.
 3. Write the required sections in order:
    - `## Status` — first line is the status value; optional `Class: <value>` on the next line.
    - `## Context and Problem Statement`

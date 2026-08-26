@@ -23,13 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Decision log gate
-        run: node scripts/verify-decisions.mjs
-      - name: Doc links gate
-        run: node scripts/verify-doc-links.mjs
-      - name: Placeholder gate
-        run: node scripts/verify-placeholders.mjs
-      - name: Manifest gate
-        run: node scripts/verify-manifest.mjs
+      - name: Governance gates
+        run: node scripts/run-gates.mjs
       - name: Tests
         run: __CI_TEST_COMMAND__

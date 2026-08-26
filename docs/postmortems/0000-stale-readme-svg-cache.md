@@ -1,5 +1,7 @@
 # Stale README SVG cache
 
+Artifact-Version: 1
+
 ## Executive summary
 The redesigned governance and workflow SVGs were committed and present on the remote `main` branch, but GitHub continued to display their previous bytes because both replacements reused their published asset paths. Local rendering and repository gates verified source correctness, not the public cache boundary. Published image replacements now use new semantic paths so a redesign changes the requested URL.
 

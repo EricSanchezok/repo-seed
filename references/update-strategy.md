@@ -8,7 +8,8 @@ repo-seed records every file it seeds in `.repo-seed/manifest.json` with:
 
 - `path` — the seeded file's path.
 - `sha256` — the file's content hash at seed time.
-- `category` — one of `instruction` (AGENTS.md, CLAUDE.md), `docs` (docs/**), `skill` (.agents/skills/repo-review, .agents/skills/repo-decisions), `gate` (scripts/**), `github` (.github/**), `meta` (CONTRIBUTING.md, LICENSE, .editorconfig, .gitattributes, .repo-seed/**).
+- `category` — one of `instruction`, `docs`, `skill`, `gate`, `github`, or `meta`.
+- `capability` — the Core or optional capability that contributes the file, when applicable. Legacy optional entries may also carry `extension`.
 
 A file is *untouched* if its current sha256 equals the recorded one. A file is *user-modified* if it differs. A file is *user-owned* if the seed marked it instantiated at seed time (`--user-owned`, manifest `userModified: true`): its content is the project's policy and its recorded hash is informational. User-created files (anything not in the manifest) are always preserved.
 
@@ -48,22 +49,49 @@ If a template's target path is a user-created file (not in the manifest), the se
 ```json
 {
   "version": 1,
-  "repoSeedVersion": "0.4.0",
+  "repoSeedVersion": "0.6.0",
   "lastSyncCommit": "<git hash or null>",
   "config": { "license": "MIT", "branchConvention": "main", "monorepo": false },
+  "governance": {
+    "paths": {
+      "architecture": "docs/architecture.md",
+      "testing": "docs/testing.md",
+      "decisions": "docs/decisions",
+      "specs": "docs/specs",
+      "postmortems": "docs/postmortems"
+    },
+    "externalSources": {}
+  },
+  "capabilities": {
+    "version": 1,
+    "items": {
+      "baseline": { "state": "enabled" },
+      "spec": { "state": "enabled", "mode": "repo" },
+      "ci": {
+        "state": "declined",
+        "assessmentHash": "<normalized-facts-hash>",
+        "reason": "verification is managed externally"
+      }
+    }
+  },
+  "artifactPolicy": { "version": 1, "legacy": [] },
   "files": [
     { "path": "AGENTS.md", "sha256": "<hex>", "category": "instruction" }
   ]
 }
 ```
 
-`version` is the manifest schema version; a future breaking schema change prompts a re-seed instead of a silent migration. `repoSeedVersion` tracks the skill version that produced the seed; it is informational for now.
+`version` is the backward-compatible manifest schema version. `repoSeedVersion` tracks the skill version that produced the seed. Governance paths and external sources prevent a second authority during adoption. Capability states are `enabled`, `external`, `deferred`, or `declined`; a declined/deferred recommendation is raised again only when its normalized assessment hash or the assessment rules change. `artifactPolicy.legacy` grandfathers an existing unversioned Spec or postmortem at one path and hash; changing it requires migration to Artifact-Version 1.
 
-## Extension packs and preservation
+Core capability state includes `baseline`, `spec`, `decisions`, and `postmortems`. Baseline remains enabled in every managed repository; artifact capabilities may be repository-owned (`enabled`) or point to an adopted source (`external`). Core is never deferred or declined.
 
-Optional extension packs (see SKILL.md "Optional extensions") are recorded in the manifest with an `extension` field. Rules:
+## Capability lifecycle and preservation
 
-- **Adding**: re-run with `--extensions <ids>`; new pack files are created like any seeded file and their manifest entries carry the pack id.
-- **Removing**: re-running without a previously-enabled pack **never deletes** its files or manifest entries. The files are preserved untouched (reason: "extension not enabled; preserved"). Removing a pack's files is an explicit user action.
-- **Refreshing**: a re-run with the pack enabled refreshes its untouched files from the current templates, exactly like core files; user-modified extension files are preserved like any user-modified file.
+The capability catalog in `scripts/capabilities.mjs` is authoritative. `extensionPacks()` and `--extensions` are compatibility projections. Rules:
+
+- **Adding**: audit, show the benefit/cost and dry-run, record user authority, then enable only the approved capability. Legacy file-backed capabilities may use `--extensions <ids>`.
+- **Omission**: re-running without a previously enabled legacy flag does not disable, stop upgrading, or delete that capability. Its state in the manifest is authoritative.
+- **Removing**: disabling policy or deleting capability files is an explicit user operation. It is never inferred from an omitted argument.
+- **Refreshing**: enabled, untouched managed files refresh normally. User-modified and user-owned files remain preserved.
+- **Equivalent systems**: register an existing mechanism as `external` with its source; do not create a competing copy.
 - The AGENTS.md extension section (the `__AGENTS_EXTENSION_SECTION__` fill-in) defaults to empty; the model fills it with one link line per enabled pack. A core-only run leaves it empty.

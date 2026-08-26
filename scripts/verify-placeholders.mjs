@@ -15,6 +15,7 @@ export const SCOPED_PATHS = [
   'CONTRIBUTING.md',
   '.agents/skills/repo-review/SKILL.md',
   '.agents/skills/repo-decisions/SKILL.md',
+  '.agents/skills/repo-governance/SKILL.md',
   'SECURITY.md',
   'CODE_OF_CONDUCT.md',
   'CODEOWNERS',

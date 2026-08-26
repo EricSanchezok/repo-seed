@@ -21,7 +21,7 @@ Static templates have a known fatal flaw: a fork is a single-commit snapshot wit
 - A skill that scaffolds deterministic structure and delegates content to the model, with an ownership manifest for updates — the chosen route.
 
 ## Decision Outcome
-repo-seed is **one generator skill** (SKILL.md + zero-dependency scripts + templates under `references/`). It writes a governance baseline into the target repository (AGENTS.md, docs/, decision log, two in-repo skills, gates, hooks, `.repo-seed/manifest.json`), which the user reviews and commits. Re-running the skill is the upgrade channel: the manifest records sha256 of every seeded file, files the user changed are preserved by default, and upstream template evolution is applied only to untouched files.
+repo-seed is **one generator skill** (SKILL.md + zero-dependency scripts + templates under `references/`). It writes an approved governance baseline into the target repository (resident instructions, docs, Specs, decision/postmortem memory, three in-repo skills, gates, and `.repo-seed/manifest.json`), which the user reviews and commits. Hooks are a separately authorized capability. Re-running the skill is the upgrade channel: the manifest records ownership, capabilities, governance paths, and external sources; files the user changed are preserved and template evolution applies only to untouched files.
 
 ### Consequences
 - Good: seeded repositories remain upgradeable — the "dead template" failure mode is structurally removed.

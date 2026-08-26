@@ -16,9 +16,9 @@ The commit-msg hook (`scripts/verify-commit-msg.mjs`, installed with `install-ho
 
 ## Decision log vs CHANGELOG vs RFC
 
-- **Decision log** ([docs/decisions/](decisions/README.md)) — for maintainers: *why* the code is the way it is. Every non-trivial change records a MADR entry. Append-only; supersede, never rewrite.
+- **Decision log** ([__DECISIONS_PATH__/](../__DECISIONS_PATH__/)) — for maintainers: *why* one meaningful alternative won. Use it for durable rationale, not as a change log. Append-only; supersede, never rewrite.
 - **CHANGELOG** — for users: *what changed* between releases. Generated from conventional commits (e.g. semantic-release) or maintained by hand; do not duplicate decision rationale here.
-- **RFC / specs** ([docs/specs/](specs/README.md), when enabled) — for proposed work: *what will be built* before implementation. A decision record captures the outcome; a spec captures the plan.
+- **Specs** ([__SPECS_PATH__/](../__SPECS_PATH__/)) — for risk-boundary work: intent, observable contract, implementation seams, verification, and evidence. A decision record captures durable alternatives; a spec captures the approved change contract.
 
 ## Release automation (optional)
 

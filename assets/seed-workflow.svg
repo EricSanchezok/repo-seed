@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470" role="img" aria-labelledby="title desc">
   <title id="title">The five-step repo-seed workflow</title>
-  <desc id="desc">Analyze, interview, scaffold, instantiate, and verify, with a safe re-run loop for future upgrades.</desc>
+  <desc id="desc">Analyze and assess, authorize, adopt or scaffold, instantiate, and verify, with a safe re-run loop for future upgrades.</desc>
   <style>
     text { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
@@ -23,9 +23,9 @@
   <g>
     <circle cx="110" cy="175" r="22" fill="#101a18" stroke="#62c7d8" stroke-width="2"/>
     <text x="110" y="181" text-anchor="middle" class="number mono" fill="#62c7d8">01</text>
-    <text x="64" y="230" class="name" fill="#f4f6ec">Analyze</text>
-    <text x="64" y="262" class="copy" fill="#9aa69f">stack · conflicts</text>
-    <text x="64" y="286" class="copy" fill="#9aa69f">git state</text>
+    <text x="64" y="230" class="name" fill="#f4f6ec">Assess</text>
+    <text x="64" y="262" class="copy" fill="#9aa69f">stack · governance</text>
+    <text x="64" y="286" class="copy" fill="#9aa69f">capability signals</text>
     <line x1="64" y1="316" x2="236" y2="316" stroke="#26332f"/>
     <text x="64" y="343" class="copy mono" fill="#687770">read-only / no .env</text>
   </g>
@@ -33,20 +33,20 @@
   <g>
     <circle cx="355" cy="175" r="22" fill="#101a18" stroke="#9bd86b" stroke-width="2"/>
     <text x="355" y="181" text-anchor="middle" class="number mono" fill="#9bd86b">02</text>
-    <text x="309" y="230" class="name" fill="#f4f6ec">Interview</text>
-    <text x="309" y="262" class="copy" fill="#9aa69f">license · commands</text>
-    <text x="309" y="286" class="copy" fill="#9aa69f">review red lines</text>
+    <text x="309" y="230" class="name" fill="#f4f6ec">Authorize</text>
+    <text x="309" y="262" class="copy" fill="#9aa69f">resolve unknowns</text>
+    <text x="309" y="286" class="copy" fill="#9aa69f">approve write scope</text>
     <line x1="309" y1="316" x2="481" y2="316" stroke="#26332f"/>
-    <text x="309" y="343" class="copy mono" fill="#687770">defaults included</text>
+    <text x="309" y="343" class="copy mono" fill="#687770">hooks default skip</text>
   </g>
 
   <g>
     <rect x="532" y="145" width="210" height="214" rx="4" fill="#101a18" stroke="#9bd86b"/>
     <circle cx="600" cy="175" r="22" fill="#9bd86b"/>
     <text x="600" y="181" text-anchor="middle" class="number mono" fill="#070d0f">03</text>
-    <text x="554" y="230" class="name" fill="#f4f6ec">Scaffold</text>
-    <text x="554" y="262" class="copy" fill="#b8c2bb">skeleton · manifest</text>
-    <text x="554" y="286" class="copy" fill="#b8c2bb">hooks</text>
+    <text x="554" y="230" class="name" fill="#f4f6ec">Adopt / seed</text>
+    <text x="554" y="262" class="copy" fill="#b8c2bb">reuse · fill gaps</text>
+    <text x="554" y="286" class="copy" fill="#b8c2bb">manifest state</text>
     <line x1="554" y1="316" x2="720" y2="316" stroke="#33423d"/>
     <text x="554" y="343" class="copy mono" fill="#9bd86b">deterministic core</text>
   </g>
@@ -66,7 +66,7 @@
     <path d="M1081 175l6 6 13-14" fill="none" stroke="#62c7d8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     <text x="1044" y="230" class="name" fill="#f4f6ec">Verify</text>
     <text x="1044" y="262" class="copy" fill="#9aa69f">gates green</text>
-    <text x="1044" y="286" class="copy" fill="#9aa69f">hooks live</text>
+    <text x="1044" y="286" class="copy" fill="#9aa69f">evidence linked</text>
     <line x1="1044" y1="316" x2="1136" y2="316" stroke="#26332f"/>
     <text x="1044" y="343" class="copy mono" fill="#687770">you commit</text>
   </g>
@@ -74,5 +74,5 @@
   <path d="M1090 376v30H110V376" fill="none" stroke="#33423d" stroke-width="2"/>
   <path d="M110 376l-7 10h14Z" fill="#9bd86b"/>
   <text x="600" y="413" text-anchor="middle" class="eyebrow" fill="#9bd86b">SAFE RE-RUN LOOP</text>
-  <text x="600" y="441" text-anchor="middle" class="copy" fill="#9aa69f">untouched files refresh  ·  user edits survive  ·  extension packs remain opt-in</text>
+  <text x="600" y="441" text-anchor="middle" class="copy" fill="#9aa69f">untouched files refresh  ·  user edits survive  ·  capability authority remains explicit</text>
 </svg>

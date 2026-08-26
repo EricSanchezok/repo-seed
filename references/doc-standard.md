@@ -17,11 +17,12 @@ Each fact has one home; everywhere else, link there.
 | `docs/architecture.md` | Ordered map: composition, modules, seams, extension points | Per-module detail (→ module docs), decision rationale (→ decision log) |
 | `docs/development.md` | Contributor setup, daily workflow, commands | Runtime rationale (→ decision log) |
 | `docs/testing.md` | Testing policy: tiers, verify-the-world, real entry path | Check-by-check lists that drift from actual commands |
-| `docs/decisions/` | The unified decision log: why, what was given up, required verification (MADR + Class extension) | Migration plans and acceptance checklists once a decision has shipped |
-| `docs/postmortems/` | Incident write-ups: the only tier where war-story narrative belongs | — |
+| `docs/specs/` | Risk-triggered change contracts: Intent, Contract, Plan, Verification, Evidence | Durable alternative rationale and routine-change ceremony |
+| `docs/decisions/` | Durable choices with genuine alternatives (MADR + Class extension) | Change logs, implementation plans, and feature contracts |
+| `docs/postmortems/` | Incident write-ups linked to permanent guardrails: the only tier where war-story narrative belongs | — |
 | In-repo skills (`.agents/skills/`) | Reusable workflows and specialized decision procedures | Product and runtime contracts (→ docs) |
 
-Placement: rationale → decisions; procedures → skills or development; incident stories → postmortems; standing orders → root `AGENTS.md` with a link.
+Placement: change contract → specs; durable alternative rationale → decisions; procedures → skills or development; incident stories → postmortems; standing orders → root `AGENTS.md` with a link.
 
 ## Tutorial or reference
 

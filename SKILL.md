@@ -1,24 +1,24 @@
 ---
 name: repo-seed
-description: "Seed an agent-native, self-governing repository — initialize a new repo or upgrade an existing one with AGENTS.md, CLAUDE.md, documentation standards, a MADR decision log, in-repo skills, deterministic gates, and a pre-commit hook. Use when the user asks to initialize a repository, make a repo agent-native, set up docs and ADR for vibe coding, prepare a project for AI development, or refresh an existing seed. Keywords: initialize repo, seed repository, agent-native, vibe coding, AGENTS.md, ADR, decision log, governance, scaffold docs."
+description: "Seed, audit, adopt, and progressively evolve an agent-native repository with risk-triggered specs, durable decisions, resident governance skills, capability state, deterministic gates, and safe upgrades. Use when initializing or upgrading a repository, when an unmanaged repository grows complex, or when delivery, ownership, security, release, or incident signals suggest a governance capability is missing."
 license: MIT
 compatibility: Node >= 18; works in any repository regardless of language or framework
 metadata:
   generator: true
   category: scaffolding
-  version: 0.4.0
+  version: 0.6.0
 allowed-tools: Read Write Edit Bash
 ---
 
 # repo-seed: seed an agent-native, self-governing repository
 
-repo-seed turns a traditional repository — empty or existing, any technology stack — into an agent-native repository ready for vibe coding: resident agent instructions, a documentation standard, a unified MADR decision log, two in-repo skills, deterministic gates, a pre-commit hook, and an ownership manifest that makes the whole seed upgradeable without overwriting the user's work.
+repo-seed turns a traditional repository — empty or existing, any technology stack — into an agent-native repository whose governance grows with its actual risk: resident instructions, risk-triggered Specs, durable MADR decisions, incident feedback, three in-repo skills, deterministic gates, and a capability manifest that preserves user ownership and external sources of truth.
 
-**repo-seed is a generator, not a template.** It writes a governance baseline into the target repository; the user reviews and commits it. Re-running repo-seed is the upgrade channel: untouched seeded files refresh to the latest templates, user-modified files are preserved by default, and user-created files are never deleted.
+**repo-seed is a progressive governance system, not a static template.** It may autonomously inspect, audit, and produce a dry-run. Writing the baseline, enabling a capability, installing a hook, changing policy/source-of-truth, or connecting an external system requires user authority. Re-running repo-seed is the only upgrade channel: untouched seeded files refresh, user-modified files are preserved, and user-created files are never deleted.
 
 ## Workflow
 
-Run the five steps in order. Steps 1-3 are the model's job; steps 3-5 are deterministic scripts.
+Run the five steps in order. Analysis, interview, and instantiation require model judgment; scaffold, record, audit, and verification mechanics are deterministic scripts.
 
 ### 1. Analyze
 
@@ -26,9 +26,12 @@ Inspect the target repository (read-only):
 
 - Stack manifests: `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `requirements.txt`, `Gemfile`, etc. Detect the test command and lint command when derivable.
 - Existing files at seeded paths (see the file list in step 4). List every conflict: a file already exists where repo-seed wants to write.
+- Existing governance equivalents: AGENTS/CLAUDE instructions, architecture/testing docs, ADR/RFC systems, postmortems, CI, release/deploy markers, hooks, CODEOWNERS, and external requirement links.
 - Git state: is it a git repository? Is the working tree clean? What is the default branch?
 - Repository size: for large repositories, sample (directory-depth limit and file-count cap); never enumerate the whole tree.
 - Never read `.env` files or other secrets.
+
+When the repository already contains `scripts/audit-governance.mjs`, run it with `--json`. In an unmanaged repository, use the global skill's read-only detection and offer adoption only when the current task or repository facts show meaningful complexity. An audit never authorizes writes.
 
 ### 2. Interview
 
@@ -41,22 +44,24 @@ Ask only the questions whose answers are not detectable and that materially chan
 5. Existing-file conflict resolution — preserve-and-merge (default) / overwrite-with-backup / skip.
 6. Monorepo — root-only seed (default) or also subtree AGENTS.md per package.
 7. Review policy input — known pitfalls, review red lines, and invariants this project must not regress (default: none; only the universal repo-review core).
-8. Optional extension packs — which outer-loop governance to add (default: none; see the Optional extensions section below).
+8. Capability choices — show only applicable recommendations with benefit, ongoing cost, urgency, and detected equivalent systems. Do not ask again when a declined/deferred assessment hash still matches.
+9. Hook authorization — default `skip`; installing or replacing local Git state is never implied by seeding.
 
 ### 3. Scaffold (deterministic)
 
-Run the scaffold against the target directory. The scaffold creates the directory skeleton, writes seeded files from the template set, records `.repo-seed/manifest.json` with sha256 of every seeded file, and installs the pre-commit hook.
+Run the scaffold against the target directory. The scaffold creates the approved directory skeleton, writes seeded files from the template set, and records `.repo-seed/manifest.json` with ownership, capability, governance-path, external-source, and artifact-policy state.
 
 ```sh
 node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
   --templates <path-to-repo-seed>/references/templates \
   --extensions ci,release \
-  --repo-seed-version 0.4.0
+  --hooks skip \
+  --repo-seed-version 0.6.0
 ```
 
-Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--values k=v` (repeatable; pre-fill tokens), `--extensions <ids>` (comma/space-separated; opt-in extension packs), `--user-owned <path>` (repeatable; mark a seeded file instantiated at seed time so re-runs never refresh it), `--record-only` (recompute hashes after the model refines content, without touching files).
+Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--adopt` (reuse detected governance paths in an unmanaged repository), `--hooks install|skip` (default `skip`), `--values k=v` (repeatable), `--extensions <ids>` (legacy compatibility entry), `--capability-state id=enabled|external|deferred|declined` plus reason/assessment hash, `--governance-path kind=relative/path`, `--external-source kind=https://stable-link`, `--user-owned <path>` (repeatable), and `--record-only` (recompute manifest state without touching governed files).
 
-Use `--dry-run` first and show the user the plan. Extensions are never enabled implicitly: a non-interactive run seeds only the core files.
+Use `--dry-run` first and show the user the plan. Optional capabilities are never enabled implicitly. The legacy `--extensions spec` flag is accepted as a deprecated no-op because Spec is Core. An enabled capability remains enabled and upgradeable when a later run omits its legacy extension flag.
 
 ### 4. Instantiate (model)
 
@@ -66,7 +71,11 @@ Three files need composition, not string replacement:
 
 - `docs/architecture.md` — write the target's real module map and seams; never ship the placeholder skeleton.
 - `docs/testing.md` — state the project's actual test tiers and entry paths from the analysis.
-- `.agents/skills/repo-review/SKILL.md` — compose `__REVIEW_PROJECT_BLOCKING__` from AGENTS.md hard rules, interview Q7 red lines, and architecture seams, and `__REVIEW_PROJECT_CHECKS__` from the stack risk catalog in [references/review-standard.md](references/review-standard.md). Procedure skills (repo-decisions) ship static; review policy is instantiated per project. Keep the universal core verbatim; replace an empty token with "None beyond the universal requirements/checks."
+- `.agents/skills/repo-review/SKILL.md` — compose `__REVIEW_PROJECT_BLOCKING__` from AGENTS.md hard rules, interview Q8 red lines, and architecture seams, and `__REVIEW_PROJECT_CHECKS__` from the stack risk catalog in [references/review-standard.md](references/review-standard.md). Procedure skills (repo-decisions) ship static; review policy is instantiated per project. Keep the universal core verbatim; replace an empty token with "None beyond the universal requirements/checks."
+
+Compose `__DECISION_INDEX__` and `__POSTMORTEM_INDEX__` from the records that actually exist after the run. Use one relative Markdown link per record, or `None yet.` for an empty postmortem index. These tokens keep user-created records discoverable across upgrades; never reset an existing index to the seed examples.
+
+When adoption registers a non-standard path, instantiate `__ARCHITECTURE_PATH__`, `__TESTING_PATH__`, `__DECISIONS_PATH__`, `__SPECS_PATH__`, and `__POSTMORTEMS_PATH__` from the manifest. Instantiate `__DECISIONS_RULE__` as the local MADR lifecycle for a repository-owned decision log or as a no-duplicate-authority rule for an external decision source. Do not copy facts from an external source of truth into a second authoritative document.
 
 ### 5. Record and verify
 
@@ -75,24 +84,20 @@ After refining, re-record the manifest so it matches the shipped state, then run
 ```sh
 node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> --record-only \
   --user-owned .agents/skills/repo-review/SKILL.md
-node scripts/verify-decisions.mjs
-node scripts/verify-doc-links.mjs
-node scripts/verify-placeholders.mjs
-node scripts/verify-manifest.mjs
-git diff --cached --check
+node scripts/run-gates.mjs
 ```
 
-The gates run from the target directory. Verify the hook is installed (`.git/hooks/pre-commit`). Then tell the user to review and commit. **Never commit or push unless the user explicitly asks.**
+The gates run from the target directory. If and only if the user authorized hooks, pass `--hooks install` to the scaffold/apply invocation in step 3 and verify the managed hook calls `run-gates.mjs --staged`; `--record-only` does not install hooks. Preserve any custom hook. Then tell the user to review and commit. **Never commit or push unless the user explicitly asks.**
 
 ## What gets seeded
 
-The seeded file set is the single source of truth in `scripts/scaffold.mjs` (`seededFiles()`). It includes:
+The capability catalog is the single source of truth for the file contributions returned by `seededFiles()`. Core includes:
 
 - `AGENTS.md` (resident agent instructions with the governance loop and security rules), `CLAUDE.md` (`@AGENTS.md` import — no symlink, Windows-safe).
-- `docs/AGENTS.md` (documentation standard), `docs/architecture.md`, `docs/development.md`, `docs/testing.md`, `docs/postmortems/README.md`.
+- `docs/AGENTS.md` (documentation standard), architecture/development/testing docs, `docs/specs/README.md`, and `docs/postmortems/README.md`.
 - `docs/decisions/` — the unified MADR decision log with four seed records and an index.
-- `.agents/skills/repo-review` and `.agents/skills/repo-decisions` — the two in-repo skills.
-- `scripts/` — the four verifier gates plus `install-hooks.mjs` (copied verbatim from repo-seed so the seeded repo runs the same code).
+- `.agents/skills/repo-review`, `.agents/skills/repo-decisions`, and `.agents/skills/repo-governance` — resident review, rationale, and capability-evolution procedures.
+- `scripts/` — capability/audit/configuration modules, the manifest-driven runner, deterministic verifiers, and the separately authorized hook installer.
 - `CONTRIBUTING.md`, `LICENSE`, `.editorconfig`, `.gitattributes`, `.github/` (PR + issue templates), `.repo-seed/update-strategy.md`.
 
 ## Security and ownership rules
@@ -102,26 +107,26 @@ The seeded file set is the single source of truth in `scripts/scaffold.mjs` (`se
 - Never read `.env` files or secrets.
 - Never delete a file repo-seed did not create.
 - Never overwrite a user-modified seeded file without asking (default: preserve).
+- Never enable CI/CD, modify a remote platform, install a hook, or replace an external source of truth without explicit authority.
 - The authority for update semantics is [references/update-strategy.md](references/update-strategy.md).
 
-## Optional extensions
+## Progressive capabilities
 
-Six optional packs extend the core seed; **none are enabled by default**. A non-interactive run or a skipped extension question seeds only the core files. Each pack is a small, self-contained addition; the scaffold registry (`extensionPacks()` in `scripts/scaffold.mjs`) is the single source of truth for their file sets.
+The canonical catalog is `CAPABILITIES` in `scripts/capabilities.mjs`. Each `CapabilityDefinition` includes tier, files, prerequisites, applicability signals, equivalent-system signals, benefit, ongoing cost, urgency, AGENTS/review/gate contributions, and enable/upgrade/re-evaluation conditions. `extensionPacks()` and `--extensions` remain compatibility projections over the catalog.
 
-| Pack | Adds | When to choose |
-|---|---|---|
-| `ci` | `.github/workflows/ci.yml` running the four gates + tests (minimal permissions + SHA pinning notes) | Any repository on GitHub |
-| `release` | `docs/release-policy.md` (conventional commits, decision-log/CHANGELOG/RFC division) + `scripts/verify-commit-msg.mjs` + commit-msg hook (`install-hooks.mjs --with-commit-msg`) | Repositories that release versions |
-| `community` | `SECURITY.md` + `CODE_OF_CONDUCT.md` | Public repositories |
-| `codeowners` | `CODEOWNERS` per-path owners | Multi-owner repositories |
-| `spec` | `docs/specs/README.md` lightweight spec lifecycle (Draft → Approved → Implemented → Superseded) | Feature-heavy projects |
-| `ai-disclosure` | `docs/ai-disclosure.md` AI participation policy (`Assisted-by:` trailer) | Repositories accepting AI-assisted contributions |
+Core includes resident instructions, architecture/testing docs, risk-triggered Spec, durable decisions, review/governance skills, deterministic gates, postmortems, manifest state, and the upgrade channel. Optional capabilities include `ci`, `release`, `community`, `codeowners`, `ai-disclosure`, monorepo subtree instructions, and local hooks.
 
-Enable packs with the `--extensions` flag (comma/space-separated), e.g. `--extensions ci,release`. When enabled, the model fills the AGENTS.md "Optional extensions" section (the `__AGENTS_EXTENSION_SECTION__` fill-in) with one link line per pack; a core-only seed leaves that section empty.
+Assessment timing follows urgency. Security, release, migration, or ownership boundaries that affect the current task are raised before implementation. Ordinary CI/community/maturity advice is raised at handoff. Record `enabled`, `external`, `deferred`, or `declined`; store the normalized assessment hash for deferred/declined advice so unchanged facts do not trigger another prompt.
 
-**Add and remove semantics**: extensions can be added anytime by re-running with new `--extensions`. Previously-seeded extension files are never auto-deleted when a pack is later omitted — re-running without a pack preserves its files and manifest entries; removing a pack's files is an explicit user action.
+Use the legacy `--extensions` flag for file-backed compatibility capabilities, or explicit `--capability-state` assignments for the catalog state. Omission never disables an enabled capability; removal is a separate, explicitly authorized operation.
 
 **CODEOWNERS handle**: when the `codeowners` pack is enabled, ask the user for the GitHub handle or team to own the seeded paths (see interview Q10). Never invent a handle. If the user provides none, the scaffold generates `@TODO-OWNER` (the `CODEOWNER_HANDLE` default) and you must tell the user to replace it before enabling branch protection that requires owner review.
+
+## Unmanaged repository adoption
+
+When the manifest is absent, the skill may perform a read-only audit and show a dry-run. Do not write until the user approves adoption. `--adopt` discovers existing AGENTS, architecture/testing docs, ADR/RFC, postmortems, CI, and hook systems; compatible non-standard paths are recorded in `governance.paths`, while external sources of truth are recorded in `governance.externalSources` and capability state. Existing files are user-owned. Fill only missing Core surfaces and never manufacture a second authoritative copy.
+
+Jira, Notion, GitHub Issues, and other requirement systems use generic stable links first; connector setup is a separate future capability and always requires authorization. The adoption order is read-only audit → dry-run → user confirmation → incremental write → `run-gates` verification.
 
 ## Authoring rules
 

@@ -14,14 +14,15 @@ Each fact has one home; everywhere else, link there.
 |---|---|---|
 | Root `AGENTS.md` | Standing orders: rules an agent needs in context in every session | Stories, worked examples, restated rules |
 | `docs/AGENTS.md` | The documentation standard | Repo-wide rules the root file carries |
-| `docs/architecture.md` | Ordered map: composition, modules, seams | Per-module detail, decision rationale |
+| `__ARCHITECTURE_PATH__` | Ordered map: composition, modules, seams | Per-module detail, decision rationale |
 | `docs/development.md` | Contributor setup, daily workflow, commands | Runtime rationale |
-| `docs/testing.md` | Testing policy: tiers, verify-the-world, real entry path | Drifting check lists |
-| `docs/decisions/` | Unified decision log (MADR + Class extension) | Migration plans once shipped |
-| `docs/postmortems/` | Incident write-ups (the only war-story tier) | — |
+| `__TESTING_PATH__` | Testing policy: tiers, verify-the-world, real entry path | Drifting check lists |
+| `__SPECS_PATH__/` | Risk-triggered Intent, Contract, Plan, Verification, and Evidence for a change | Durable alternative rationale or routine-change ceremony |
+| `__DECISIONS_PATH__/` | Durable choices with genuine alternatives (MADR + Class extension) | Change logs, implementation plans, product contracts |
+| `__POSTMORTEMS_PATH__/` | Incident write-ups linked to permanent guardrails (the only war-story tier) | — |
 | In-repo skills | Reusable workflows and decision procedures | Product contracts |
 
-Placement: rationale → decisions; procedures → skills or development; incident stories → postmortems; standing orders → root `AGENTS.md` with a link.
+Placement: change contract → specs; durable alternative rationale → decisions; procedures → skills or development; incident stories → postmortems; standing orders → root `AGENTS.md` with a link.
 
 ## Tutorial or reference
 

@@ -11,7 +11,8 @@ Read the diff, the owning docs, the decision log, and enough surrounding code to
 
 - [AGENTS.md](../../../AGENTS.md): standing repository rules.
 - [docs/AGENTS.md](../../../docs/AGENTS.md): documentation placement and prose discipline.
-- [docs/decisions/](../../../docs/decisions/README.md): design rationale. Disagreement with a decision record is a design discussion, not an automatic veto.
+- [docs/decisions/](../../../docs/decisions/README.md): durable design rationale. Disagreement with a decision record is a design discussion, not an automatic veto.
+- [docs/specs/](../../../docs/specs/README.md): risk-triggered change contracts.
 - [docs/testing.md](../../../docs/testing.md): required test tiers.
 - [docs/architecture.md](../../../docs/architecture.md): the module map and seams.
 
@@ -21,7 +22,7 @@ Read the diff, the owning docs, the decision log, and enough surrounding code to
 
 1. **New prose receives semantic review.** Critically review every added or changed Markdown passage, JSDoc, comment, prompt, description, diagnostic, and visible string. Verify required coverage, accuracy, placement, and editorial quality against the owning code or behavior; automated checks do not establish those properties.
 2. **Docs match the code.** Config, defaults, errors, wire fields, events, and public behavior update the owning docs and JSDoc in the same diff.
-3. **Decisions are recorded.** A non-trivial change adds or updates a decision record in `docs/decisions/` (see the `repo-decisions` skill). Flag a missing record.
+3. **Contracts and decisions use the right artifact.** A risk-boundary change has an Approved spec; a durable choice with real alternatives has a decision record. Do not demand an ADR as a change log.
 4. **Tests exist for the behavior.** A behavior change carries a test in the same change; a fix without a regression test is a rumor.
 5. **External-source provenance is retained.** If implementation is materially derived from a paper, article, community post, benchmark, research report, or copied/adapted code, cite it at the closest stable code location or link that location to a decision record whose `## Links` cites the source. A pull request, issue, prompt, or chat-only citation does not count; copied or adapted material also preserves applicable license and NOTICE requirements.
 
@@ -30,6 +31,7 @@ Read the diff, the owning docs, the decision log, and enough surrounding code to
 1. **Seeded surface stays bounded.** A change writes only the seeded paths; `references/templates/` remains the single source of truth for `seededFiles()`, and every seeded-file change updates templates, manifest, and tests in the same diff.
 2. **Update semantics are preserved.** Changes to `scripts/scaffold.mjs` keep `references/update-strategy.md` and the seeded `.repo-seed/update-strategy.md` in sync; every preservation rule (never overwrite user-modified or instantiated content, never delete user files, never regress instantiated content to placeholders) has a test.
 3. **Tokens ship with instantiation guidance.** Any new template token needs coverage in `SKILL.md` step 4 or `references/review-standard.md`, plus a refusal-path test.
+4. **Capability authority stays explicit.** Read-only audits and dry-runs may be autonomous; enabling capabilities, installing hooks, changing governance policy/source-of-truth, or connecting external systems requires recorded user authority.
 
 ## Manual checks
 
@@ -37,6 +39,8 @@ Read the diff, the owning docs, the decision log, and enough surrounding code to
 
 - **Plan/apply symmetry:** `planRun` decisions (create/update/skip/refusal) and `applyPlan` manifest writes stay consistent; dry-run never mutates disk or manifest.
 - **Gate determinism:** verifier scopes never silently shrink; a verifier exits non-zero only on real violations.
+- **Capability lifecycle:** recommendation hashes depend only on normalized relevant facts; declined/deferred suggestions stay suppressed until those facts or rules change; enabled capabilities remain managed when CLI flags are omitted.
+- **Adoption uniqueness:** non-standard paths and external sources of truth are registered and linked, not copied into a competing governance system.
 - **Template ↔ dogfood parity (static files):** static seeded files in this repository match their templates; the instantiated repo-review and manifest hashes are exempt by design.
 - **Refusal correctness:** a re-run that would regress instantiated content to unresolved placeholders is refused; `userModified` entries are never refreshed.
 - **Model perspective:** repo-seed is agent-facing — review changes to `SKILL.md`, templates, and seeded prose as instructions a fresh agent will read: check the exact wording and that tokens, links, and paths resolve from a clean checkout.

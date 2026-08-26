@@ -4,9 +4,9 @@
 
 <h1>repo-seed</h1>
 
-**Make any repository agent-native — docs, decisions, gates & hooks, seeded in one pass.**
+**Make repository governance grow with the code — explicit contracts, durable memory, executable controls.**
 
-`repo-seed` is a cross-tool skill that turns a traditional repository — empty or existing, any stack — into a **self-governing, vibe-coding-ready** repository. It's a generator, not a template: deterministic scripts build the skeleton, the model instantiates the content, and an ownership manifest keeps the whole seed **upgradeable without ever overwriting your work**.
+`repo-seed` is a cross-tool skill that initializes, audits, adopts, and progressively evolves an **agent-native, self-governing** repository. Deterministic scripts own the mechanics, the model instantiates project knowledge, and a capability manifest keeps the governance layer upgradeable without overwriting user-owned work or duplicating an existing source of truth.
 
 </div>
 
@@ -19,9 +19,11 @@ AI assistants are only as good as the context you give them. Most repositories d
 repo-seed fixes that with **mechanical governance, not more documents**:
 
 - **Agents finally understand your repo** — one `AGENTS.md`, discovered by Claude Code, Codex, Cursor, Gemini CLI, opencode, Copilot & Synergy.
-- **Decisions stop disappearing** — a unified MADR decision log that agents actually read.
+- **Intent survives agent handoffs** — risk-boundary work starts from an Approved Spec with permanent evidence.
+- **Decisions stop disappearing** — MADR records preserve choices with genuine alternatives without becoming a change log.
 - **Research stays traceable** — externally derived implementation keeps its source beside the code or in the owning decision record.
-- **Drift gets caught, not noticed late** — deterministic gates enforced by a pre-commit hook.
+- **Drift gets caught, not noticed late** — a manifest-driven runner gives CLI, CI, and authorized hooks one gate list.
+- **Governance grows deliberately** — read-only audits recommend capabilities from repository facts; writes and integrations remain user-authorized.
 - **Your work is never overwritten** — the manifest remembers every seeded file; re-running refreshes only what you haven't touched.
 
 ## Quick start
@@ -52,36 +54,38 @@ node repo-seed/scripts/scaffold.mjs <target-dir> \
 | Layer | What it does |
 |---|---|
 | **L0 · Resident instructions** | `AGENTS.md` (≤ 100 lines) + `CLAUDE.md` via `@AGENTS.md` import — standing orders every session sees |
-| **L1 · Deterministic gates** | `verify-decisions` · `verify-doc-links` · `verify-placeholders` · `verify-manifest` · whitespace — enforced by a pre-commit hook |
-| **L2 · Unified decision log** | MADR records + `Class:` extension — `Proposed → Accepted → Superseded by NNNN`, never rewritten |
-| **L3 · In-repo skills** | `repo-review` (instantiated per project) · `repo-decisions` — procedures live where agents find them |
-| **L4 · Process memory** | testing policy · postmortems · PR template — lessons outlive the session |
-| **Upgrade channel** | `.repo-seed/manifest.json` records seeded-file hashes — re-run to refresh untouched files, keep yours |
+| **L1 · Deterministic gates** | Manifest-selected Spec, decision, postmortem, link, placeholder, and ownership verification through one runner |
+| **L2 · Change memory** | Risk-triggered Specs + selective MADR decisions + guardrail-linked postmortems |
+| **L3 · In-repo skills** | `repo-review` · `repo-decisions` · `repo-governance` — project procedures stay resident |
+| **L4 · Process evidence** | Testing policy · Spec Evidence · PR review findings · optional CI/hook enforcement |
+| **Upgrade channel** | `.repo-seed/manifest.json` records ownership, capabilities, paths, external sources, and gradual artifact policy |
 
 ## How it works
 
 ![The five controlled moves in the repo-seed workflow](assets/seed-workflow.svg)
 
 1. **Analyze** — detect stack, existing files at seeded paths, git state (read-only; never reads `.env`).
-2. **Interview** — ask only what detection can't answer: license, commands, review red lines, extension packs. Every question has a default.
-3. **Scaffold** — deterministic: directory skeleton, seeded files, manifest, hooks. Zero dependencies.
-4. **Instantiate** — the model resolves every token into real content; no placeholder may ship.
-5. **Verify** — gates green, hooks live; **you** review and commit — repo-seed never commits or pushes on its own.
+2. **Assess** — match discrete facts to the capability catalog; suppress advice already declined against unchanged facts.
+3. **Interview** — ask only what detection cannot answer and only when the answer changes the output or authority boundary.
+4. **Scaffold or adopt** — preview first, then incrementally write only approved Core/capability surfaces. Hooks default to skipped.
+5. **Instantiate** — the model resolves every token into real content; no placeholder may ship.
+6. **Verify** — the shared runner and tests prove the resulting repository; **you** review and commit.
 
 Re-run any time to upgrade: untouched files refresh to the latest templates, **your edits survive by default**, and files you created are never deleted.
 
-## Optional extension packs
+## Progressive capabilities
 
-**Core-minimal by default.** repo-seed ships six optional packs — none are enabled unless you choose them. A non-interactive run seeds only the 27-file core baseline.
+Core contains resident instructions, architecture/testing docs, risk-triggered Spec, selective decisions, review/governance skills, deterministic gates, postmortems, manifest state, and the upgrade channel. Optional capabilities are proposed only when repository facts make them relevant.
 
-| Pack | Adds | Choose when |
+| Capability | Adds | Typical signal |
 |---|---|---|
 | `ci` | `.github/workflows/ci.yml` running gates + tests | any GitHub repo |
 | `release` | conventional commits + commit-msg hook + release policy | repos that ship versions |
 | `community` | `SECURITY.md` + `CODE_OF_CONDUCT.md` | public repos |
 | `codeowners` | `CODEOWNERS` per-path owners | multi-owner repos |
-| `spec` | lightweight spec lifecycle in `docs/specs/` | feature-heavy projects |
 | `ai-disclosure` | AI participation policy (`Assisted-by:` trailer) | AI-assisted repos |
+| `monorepo` | focused subtree instructions | packages have different commands or ownership |
+| `hook` | managed pre-commit runner | local enforcement is useful and explicitly authorized |
 
 ```bash
 node repo-seed/scripts/scaffold.mjs <target-dir> \
@@ -89,7 +93,11 @@ node repo-seed/scripts/scaffold.mjs <target-dir> \
   --extensions ci,release,community
 ```
 
-Extensions can be added any time; removing a pack's files is always an explicit user action — never an automatic deletion.
+Legacy `--extensions` flags remain supported; `--extensions spec` is a deprecated no-op because Spec is Core. Enabled capabilities stay managed when later runs omit flags. Capability state can also be `external`, `deferred`, or `declined`; unchanged declined/deferred advice is not repeated.
+
+## Adopt an existing repository
+
+An unmanaged repository follows the same authority boundary: read-only audit → dry-run → user confirmation → incremental write → gates. `--adopt` detects existing AGENTS, architecture/testing docs, ADR/RFC, postmortem, CI, and hook systems. Non-standard paths and external systems remain authoritative and are registered in the manifest instead of copied into a second governance tree.
 
 ## Repository layout
 
@@ -98,14 +106,14 @@ repo-seed/
 ├── SKILL.md                  skill entry (agentskills.io spec)
 ├── references/               templates/ · interview.md · decision-standard.md
 │                             doc-standard.md · review-standard.md · update-strategy.md
-├── scripts/                  scaffold.mjs · 4 verifiers · verify-commit-msg · install-hooks · tests
+├── scripts/                  scaffold · capabilities · audit · runner · verifiers · hooks · tests
 ├── assets/                   hero.webp · governance-map.svg · seed-workflow.svg
 ├── AGENTS.md  CLAUDE.md      this repo's own resident instructions (dogfood)
 ├── docs/                     decisions/ · specs/ · postmortems/ · policies
-└── .agents/skills/           repo-review · repo-decisions (dogfood copies)
+└── .agents/skills/           repo-review · repo-decisions · repo-governance
 ```
 
-The repository **dogfoods its own standard**: its `AGENTS.md`, docs, decision log, gates, and hooks were generated by repo-seed itself and pass their own verifiers. 42 tests, 4 gates, all green.
+The repository **dogfoods its own standard**: its resident instructions, Spec, decisions, postmortem, capability manifest, and shared gate runner are the same surfaces it seeds downstream.
 
 ## License
 

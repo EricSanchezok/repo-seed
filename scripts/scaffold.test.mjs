@@ -16,8 +16,9 @@ import {
   extensionPacks,
   resolveExtensions,
   baseValues,
+  discoverAdoption,
 } from './scaffold.mjs';
-import { installHook, hookScript, HOOK_NAME } from './install-hooks.mjs';
+import { installHook, hookScript, HOOK_NAME, MANAGED_MARKER } from './install-hooks.mjs';
 import { verifyManifest } from './verify-manifest.mjs';
 import { verifyPlaceholders, findPlaceholders } from './verify-placeholders.mjs';
 import { verifyLinks } from './verify-doc-links.mjs';
@@ -165,7 +166,7 @@ test('installHook writes an executable pre-commit hook', async () => {
     await installHook(target);
     const hookPath = path.join(target, '.git', 'hooks', HOOK_NAME);
     const content = await readFile(hookPath, 'utf8');
-    assert.ok(content.includes('verify-decisions.mjs'));
+    assert.ok(content.includes('scripts/run-gates.mjs --staged'));
     const st = await stat(hookPath);
     assert.ok(st.mode & 0o100, 'hook must be executable');
   } finally {
@@ -173,14 +174,50 @@ test('installHook writes an executable pre-commit hook', async () => {
   }
 });
 
-test('hookScript embeds the repo root and the four gates', () => {
-  const s = hookScript('/some/repo');
-  assert.ok(s.includes('cd "/some/repo"'));
-  assert.ok(s.includes('verify-decisions.mjs'));
-  assert.ok(s.includes('verify-doc-links.mjs'));
-  assert.ok(s.includes('verify-placeholders.mjs'));
-  assert.ok(s.includes('verify-manifest.mjs'));
-  assert.ok(s.includes('git diff --cached --check'));
+test('hookScript resolves the active worktree and calls the shared runner', () => {
+  const s = hookScript();
+  assert.ok(s.includes('git rev-parse --show-toplevel'));
+  assert.ok(s.includes('cd "$repo_root"'));
+  assert.ok(s.includes('node scripts/run-gates.mjs --staged'));
+  assert.ok(!s.includes('/some/repo'));
+});
+
+test('installHook preserves a custom hook and refreshes a managed hook', async () => {
+  const target = await tmpdir();
+  try {
+    const hooks = path.join(target, '.git', 'hooks');
+    await mkdir(hooks, { recursive: true });
+    const hookPath = path.join(hooks, HOOK_NAME);
+    await writeFile(hookPath, '#!/bin/sh\necho custom\n', 'utf8');
+    const conflict = await installHook(target);
+    assert.equal(conflict.status, 'conflict');
+    assert.equal(await readFile(hookPath, 'utf8'), '#!/bin/sh\necho custom\n');
+
+    await writeFile(hookPath, `#!/bin/sh\n${MANAGED_MARKER}: pre-commit\necho stale\n`, 'utf8');
+    const refreshed = await installHook(target);
+    assert.equal(refreshed.status, 'updated');
+    assert.match(await readFile(hookPath, 'utf8'), /scripts\/run-gates\.mjs --staged/);
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+test('installHook uses the common hooks directory for a linked worktree', async () => {
+  const root = await tmpdir();
+  try {
+    const worktree = path.join(root, 'worktree');
+    const worktreeGit = path.join(root, 'main.git', 'worktrees', 'worktree');
+    const commonGit = path.join(root, 'main.git');
+    await mkdir(worktree, { recursive: true });
+    await mkdir(worktreeGit, { recursive: true });
+    await writeFile(path.join(worktree, '.git'), `gitdir: ${worktreeGit}\n`, 'utf8');
+    await writeFile(path.join(worktreeGit, 'commondir'), '../..\n', 'utf8');
+    const result = await installHook(worktree);
+    assert.equal(result.gitDir, commonGit);
+    assert.ok((await stat(path.join(commonGit, 'hooks', HOOK_NAME))).isFile());
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test('installHook fails on a non-git directory', async () => {
@@ -195,15 +232,15 @@ test('installHook fails on a non-git directory', async () => {
 test('verifyManifest: clean seed passes; tampered seed fails', async () => {
   const target = await tmpdir();
   try {
+    const manifest = defaultManifest();
     const { actions } = await planRun({
       targetDir: target,
       templatesRoot: null,
-      manifest: defaultManifest(),
+      manifest,
       values: {},
       dryRun: false,
       noInterview: true,
     });
-    const manifest = defaultManifest();
     await applyPlan({ targetDir: target, actions, manifest, dryRun: false });
     await mkdir(path.join(target, '.repo-seed'), { recursive: true });
     await writeFile(path.join(target, '.repo-seed', 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
@@ -392,13 +429,18 @@ test('verifyPlaceholders flags an un-instantiated repo-review', async () => {
 
 // --- Optional extension packs (v0.3.0) ---
 
-test('extensionPacks returns six packs with files and agentsLine', () => {
+test('extensionPacks preserves six legacy ids; spec is a deprecated no-op', () => {
   const packs = extensionPacks();
   assert.equal(packs.length, 6);
   const ids = packs.map((p) => p.id);
   assert.deepEqual(ids.sort(), ['ai-disclosure', 'ci', 'codeowners', 'community', 'release', 'spec']);
   for (const p of packs) {
-    assert.ok(p.files.length >= 1, `${p.id} has files`);
+    if (p.id === 'spec') {
+      assert.equal(p.files.length, 0);
+      assert.equal(p.deprecated, true);
+    } else {
+      assert.ok(p.files.length >= 1, `${p.id} has files`);
+    }
     assert.ok(p.agentsLine.startsWith('- '), `${p.id} has an AGENTS.md line`);
   }
 });
@@ -406,7 +448,7 @@ test('extensionPacks returns six packs with files and agentsLine', () => {
 test('seededFiles(extensions) adds pack files to core', () => {
   const core = seededFiles();
   const all = seededFiles(['ci', 'release', 'community', 'codeowners', 'spec', 'ai-disclosure']);
-  assert.equal(core.length, 27);
+  assert.equal(core.length, 35);
   assert.ok(all.length > core.length);
   assert.ok(all.some(([p]) => p === '.github/workflows/ci.yml'));
   assert.ok(all.some(([p]) => p === 'SECURITY.md'));
@@ -467,7 +509,7 @@ test('re-run without extensions preserves previously-seeded extension files', as
     await mkdir(path.join(target, '.repo-seed'), { recursive: true });
     await writeFile(path.join(target, '.repo-seed', 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
 
-    // Second run WITHOUT extensions: extension files preserved, not deleted, not refreshed
+    // Second run WITHOUT flags: enabled capabilities remain managed and refreshable.
     const second = await planRun({
       targetDir: target,
       templatesRoot: REPO_TEMPLATES,
@@ -478,8 +520,7 @@ test('re-run without extensions preserves previously-seeded extension files', as
       extensions: [],
     });
     const ciAction = second.actions.find((a) => a.rel === '.github/workflows/ci.yml');
-    assert.equal(ciAction.action, 'skip');
-    assert.ok(ciAction.reason.includes('extension not enabled'));
+    assert.ok(['keep', 'update'].includes(ciAction.action));
     // File still on disk, manifest entry still present
     const ciAbs = path.join(target, '.github/workflows/ci.yml');
     assert.ok((await stat(ciAbs)).isFile());
@@ -489,7 +530,7 @@ test('re-run without extensions preserves previously-seeded extension files', as
   }
 });
 
-test('default core-only seed has no extension files and empty extension section', async () => {
+test('default seed includes Core Spec but no optional capability files', async () => {
   const target = await tmpdir();
   try {
     const manifest = defaultManifest();
@@ -504,7 +545,8 @@ test('default core-only seed has no extension files and empty extension section'
     });
     assert.ok(!actions.some((a) => a.rel === '.github/workflows/ci.yml'));
     assert.ok(!actions.some((a) => a.rel === 'SECURITY.md'));
-    assert.ok(!actions.some((a) => a.rel === 'docs/specs/README.md'));
+    assert.ok(actions.some((a) => a.rel === 'docs/specs/README.md'));
+    assert.ok(actions.some((a) => a.rel === 'scripts/verify-specs.mjs'));
     // AGENTS.md content has no extension section token residue when instantiated with empty value
     const agents = actions.find((a) => a.rel === 'AGENTS.md');
     assert.ok(!agents.content.includes('__AGENTS_EXTENSION_SECTION__'));
@@ -539,6 +581,44 @@ test('recordOnly preserves extension and userModified markers', async () => {
     await rm(path.join(target, 'docs', 'architecture.md'));
     const after = await recordOnly({ targetDir: target, manifest: updated });
     assert.ok(!after.files.some((f) => f.path === 'docs/architecture.md'));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+test('recordOnly adds newly introduced Core files to an older manifest', async () => {
+  const target = await tmpdir();
+  try {
+    const manifest = defaultManifest({ repoSeedVersion: '0.4.0' });
+    const first = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: baseValues(),
+      noInterview: true,
+    });
+    await applyPlan({ targetDir: target, actions: first.actions, manifest, dryRun: false });
+    manifest.files = manifest.files.filter((entry) => entry.path !== 'scripts/audit-governance.mjs');
+    const updated = await recordOnly({ targetDir: target, manifest });
+    assert.ok(updated.files.some((entry) => entry.path === 'scripts/audit-governance.mjs'));
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
+test('discoverAdoption reuses non-standard governance homes', async () => {
+  const target = await tmpdir();
+  try {
+    await mkdir(path.join(target, 'docs', 'adr'), { recursive: true });
+    await mkdir(path.join(target, 'docs', 'rfcs'), { recursive: true });
+    await writeFile(path.join(target, 'ARCHITECTURE.md'), '# Architecture\n', 'utf8');
+    await writeFile(path.join(target, 'TESTING.md'), '# Testing\n', 'utf8');
+    const adoption = await discoverAdoption(target);
+    assert.equal(adoption.paths.architecture, 'ARCHITECTURE.md');
+    assert.equal(adoption.paths.testing, 'TESTING.md');
+    assert.equal(adoption.paths.decisions, 'docs/adr');
+    assert.equal(adoption.paths.specs, 'docs/rfcs');
+    assert.equal(adoption.externalSources.decisions.location, 'docs/adr');
   } finally {
     await rm(target, { recursive: true, force: true });
   }

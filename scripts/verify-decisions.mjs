@@ -11,6 +11,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { pathToFileURL } from 'node:url';
+import { governancePaths, readRepoManifest } from './governance-config.mjs';
 
 export const DECISIONS_DIR = 'docs/decisions';
 export const REQUIRED_SECTIONS = [
@@ -112,7 +113,9 @@ export async function verifyDir(dirPath) {
 }
 
 async function main() {
-  const dir = process.argv[2] ?? DECISIONS_DIR;
+  const repoRoot = process.cwd();
+  const manifest = await readRepoManifest(repoRoot);
+  const dir = process.argv[2] ?? path.join(repoRoot, governancePaths(manifest).decisions);
   const errors = await verifyDir(dir);
   if (errors.length) {
     for (const e of errors) console.error(`verify-decisions: ${e}`);

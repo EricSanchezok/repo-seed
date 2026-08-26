@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
   <title id="title">Five layers of repository governance and an upgrade channel</title>
-  <desc id="desc">Resident instructions, deterministic gates, a decision log, in-repo skills, and process memory connect to a safe re-run upgrade channel.</desc>
+  <desc id="desc">Resident instructions, deterministic gates, change memory, in-repo skills, and process evidence connect to a safe re-run upgrade channel.</desc>
   <style>
     text { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
@@ -35,17 +35,17 @@
     <circle cx="117" cy="257" r="8" fill="#62c7d8"/>
     <text x="64" y="262" class="layer mono" fill="#62c7d8">L1</text>
     <text x="164" y="257" class="name" fill="#f4f6ec">Deterministic gates</text>
-    <text x="472" y="257" class="copy" fill="#9aa69f">Decisions, links, placeholders &amp; manifest verified before commit.</text>
-    <text x="1136" y="257" text-anchor="end" class="path mono" fill="#62c7d8">scripts/verify-*</text>
+    <text x="472" y="257" class="copy" fill="#9aa69f">Manifest-selected controls share one execution path.</text>
+    <text x="1136" y="257" text-anchor="end" class="path mono" fill="#62c7d8">scripts/run-gates.mjs</text>
   </g>
 
   <g>
     <line x1="64" y1="292" x2="1136" y2="292" stroke="#26332f"/>
     <circle cx="117" cy="327" r="8" fill="#e9e4d5"/>
     <text x="64" y="332" class="layer mono" fill="#e9e4d5">L2</text>
-    <text x="164" y="327" class="name" fill="#f4f6ec">Unified decision log</text>
-    <text x="472" y="327" class="copy" fill="#9aa69f">MADR records preserve rationale and explicit succession.</text>
-    <text x="1136" y="327" text-anchor="end" class="path mono" fill="#62c7d8">docs/decisions/</text>
+    <text x="164" y="327" class="name" fill="#f4f6ec">Change memory</text>
+    <text x="472" y="327" class="copy" fill="#9aa69f">Specs, decisions &amp; incidents keep distinct durable roles.</text>
+    <text x="1136" y="327" text-anchor="end" class="path mono" fill="#62c7d8">docs/specs/ · decisions/</text>
   </g>
 
   <g>
@@ -53,7 +53,7 @@
     <circle cx="117" cy="397" r="8" fill="#9bd86b"/>
     <text x="64" y="402" class="layer mono" fill="#9bd86b">L3</text>
     <text x="164" y="397" class="name" fill="#f4f6ec">In-repo skills</text>
-    <text x="472" y="397" class="copy" fill="#9aa69f">Review and decision procedures live beside the code.</text>
+    <text x="472" y="397" class="copy" fill="#9aa69f">Review, decision &amp; governance procedures stay resident.</text>
     <text x="1136" y="397" text-anchor="end" class="path mono" fill="#62c7d8">.agents/skills/</text>
   </g>
 
@@ -61,8 +61,8 @@
     <line x1="64" y1="432" x2="1136" y2="432" stroke="#26332f"/>
     <circle cx="117" cy="467" r="8" fill="#62c7d8"/>
     <text x="64" y="472" class="layer mono" fill="#62c7d8">L4</text>
-    <text x="164" y="467" class="name" fill="#f4f6ec">Process memory</text>
-    <text x="472" y="467" class="copy" fill="#9aa69f">Tests, postmortems &amp; PR policy outlive the session.</text>
+    <text x="164" y="467" class="name" fill="#f4f6ec">Process evidence</text>
+    <text x="472" y="467" class="copy" fill="#9aa69f">Tests, gates &amp; postmortems close the feedback loop.</text>
     <text x="1136" y="467" text-anchor="end" class="path mono" fill="#62c7d8">docs/</text>
     <line x1="64" y1="502" x2="1136" y2="502" stroke="#26332f"/>
   </g>

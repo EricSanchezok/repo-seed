@@ -5,7 +5,7 @@ Accepted
 Class: architecture
 
 ## Context and Problem Statement
-The seed ships two in-repo skills: repo-decisions (a procedure bound to the MADR standard) and repo-review (a review policy). repo-review's template was static: every seeded repository received the same blocking requirements and manual checks. Evidence that this is wrong: the template's manual checks were written for an agent-harness repository (lifecycle/concurrency races, model-perspective review) and generalize poorly to other stacks; a static policy carries no project red lines (deployment order, forbidden tools, schema obligations); and it breaks the generator principle ADR 0001 established — structure deterministic, content instantiated. Every other content-bearing seeded doc (architecture.md, testing.md) is instantiated with tokens; repo-review alone shipped static prose.
+The seed ships resident procedure skills plus repo-review, a project policy. A static review policy generalizes poorly across stacks, carries no project red lines, and breaks the generator principle ADR 0001 established — structure deterministic, content instantiated. Every other content-bearing seeded doc (architecture.md, testing.md) is instantiated with tokens; repo-review needs the same treatment.
 
 ## Decision Drivers
 - Review policy is project-specific; its value is specificity, not uniformity.
@@ -19,7 +19,7 @@ The seed ships two in-repo skills: repo-decisions (a procedure bound to the MADR
 - Universal core plus per-project instantiation with a derivation standard — the chosen route.
 
 ## Decision Outcome
-The repo-review template carries a universal core (semantic prose review, docs match code, decisions recorded, tests exist) plus two instantiation tokens — REVIEW_PROJECT_BLOCKING and REVIEW_PROJECT_CHECKS — that the model composes at seed time from AGENTS.md hard rules, architecture seams, stack detection, and interview Q8 (review policy input). The repo-seed skill carries a derivation standard (`references/review-standard.md`) with a per-stack risk catalog; it is skill-side guidance and is not seeded into target repositories. The record step marks the instantiated file's manifest entry `userModified` via the `--user-owned` flag, and a re-run never refreshes a user-owned entry. The "gates are green" blocking item was removed (CI proves gates mechanically; a reviewer restating CI wastes review on machine-provable facts), and the "guidance, not a checklist" disclaimer was replaced with a hard/soft split: blocking requirements block; manual checks rank remaining risk.
+The repo-review template carries a universal core (semantic prose review, docs match code, correct Spec/decision use, tests, and provenance) plus two instantiation tokens — REVIEW_PROJECT_BLOCKING and REVIEW_PROJECT_CHECKS — that the model composes at seed time from AGENTS.md hard rules, architecture seams, stack detection, and interview Q8. The repo-seed skill carries a derivation standard (`references/review-standard.md`) with a per-stack risk catalog; it is skill-side guidance and is not seeded into target repositories. The record step marks the instantiated file's manifest entry `userModified` via `--user-owned`, and a re-run never refreshes a user-owned entry. Machine-provable gate results stay out of semantic review; blocking requirements block while manual checks rank remaining risk.
 
 ### Consequences
 - Good: seeded repositories get a review policy that names their actual failure modes and red lines.

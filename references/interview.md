@@ -18,7 +18,7 @@ The generator asks the minimum necessary questions before scaffolding. Every que
 
 ### Q4. Test command
 - **Ask when**: not detectable from the repository (no package.json `test` script, no pytest.ini/pyproject `[tool.pytest]`, no go test convention, no Cargo.toml).
-- **Default**: `__TEST_COMMAND__` stays as a fill-in for the model to resolve; if the model cannot resolve it, use `npm test`-style generic and say so.
+- **Default**: resolve `__TEST_COMMAND__` from repository evidence; if it cannot be resolved, ask or omit the command rather than inventing one.
 
 ### Q5. Lint command
 - **Ask when**: not detectable.
@@ -45,14 +45,26 @@ The generator asks the minimum necessary questions before scaffolding. Every que
 3. Record answers; pass them to the scaffold step. Never block on a question whose default is acceptable.
 4. Never read `.env` files or other secrets during detection.
 
-### Q9. Optional extension packs
-- **Ask when**: always; it decides whether the seed stays core-only or grows outer-loop governance.
-- **Prompt**: "Optional extensions (default: none — core only): 1) CI workflow (GitHub Actions running the gates + tests) 2) Release policy (conventional commits + commit-msg hook + CHANGELOG division) 3) Community health files (SECURITY.md + CODE_OF_CONDUCT, recommended for public repos) 4) CODEOWNERS per-path owners 5) Spec contract layer (docs/specs/ lifecycle) 6) AI disclosure policy (Assisted-by trailer). Which do you want? (multi-select; skip = core only)"
-- **Default**: none — only the core 27-file seed ships; extension files are added only when explicitly chosen.
-- **Use**: pass the chosen pack ids to the scaffold `--extensions` flag; the model fills the AGENTS.md extension section with each pack's link line.
+### Q9. Applicable capabilities
+- **Ask when**: the audit recommends an optional capability and no enabled/external/unchanged declined or deferred state already resolves it.
+- **Prompt**: name only the applicable capability, its observed signals, existing equivalent-system result, benefit, ongoing cost, added files/processes, and `blocking` or `advisory` urgency. Ask whether to enable it, register an external equivalent, defer it, or decline it.
+- **Default**: deferred — no optional capability is enabled implicitly.
+- **Use**: record the chosen state and normalized assessment hash. File-backed legacy capabilities may still pass through `--extensions`; Spec is Core and legacy `--extensions spec` is a no-op.
 
 ### Q10. CODEOWNERS owner handle
 - **Ask when**: the user selected the `codeowners` extension pack in Q9.
 - **Prompt**: "Which GitHub handle or team should own the seeded paths (docs/, scripts/, .agents/, .github/)? For example `@alice` or `@acme/platform`. If you do not provide one, the placeholder `@TODO-OWNER` is generated and you must replace it before enabling branch protection."
 - **Default**: none — the scaffold generates `@TODO-OWNER`; the model tells the user to replace it.
 - **Use**: pass the handle to the scaffold as `--values CODEOWNER_HANDLE=<handle>`; without it the scaffold falls back to `TODO-OWNER`.
+
+### Q11. Local hooks
+- **Ask when**: the target is a Git repository and the audit does not detect an existing pre-commit hook or hook manager.
+- **Prompt**: "Install repo-seed's managed pre-commit hook? It runs the manifest-selected governance gates plus staged whitespace checks. Existing custom hooks are never overwritten."
+- **Default**: skip.
+- **Use**: pass `--hooks install` only after explicit approval; otherwise pass or retain `--hooks skip`.
+
+### Q12. Adoption source of truth
+- **Ask when**: adopting an unmanaged repository with non-standard governance paths or an external requirements/decision system.
+- **Prompt**: confirm the authoritative home for each detected artifact and whether repo-seed should link it as external or manage the existing repository path.
+- **Default**: preserve the existing system as external/user-owned and add only links plus missing Core.
+- **Use**: populate `governance.paths`, `governance.externalSources`, and capability state. Never create a duplicate canonical document merely to fit repo-seed's default layout.

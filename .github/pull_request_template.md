@@ -3,7 +3,7 @@
 ## Why
 
 ## Verification
-- [ ] Gates green (`node scripts/verify-decisions.mjs && node scripts/verify-doc-links.mjs && node scripts/verify-placeholders.mjs && node scripts/verify-manifest.mjs`)
+- [ ] Gates green (`node scripts/run-gates.mjs`)
 - [ ] Tests pass
-- [ ] Docs and decision records updated if non-trivial
+- [ ] Approved spec linked for a risk-boundary change; durable decisions recorded only when genuine alternatives exist
 - [ ] External sources are cited at the owning code or decision record, when applicable

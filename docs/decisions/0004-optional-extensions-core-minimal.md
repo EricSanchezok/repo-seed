@@ -1,7 +1,7 @@
 # Optional extension packs: core minimal by default, explicit opt-in
 
 ## Status
-Accepted
+Superseded by [0009](0009-progressive-capability-governance.md)
 Class: architecture
 
 ## Context and Problem Statement

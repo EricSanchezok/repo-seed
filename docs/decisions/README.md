@@ -1,6 +1,6 @@
 # Decision log
 
-Every decision — architecture or process — lives in one place: this directory. This is the unified decision log: architecture decisions and process decisions share the same format, the same lifecycle, and the same verifier. There is no second system.
+Every durable choice with meaningful alternatives — architecture or process — lives in one place: this directory. Architecture and process decisions share the same format, lifecycle, and verifier. Specs own change contracts; commits own change history.
 
 ## Format
 
@@ -55,7 +55,7 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 
 ## Writing rules
 
-- Every non-trivial change includes at least one new decision record or updates an existing one, in the same change. "Non-trivial" means it alters behavior, architecture, a contract shared across files, process or tooling, testing strategy, or a decision a maintainer may reasonably revisit.
+- Create or update a record when a change chooses among meaningful alternatives and future maintainers may reasonably revisit the rationale. Do not create a decision record for routine implementation, mechanical refactors, obvious fixes already defined by regression tests, or work that merely follows an accepted decision; risk-boundary feature behavior belongs in a spec and change history belongs in commits.
 - State the decision, what it beats, and what it gives up. `## Considered Options` lists genuine alternatives; `## Pros and Cons of the Options` records why the losers lost. A decision without its alternatives invites re-litigation.
 - When a record relies on external evidence or an implementation source, cite it descriptively in `## Links` with a stable URL, DOI, or versioned permalink. Do not leave research or quantitative claims unlinked.
 - Cross-reference records with relative Markdown links (`[0001](0001-title.md)`), never bare numbers.
@@ -63,7 +63,7 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 
 ## Verifier
 
-`scripts/verify-decisions.mjs` enforces: file naming, unique sequential numbering, required sections, valid status values, valid `Class:` values when present, and `Superseded by NNNN` targets that exist. It exits non-zero on any violation. The verifier is installed as a pre-commit hook by `scripts/install-hooks.mjs` and can be run standalone.
+`scripts/verify-decisions.mjs` enforces: file naming, unique sequential numbering, required sections, valid status values, valid `Class:` values when present, and `Superseded by NNNN` targets that exist. It exits non-zero on any violation. `scripts/run-gates.mjs` selects it from the manifest; an explicitly authorized managed hook calls the runner.
 
 ## Index
 
@@ -75,3 +75,6 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 - [0005 — README visuals use generated art and native diagrams](0005-readme-visual-system.md)
 - [0006 — Published README image replacements use cache-safe paths](0006-readme-image-cache-safe-paths.md)
 - [0007 — Preserve external-source provenance beside implementation](0007-preserve-external-source-provenance.md)
+- [0008 — Separate change contracts from durable decisions](0008-separate-change-contracts-from-durable-decisions.md)
+- [0009 — Govern repository capabilities through progressive state](0009-progressive-capability-governance.md)
+- [0010 — Execute governance gates through one runner and authorize hooks separately](0010-unified-gates-and-authorized-hooks.md)

@@ -4,9 +4,9 @@ How this repository tests, tier by tier, and the rules that keep a green suite m
 
 ## Tiers
 
-- **Unit** (`node --test scripts/*.test.mjs`): fast tests that stay with the code area they exercise. Prefer edge cases, error paths, event ordering, and concurrency races.
-- **Integration**: tests that exercise real composition (real modules wired together, external services mocked only at the expensive or non-deterministic boundary).
-- **End-to-end** (`n/a`): tests that boot the real entry point and verify the world — re-run the command or re-read the file externally, never the program's own claim.
+- **Unit** (`node --test scripts/*.test.mjs`): capability matching, lifecycle transitions, stable assessment hashes, manifest migration, verifier edge cases, and preservation rules.
+- **Integration** (`node --test scripts/*.test.mjs`): real scaffold CLI, capability addition, adoption dry-runs, hooks, worktree resolution, manifest-driven gates, and template instantiation in temporary repositories.
+- **End-to-end** (`node scripts/run-gates.mjs`): execute the same manifest-selected governance gates used by CI and hooks, then inspect the resulting repository state rather than trusting scaffold output.
 
 ## Rules
 
