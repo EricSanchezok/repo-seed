@@ -61,7 +61,7 @@ export function sha256(text) {
   return createHash('sha256').update(text).digest('hex');
 }
 
-export function defaultManifest({ repoSeedVersion = '0.6.0' } = {}) {
+export function defaultManifest({ repoSeedVersion = '0.6.1' } = {}) {
   return {
     version: MANIFEST_VERSION,
     repoSeedVersion,
@@ -161,7 +161,7 @@ export function builtinDefault(rel) {
         '',
         '## Verification',
         '- [ ] Gates green (`node scripts/run-gates.mjs`)',
-        '- [ ] Tests pass',
+        '- [ ] Verification names the regression risk and lowest sufficiently real test boundary; tests pass',
         '- [ ] Approved spec linked for a risk-boundary change; durable decisions recorded only when genuine alternatives exist',
         '- [ ] External sources are cited at the owning code or decision record, when applicable',
       ].join('\n') + '\n';
@@ -718,7 +718,7 @@ async function main() {
   const adopt = flags.has('adopt');
   const userOwned = parseListFlag(flags.get('user-owned'));
   const extensions = resolveExtensions(parseListFlag(flags.get('extensions')));
-  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.6.0';
+  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.6.1';
   const hookMode = flags.get('hooks') || 'skip';
   if (!['install', 'skip'].includes(hookMode)) throw new Error('--hooks must be install or skip');
 

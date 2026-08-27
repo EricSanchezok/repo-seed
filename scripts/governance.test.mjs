@@ -30,7 +30,7 @@ async function tmpdir() {
 async function writeManifest(repoRoot, overrides = {}) {
   const manifest = {
     version: 1,
-    repoSeedVersion: '0.6.0',
+    repoSeedVersion: '0.6.1',
     governance: {
       paths: {
         architecture: 'docs/architecture.md',
@@ -406,7 +406,7 @@ test('fully instantiated fresh seed passes its own manifest-selected gates', asy
       LINT_COMMAND: 'n/a',
       RUNTIME_PREREQUISITE: 'Node >= 18',
       ARCHITECTURE_CONTENT: '## Modules\n\n- `src/` owns product code.',
-      E2E_COMMAND: 'n/a',
+      TEST_TOPOLOGY: '- Unit and integration tests live in `tests/` and are selected by the root Test command.\n- No end-to-end tier exists; add it when a shipped entry-point risk requires one.',
       REVIEW_PROJECT_BLOCKING: 'None beyond the universal requirements.',
       REVIEW_PROJECT_CHECKS: 'None beyond the universal checks below.',
       COPYRIGHT_HOLDER: 'Test Maintainers',
@@ -421,9 +421,33 @@ test('fully instantiated fresh seed passes its own manifest-selected gates', asy
       cli,
       root,
       '--record-only',
-      '--repo-seed-version', '0.6.0',
+      '--repo-seed-version', '0.6.1',
       '--user-owned', '.agents/skills/repo-review/SKILL.md',
     ]);
+    const testingPolicy = await readFile(path.join(root, 'docs', 'testing.md'), 'utf8');
+    const residentInstructions = await readFile(path.join(root, 'AGENTS.md'), 'utf8');
+    const reviewPolicy = await readFile(path.join(root, '.agents', 'skills', 'repo-review', 'SKILL.md'), 'utf8');
+    const manifest = JSON.parse(await readFile(path.join(root, '.repo-seed', 'manifest.json'), 'utf8'));
+    assert.match(testingPolicy, /risk-adjusted signal/);
+    assert.match(testingPolicy, /lowest boundary/);
+    assert.match(testingPolicy, /tests\//);
+    assert.match(testingPolicy, /Coverage reports.*not a target/);
+    assert.doesNotMatch(testingPolicy, /__[A-Z][A-Z0-9_]*__/);
+    assert.match(residentInstructions, /smallest test set at the lowest sufficiently real boundary/);
+    assert.ok(
+      residentInstructions.indexOf('## Repository governance') < residentInstructions.indexOf('## Repository layout'),
+      'governance identity and routing must appear before repository orientation'
+    );
+    assert.match(residentInstructions, /governance layer is managed by repo-seed/);
+    assert.match(residentInstructions, /product code remains repository-owned/);
+    assert.match(residentInstructions, /manifest\.json.*authoritative/);
+    assert.match(residentInstructions, /review must use `repo-review`/);
+    assert.match(residentInstructions, /meaningful alternatives must use `repo-decisions`/);
+    assert.match(residentInstructions, /signals must use `repo-governance`/);
+    assert.match(residentInstructions, /upstream repair must use the global `repo-seed` skill/);
+    assert.match(residentInstructions, /Ordinary implementation.*without invoking repo-seed again/);
+    assert.match(reviewPolicy, /minimum sufficient behavior evidence/);
+    assert.equal(manifest.repoSeedVersion, '0.6.1');
     assert.deepEqual((await runGates(root)).errors, []);
   } finally {
     await rm(root, { recursive: true, force: true });

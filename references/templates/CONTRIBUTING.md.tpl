@@ -10,7 +10,7 @@ Thank you for considering contributing to this project. This repository is agent
    ```sh
    node scripts/run-gates.mjs
    ```
-4. Write or update tests in the same change; a fix without a regression test is a rumor.
+4. Name the regression risk and add or update the smallest test set that proves the affected contract; a fix without reproducible evidence is a rumor.
 5. If the change closes a subtle or systemic escaped failure, add a postmortem in [__POSTMORTEMS_PATH__/](./__POSTMORTEMS_PATH__/) linked to the permanent guardrail.
 
 ## Decision records

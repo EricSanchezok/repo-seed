@@ -12,11 +12,11 @@ Each fact has one home; everywhere else, link there.
 
 | Tier | Job | Does NOT belong there |
 |---|---|---|
-| Root `AGENTS.md` | Standing orders: rules an agent needs in context in every session, one to three lines each, linking its home | Stories, worked examples, restated rules |
+| Root `AGENTS.md` | Management identity, skill router, and standing orders needed in every session, linking each procedure home | Stories, worked examples, restated procedures |
 | `docs/AGENTS.md` | The documentation standard for this repository | Repo-wide rules the root file already carries |
 | `docs/architecture.md` | Ordered map: composition, modules, seams, extension points | Per-module detail (→ module docs), decision rationale (→ decision log) |
 | `docs/development.md` | Contributor setup, daily workflow, commands | Runtime rationale (→ decision log) |
-| `docs/testing.md` | Testing policy: tiers, verify-the-world, real entry path | Check-by-check lists that drift from actual commands |
+| `docs/testing.md` | Test mission, risk-to-layer selection, topology, evidence, maintenance budget | Per-case walkthroughs or drifting command inventories |
 | `docs/specs/` | Risk-triggered change contracts: Intent, Contract, Plan, Verification, Evidence | Durable alternative rationale and routine-change ceremony |
 | `docs/decisions/` | Durable choices with genuine alternatives (MADR + Class extension) | Change logs, implementation plans, and feature contracts |
 | `docs/postmortems/` | Incident write-ups linked to permanent guardrails: the only tier where war-story narrative belongs | — |

@@ -26,6 +26,8 @@ Planning is read-only. `planRun()` may inspect files and return create/update/ke
 
 The manifest mediates upgrades. An untouched managed file may refresh automatically; a user-modified or user-owned file is preserved. Omitting an enabled capability from a later CLI invocation does not disable it. Capability enabling, hook installation, policy/source-of-truth changes, and external connections require explicit user authority.
 
+Root AGENTS is the resident governance router. It identifies the manifest-backed management boundary and routes ordinary review, decisions, and governance evolution to local procedures; the global repo-seed skill owns only seeding, adoption, upgrades, and upstream repair.
+
 Adoption has one source of truth per artifact. Existing compatible AGENTS, architecture, test, ADR/RFC, incident, CI, or hook systems are detected and registered as external or user-owned; the scaffold fills missing Core surfaces without cloning their facts into a canonical path.
 
 Artifact enforcement is progressive. Existing unversioned Specs and postmortems are accepted only at their recorded path and hash. New or materially changed records use Artifact-Version 1.
@@ -34,5 +36,5 @@ Artifact enforcement is progressive. Existing unversioned Specs and postmortems 
 
 1. Trace the relevant seam and its downstream copies in the seeded repository.
 2. For a risk-boundary change, update an Approved [Spec](specs/README.md). Add a [decision record](decisions/README.md) only when the change selects among durable alternatives.
-3. Update source scripts, templates, dogfood copies, manifest metadata, and behavior tests together.
+3. Update source scripts, templates, dogfood copies, manifest metadata, and the smallest sufficient behavior evidence together.
 4. Run the affected tests and [`node scripts/run-gates.mjs`](../scripts/run-gates.mjs).

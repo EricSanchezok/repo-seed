@@ -13,7 +13,7 @@ Read the diff, the owning docs, the decision log, and enough surrounding code to
 - [docs/AGENTS.md](../../../docs/AGENTS.md): documentation placement and prose discipline.
 - [__DECISIONS_PATH__/](../../../__DECISIONS_PATH__/): durable design rationale. Disagreement with a decision record is a design discussion, not an automatic veto.
 - [__SPECS_PATH__/](../../../__SPECS_PATH__/): risk-triggered change contracts.
-- [__TESTING_PATH__](../../../__TESTING_PATH__): required test tiers.
+- [__TESTING_PATH__](../../../__TESTING_PATH__): risk-to-layer selection, test topology, evidence rules, and maintenance budget.
 - [__ARCHITECTURE_PATH__](../../../__ARCHITECTURE_PATH__): the module map and seams.
 
 ## Blocking requirements
@@ -23,7 +23,7 @@ Read the diff, the owning docs, the decision log, and enough surrounding code to
 1. **New prose receives semantic review.** Critically review every added or changed Markdown passage, JSDoc, comment, prompt, description, diagnostic, and visible string. Verify required coverage, accuracy, placement, and editorial quality against the owning code or behavior; automated checks do not establish those properties.
 2. **Docs match the code.** Config, defaults, errors, wire fields, events, and public behavior update the owning docs and JSDoc in the same diff.
 3. **Contracts and decisions use the right artifact.** A risk-boundary change has an Approved spec; a durable choice with real alternatives has a decision record. Do not demand an ADR as a change log.
-4. **Tests exist for the behavior.** A behavior change carries a test in the same change; a fix without a regression test is a rumor.
+4. **Tests provide minimum sufficient behavior evidence.** Name the meaningful regression each changed test prevents and place its primary evidence at the lowest sufficiently real boundary. A fix links an existing deterministic reproduction or adds a regression test that fails before the fix and passes afterward; redundant coverage or implementation-only assertions do not satisfy this requirement.
 5. **External-source provenance is retained.** If implementation is materially derived from a paper, article, community post, benchmark, research report, or copied/adapted code, cite it at the closest stable code location or link that location to a decision record whose `## Links` cites the source. A pull request, issue, prompt, or chat-only citation does not count; copied or adapted material also preserves applicable license and NOTICE requirements.
 
 ### Project-specific (instantiated at seed time from this project's own rules)
@@ -42,4 +42,4 @@ __REVIEW_PROJECT_CHECKS__
 - **Lifecycle and concurrency:** for async setup, callbacks, processes, or teardown, check races before publication, cancellation during awaits, independent error reporting, and complete cleanup.
 - **Scope and necessity:** map each abstraction, option, defensive copy, and compatibility path to its current contract and consumer. Challenge unrelated features and speculative generality.
 - **Bounds cover the final operation:** probe tiny and exact limits, oversized chunks, and multibyte text for byte limits.
-- **Real entry path:** tests exercise the shipped binary, module, or process where relevant; a hand-wired harness does not catch a broken entry point.
+- **Test value and boundary:** identify the contract each changed test owns, challenge duplicate evidence, and use the real shipped entry path whenever packaging, configuration, process setup, or wiring is part of the risk.

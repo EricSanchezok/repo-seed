@@ -68,6 +68,37 @@ test('instantiate replaces tokens and leaves unknown tokens', () => {
   assert.equal(instantiate('__A__ and __B__', { A: 'x' }), 'x and __B__');
 });
 
+test('testing topology token never regresses an instantiated policy on upgrade', async () => {
+  const target = await tmpdir();
+  try {
+    const manifest = defaultManifest();
+    const first = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: { TEST_TOPOLOGY: '- Unit tests are colocated as `*.test.mjs`.' },
+      noInterview: true,
+    });
+    await applyPlan({ targetDir: target, actions: first.actions, manifest, dryRun: false });
+    const installed = await readFile(path.join(target, 'docs', 'testing.md'), 'utf8');
+    assert.match(installed, /Unit tests are colocated/);
+    assert.doesNotMatch(installed, /__TEST_TOPOLOGY__/);
+
+    const second = await planRun({
+      targetDir: target,
+      templatesRoot: REPO_TEMPLATES,
+      manifest,
+      values: {},
+      noInterview: true,
+    });
+    const testingAction = second.actions.find((action) => action.rel === 'docs/testing.md');
+    assert.equal(testingAction.action, 'skip');
+    assert.match(testingAction.reason, /unresolved placeholders/);
+  } finally {
+    await rm(target, { recursive: true, force: true });
+  }
+});
+
 test('planRun creates files in an empty target and records manifest', async () => {
   const target = await tmpdir();
   try {

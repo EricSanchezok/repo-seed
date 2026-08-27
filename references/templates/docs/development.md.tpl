@@ -10,7 +10,7 @@ English is the working language of this repository. This document covers contrib
 ## Daily workflow
 
 1. Pull, branch, or stack per the repository's branching convention (see [CONTRIBUTING.md](../CONTRIBUTING.md)).
-2. Make the change; update the applicable spec, durable decisions, docs, and tests in the same change.
+2. Make the change; update the applicable spec, durable decisions, docs, and the smallest sufficient behavior evidence in the same change.
 3. Run the relevant gates:
    ```sh
    node scripts/run-gates.mjs

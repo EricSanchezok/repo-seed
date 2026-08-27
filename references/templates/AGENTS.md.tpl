@@ -2,6 +2,20 @@
 
 __PROJECT_ONE_LINER__
 
+## Repository governance
+
+This repository's governance layer is managed by repo-seed; product code remains repository-owned. [`.repo-seed/manifest.json`](.repo-seed/manifest.json) is authoritative for managed files, capability state, governance paths, external sources of truth, and the installed repo-seed version.
+
+Route governance work explicitly:
+
+- Change or pull-request review must use `repo-review`.
+- A durable choice with meaningful alternatives must use `repo-decisions`.
+- New complexity, delivery, ownership, security, release, or incident signals must use `repo-governance`.
+- Seeding, adoption, governance-layer upgrades, or upstream repair must use the global `repo-seed` skill. If it is unavailable, stop and ask rather than hand-copying upstream governance.
+- Ordinary implementation follows this file and the linked project documents without invoking repo-seed again.
+
+If automatic skill activation is unavailable, read the linked resident `SKILL.md` directly and follow it.
+
 ## Repository layout
 
 See [__ARCHITECTURE_PATH__](__ARCHITECTURE_PATH__) for the module map and seams. Directories named there are the canonical layout; anything else is user code.
@@ -43,7 +57,7 @@ Use the `repo-governance` skill when complexity, delivery, ownership, security, 
 
 ## Testing
 
-Follow [__TESTING_PATH__](__TESTING_PATH__). Test the real entry path; verify the world, not the self-report; mock only expensive or non-deterministic boundaries.
+Follow [__TESTING_PATH__](__TESTING_PATH__). Name the regression risk, then choose the smallest test set at the lowest sufficiently real boundary; verify observable outcomes rather than implementation details.
 
 ## Skills
 

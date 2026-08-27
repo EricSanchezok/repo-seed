@@ -19,9 +19,11 @@ AI assistants are only as good as the context you give them. Most repositories d
 repo-seed fixes that with **mechanical governance, not more documents**:
 
 - **Agents finally understand your repo** — one `AGENTS.md`, discovered by Claude Code, Codex, Cursor, Gemini CLI, opencode, Copilot & Synergy.
+- **Governance skills stay discoverable** — the resident AGENTS router identifies repo-seed management and maps each governance task to the right local or global skill.
 - **Intent survives agent handoffs** — risk-boundary work starts from an Approved Spec with permanent evidence.
 - **Decisions stop disappearing** — MADR records preserve choices with genuine alternatives without becoming a change log.
 - **Research stays traceable** — externally derived implementation keeps its source beside the code or in the owning decision record.
+- **Tests earn their keep** — the Core policy maps regression risk to the smallest sufficiently real evidence instead of rewarding test count or coverage theater.
 - **Drift gets caught, not noticed late** — a manifest-driven runner gives CLI, CI, and authorized hooks one gate list.
 - **Governance grows deliberately** — read-only audits recommend capabilities from repository facts; writes and integrations remain user-authorized.
 - **Your work is never overwritten** — the manifest remembers every seeded file; re-running refreshes only what you haven't touched.
@@ -57,7 +59,7 @@ node repo-seed/scripts/scaffold.mjs <target-dir> \
 | **L1 · Deterministic gates** | Manifest-selected Spec, decision, postmortem, link, placeholder, and ownership verification through one runner |
 | **L2 · Change memory** | Risk-triggered Specs + selective MADR decisions + guardrail-linked postmortems |
 | **L3 · In-repo skills** | `repo-review` · `repo-decisions` · `repo-governance` — project procedures stay resident |
-| **L4 · Process evidence** | Testing policy · Spec Evidence · PR review findings · optional CI/hook enforcement |
+| **L4 · Process evidence** | Risk-driven testing policy · Spec Evidence · PR review findings · optional CI/hook enforcement |
 | **Upgrade channel** | `.repo-seed/manifest.json` records ownership, capabilities, paths, external sources, and gradual artifact policy |
 
 ## How it works

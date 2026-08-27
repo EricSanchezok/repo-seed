@@ -17,4 +17,4 @@ __ARCHITECTURE_CONTENT__
 2. For a risk-boundary change, obtain an Approved spec in [__SPECS_PATH__/](../__SPECS_PATH__/).
 3. Record durable design choices in [__DECISIONS_PATH__/](../__DECISIONS_PATH__/) when genuine alternatives exist.
 4. Update this document and the owning module docs in the same change.
-5. Run the gates; add tests for the behavior, not just for the lines.
+5. Run the gates; add the smallest sufficient evidence for the behavior and risk, not tests for line count.

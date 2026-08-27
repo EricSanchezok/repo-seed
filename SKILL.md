@@ -6,7 +6,7 @@ compatibility: Node >= 18; works in any repository regardless of language or fra
 metadata:
   generator: true
   category: scaffolding
-  version: 0.6.0
+  version: 0.6.1
 allowed-tools: Read Write Edit Bash
 ---
 
@@ -16,6 +16,8 @@ repo-seed turns a traditional repository — empty or existing, any technology s
 
 **repo-seed is a progressive governance system, not a static template.** It may autonomously inspect, audit, and produce a dry-run. Writing the baseline, enabling a capability, installing a hook, changing policy/source-of-truth, or connecting an external system requires user authority. Re-running repo-seed is the only upgrade channel: untouched seeded files refresh, user-modified files are preserved, and user-created files are never deleted.
 
+In a managed repository, the resident AGENTS router is authoritative. Ordinary implementation consumes its standing rules and linked project documents directly; review, durable decisions, and governance evolution use the resident `repo-review`, `repo-decisions`, and `repo-governance` skills. Invoke the global repo-seed skill only for seeding, adoption, governance-layer upgrades, or upstream repair.
+
 ## Workflow
 
 Run the five steps in order. Analysis, interview, and instantiation require model judgment; scaffold, record, audit, and verification mechanics are deterministic scripts.
@@ -24,7 +26,7 @@ Run the five steps in order. Analysis, interview, and instantiation require mode
 
 Inspect the target repository (read-only):
 
-- Stack manifests: `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `requirements.txt`, `Gemfile`, etc. Detect the test command and lint command when derivable.
+- Stack manifests: `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `requirements.txt`, `Gemfile`, etc. Detect test/lint commands plus actual unit, integration, end-to-end, fixture, and naming conventions when derivable.
 - Existing files at seeded paths (see the file list in step 4). List every conflict: a file already exists where repo-seed wants to write.
 - Existing governance equivalents: AGENTS/CLAUDE instructions, architecture/testing docs, ADR/RFC systems, postmortems, CI, release/deploy markers, hooks, CODEOWNERS, and external requirement links.
 - Git state: is it a git repository? Is the working tree clean? What is the default branch?
@@ -40,7 +42,7 @@ Ask only the questions whose answers are not detectable and that materially chan
 1. Project one-liner (always; fills the AGENTS.md opening line).
 2. License — default MIT; skip if a LICENSE exists.
 3. Branch convention — default `main` with short-lived feature branches.
-4. Test command / lint command — only when not detectable.
+4. Test command, topology, and lint command — ask only for material facts that repository evidence cannot resolve; never invent a tier or directory.
 5. Existing-file conflict resolution — preserve-and-merge (default) / overwrite-with-backup / skip.
 6. Monorepo — root-only seed (default) or also subtree AGENTS.md per package.
 7. Review policy input — known pitfalls, review red lines, and invariants this project must not regress (default: none; only the universal repo-review core).
@@ -56,7 +58,7 @@ node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
   --templates <path-to-repo-seed>/references/templates \
   --extensions ci,release \
   --hooks skip \
-  --repo-seed-version 0.6.0
+  --repo-seed-version 0.6.1
 ```
 
 Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--adopt` (reuse detected governance paths in an unmanaged repository), `--hooks install|skip` (default `skip`), `--values k=v` (repeatable), `--extensions <ids>` (legacy compatibility entry), `--capability-state id=enabled|external|deferred|declined` plus reason/assessment hash, `--governance-path kind=relative/path`, `--external-source kind=https://stable-link`, `--user-owned <path>` (repeatable), and `--record-only` (recompute manifest state without touching governed files).
@@ -65,15 +67,17 @@ Use `--dry-run` first and show the user the plan. Optional capabilities are neve
 
 ### 4. Instantiate (model)
 
-For every seeded file that contains fill-in tokens (`__UPPERCASE__`), replace the tokens with content derived from the analysis and interview: project one-liner, real test/lint commands, stack description, architecture content for `docs/architecture.md`, and a testing policy tailored to the detected stack in `docs/testing.md`. Resolve every token — the placeholder gate fails on any survivor. Do not invent commands: if a command cannot be resolved, omit that line rather than fabricate it.
+For every seeded file that contains fill-in tokens (`__UPPERCASE__`), replace the tokens with content derived from the analysis and interview: project one-liner, real test/lint commands, stack description, architecture content for `docs/architecture.md`, and a risk-driven testing policy tailored to the detected stack in `docs/testing.md`. Resolve every token — the placeholder gate fails on any survivor. Do not invent commands, tiers, or directories: if a command cannot be resolved, omit that line rather than fabricate it.
 
 Three files need composition, not string replacement:
 
 - `docs/architecture.md` — write the target's real module map and seams; never ship the placeholder skeleton.
-- `docs/testing.md` — state the project's actual test tiers and entry paths from the analysis.
+- `docs/testing.md` — preserve the Core mission and evidence rules, then state the project's actual risk-to-layer choices, test roots, colocated naming conventions, fixtures, commands, and absent tiers from repository evidence.
 - `.agents/skills/repo-review/SKILL.md` — compose `__REVIEW_PROJECT_BLOCKING__` from AGENTS.md hard rules, interview Q8 red lines, and architecture seams, and `__REVIEW_PROJECT_CHECKS__` from the stack risk catalog in [references/review-standard.md](references/review-standard.md). Procedure skills (repo-decisions) ship static; review policy is instantiated per project. Keep the universal core verbatim; replace an empty token with "None beyond the universal requirements/checks."
 
 Compose `__DECISION_INDEX__` and `__POSTMORTEM_INDEX__` from the records that actually exist after the run. Use one relative Markdown link per record, or `None yet.` for an empty postmortem index. These tokens keep user-created records discoverable across upgrades; never reset an existing index to the seed examples.
+
+Compose `__TEST_TOPOLOGY__` as a short list of the repository's actual test homes. Name each existing tier's path or colocated filename convention, the root entry or runner configuration that selects it, and fixture location where present; link rather than duplicate a command already owned by AGENTS.md. If a tier does not exist, state that fact and the risk that would justify adding it; do not create a directory merely to satisfy the template. Follow the ecosystem's idiom: for example Go unit tests stay beside source as `*_test.go`, while Python commonly uses tiered roots under `tests/`.
 
 When adoption registers a non-standard path, instantiate `__ARCHITECTURE_PATH__`, `__TESTING_PATH__`, `__DECISIONS_PATH__`, `__SPECS_PATH__`, and `__POSTMORTEMS_PATH__` from the manifest. Instantiate `__DECISIONS_RULE__` as the local MADR lifecycle for a repository-owned decision log or as a no-duplicate-authority rule for an external decision source. Do not copy facts from an external source of truth into a second authoritative document.
 
@@ -93,8 +97,8 @@ The gates run from the target directory. If and only if the user authorized hook
 
 The capability catalog is the single source of truth for the file contributions returned by `seededFiles()`. Core includes:
 
-- `AGENTS.md` (resident agent instructions with the governance loop and security rules), `CLAUDE.md` (`@AGENTS.md` import — no symlink, Windows-safe).
-- `docs/AGENTS.md` (documentation standard), architecture/development/testing docs, `docs/specs/README.md`, and `docs/postmortems/README.md`.
+- `AGENTS.md` (management identity, resident skill router, governance loop, and security rules), `CLAUDE.md` (`@AGENTS.md` import — no symlink, Windows-safe).
+- `docs/AGENTS.md` (documentation standard), architecture/development docs, a risk-driven testing policy with instantiated topology, `docs/specs/README.md`, and `docs/postmortems/README.md`.
 - `docs/decisions/` — the unified MADR decision log with four seed records and an index.
 - `.agents/skills/repo-review`, `.agents/skills/repo-decisions`, and `.agents/skills/repo-governance` — resident review, rationale, and capability-evolution procedures.
 - `scripts/` — capability/audit/configuration modules, the manifest-driven runner, deterministic verifiers, and the separately authorized hook installer.

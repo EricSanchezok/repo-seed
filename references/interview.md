@@ -16,9 +16,21 @@ The generator asks the minimum necessary questions before scaffolding. Every que
 - **Ask when**: repository has no default branch set and no existing CONTRIBUTING.
 - **Default**: `main` with short-lived feature branches.
 
-### Q4. Test command
-- **Ask when**: not detectable from the repository (no package.json `test` script, no pytest.ini/pyproject `[tool.pytest]`, no go test convention, no Cargo.toml).
-- **Default**: resolve `__TEST_COMMAND__` from repository evidence; if it cannot be resolved, ask or omit the command rather than inventing one.
+### Q4. Test command and topology
+- **Ask when**: the owning command or a material test location cannot be detected from manifests, runner configuration, filenames, or existing test roots. A missing tier is a detected fact, not a reason to invent a directory.
+- **Prompt**: confirm only the unresolved command or ownership boundary: where unit, integration, and end-to-end behavior lives; whether tests are colocated or under repository-level roots; and where fixtures belong.
+- **Default**: resolve `__TEST_COMMAND__` and `__TEST_TOPOLOGY__` from repository evidence. If a command is unresolved, omit it; if a tier is absent, state the risk that would justify adding it rather than creating it speculatively.
+- **Use**: instantiate the testing policy with actual paths, naming conventions, runner ownership, and fixture ownership. Keep repository-wide command strings in AGENTS.md and preserve an adopted testing source of truth instead of generating a second layout.
+
+When an empty repository has no contrary convention, follow the detected ecosystem rather than a repo-seed-specific tree:
+
+| Ecosystem | Placement default |
+|---|---|
+| JavaScript/TypeScript | Colocate focused `*.test.*` unit tests or mirror source under `test(s)/unit`; use named `integration` and `e2e` roots for wider composition |
+| Python | Mirror packages under `tests/`, separating `unit`, `integration`, and `e2e` only when those tiers actually exist |
+| Go | Keep `*_test.go` beside the owning package; isolate cross-package or environment suites only when needed |
+| Rust | Keep unit tests with the owning module and public integration tests under `tests/` |
+| Java/Kotlin | Follow build-tool source sets such as `src/test/java` or `src/test/kotlin`; create additional source sets for integration/system tests only when configured |
 
 ### Q5. Lint command
 - **Ask when**: not detectable.

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "repoSeedVersion": "0.6.0",
+  "repoSeedVersion": "0.6.1",
   "lastSyncCommit": null,
   "config": {
     "license": "MIT",
@@ -10,7 +10,7 @@
   "files": [
     {
       "path": "AGENTS.md",
-      "sha256": "55aadfc752ba02fa3848ee85da5e704096bf475518c27501303934a8b94bf7a6",
+      "sha256": "5b56fc479afdb4069cfeaa97ed5684c8c88196a18f50a34ae42e34467f8f762f",
       "category": "instruction",
       "capability": "baseline"
     },
@@ -22,31 +22,31 @@
     },
     {
       "path": "docs/AGENTS.md",
-      "sha256": "182da27f942f1887200ae83d6de033fe4153fbf98f17c917bd585aea38a731a6",
+      "sha256": "134e5a28d1507fac4bca101df9b4b096fbb020431d5b40af8fb63eaccf5785ff",
       "category": "docs",
       "capability": "baseline"
     },
     {
       "path": "docs/architecture.md",
-      "sha256": "513f8d011f10c51f0256bb239a551f4df8e778c50c8062ff60110605b79aee93",
+      "sha256": "d0d8d1658dbab480e7dfe9ef6f1fcf30bfcb07da7be09271e33c4ae3ca84793a",
       "category": "docs",
       "capability": "baseline"
     },
     {
       "path": "docs/development.md",
-      "sha256": "2fdad6b87b98a7b4636aad09e0b40eb7ec970dacfd29aae50e16032091e2057a",
+      "sha256": "60003ba67073df3583b2d7c55511bc0349625d39bc703ca7678f2d61e7fbe81b",
       "category": "docs",
       "capability": "baseline"
     },
     {
       "path": "docs/testing.md",
-      "sha256": "e82a75ebac6a94ba43a1241f047e600e4767a03cd58e8ddb67ef0fc7e881283e",
+      "sha256": "ddbb1c2884c3a85cade429ecb68b227fad279f2c821daf1b1843a475d735c60f",
       "category": "docs",
       "capability": "baseline"
     },
     {
       "path": "docs/decisions/README.md",
-      "sha256": "0a237265226a8fa0be39066eac48a491cb8daa107d580a109366bd202c5e7322",
+      "sha256": "f701a11f687d5ac24ce2ea6e3461206c59125922243545d8ee7487e7d901e7b3",
       "category": "docs",
       "capability": "decisions"
     },
@@ -82,7 +82,7 @@
     },
     {
       "path": ".agents/skills/repo-review/SKILL.md",
-      "sha256": "53f1e2b25b3ae9a2eb4a5971ad8a5cbfa7ce17c7a0e893f5aed9eda8668e9764",
+      "sha256": "70c03da0579cfa8e554a3308436cc5931417d0f2828d5b948505932cd978ac29",
       "category": "skill",
       "capability": "baseline",
       "userModified": true
@@ -125,7 +125,7 @@
     },
     {
       "path": "CONTRIBUTING.md",
-      "sha256": "d1a70de7a47c275cc351bff9b10b796589dbdebb72b04411e83f7f0e12f86cd3",
+      "sha256": "80ce6de99190bf2542da656bb3e07256c86184508538fa7bbfdfd55c7d7c9fc6",
       "category": "meta",
       "capability": "baseline"
     },
@@ -155,7 +155,7 @@
     },
     {
       "path": ".github/pull_request_template.md",
-      "sha256": "5a644e671e688f74d0fa9b20c220c607df11b0e4c96c6b1a5a19f34ab36abec3",
+      "sha256": "5b2db85304170bc600cbb68b98a6d758dfdc5cd6dc51a85677df111cf2720ff0",
       "category": "github",
       "capability": "baseline"
     },
@@ -199,7 +199,7 @@
     },
     {
       "path": "scripts/capabilities.mjs",
-      "sha256": "3651f17f6d4d128561a0ad227679c4635311a3c3eee71d070c8279737f48566c",
+      "sha256": "8ca9afae297dd82017a2ef7516095230873c776349e8e186dc381d2be33c1746",
       "category": "gate",
       "capability": "baseline"
     },
