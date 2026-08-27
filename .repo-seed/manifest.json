@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "repoSeedVersion": "0.6.1",
+  "repoSeedVersion": "0.6.2",
   "lastSyncCommit": null,
   "config": {
     "license": "MIT",
@@ -10,7 +10,7 @@
   "files": [
     {
       "path": "AGENTS.md",
-      "sha256": "5b56fc479afdb4069cfeaa97ed5684c8c88196a18f50a34ae42e34467f8f762f",
+      "sha256": "1f14801601bedc148d9cbc94d4c58085870b5927b08648a4558b88088c6d4a60",
       "category": "instruction",
       "capability": "baseline"
     },
@@ -82,7 +82,7 @@
     },
     {
       "path": ".agents/skills/repo-review/SKILL.md",
-      "sha256": "70c03da0579cfa8e554a3308436cc5931417d0f2828d5b948505932cd978ac29",
+      "sha256": "af3065ef531895b47b05dff490f107511392a4e8cfee4e2f21bcea8f48bf7a79",
       "category": "skill",
       "capability": "baseline",
       "userModified": true
@@ -199,7 +199,7 @@
     },
     {
       "path": "scripts/capabilities.mjs",
-      "sha256": "8ca9afae297dd82017a2ef7516095230873c776349e8e186dc381d2be33c1746",
+      "sha256": "74fc315d590a4d9c491ff4034f298f1288f649b4e00b3303d07bbb6d28adcc51",
       "category": "gate",
       "capability": "baseline"
     },

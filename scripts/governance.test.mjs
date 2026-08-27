@@ -30,7 +30,7 @@ async function tmpdir() {
 async function writeManifest(repoRoot, overrides = {}) {
   const manifest = {
     version: 1,
-    repoSeedVersion: '0.6.1',
+    repoSeedVersion: '0.6.2',
     governance: {
       paths: {
         architecture: 'docs/architecture.md',
@@ -421,7 +421,7 @@ test('fully instantiated fresh seed passes its own manifest-selected gates', asy
       cli,
       root,
       '--record-only',
-      '--repo-seed-version', '0.6.1',
+      '--repo-seed-version', '0.6.2',
       '--user-owned', '.agents/skills/repo-review/SKILL.md',
     ]);
     const testingPolicy = await readFile(path.join(root, 'docs', 'testing.md'), 'utf8');
@@ -446,8 +446,16 @@ test('fully instantiated fresh seed passes its own manifest-selected gates', asy
     assert.match(residentInstructions, /signals must use `repo-governance`/);
     assert.match(residentInstructions, /upstream repair must use the global `repo-seed` skill/);
     assert.match(residentInstructions, /Ordinary implementation.*without invoking repo-seed again/);
+    assert.match(residentInstructions, /Keep the primary logic path visible/);
+    assert.match(residentInstructions, /abstraction only when it hides more complexity than its indirection adds/);
+    assert.match(residentInstructions, /one repository term per concept/);
     assert.match(reviewPolicy, /minimum sufficient behavior evidence/);
-    assert.equal(manifest.repoSeedVersion, '0.6.1');
+    assert.match(reviewPolicy, /Human readability/);
+    assert.match(reviewPolicy, /without opening every helper/);
+    assert.match(reviewPolicy, /Block when these make behavior unreliable to infer/);
+    assert.match(reviewPolicy, /subjective polish as advisory/);
+    assert.match(reviewPolicy, /signals, not verdicts/);
+    assert.equal(manifest.repoSeedVersion, '0.6.2');
     assert.deepEqual((await runGates(root)).errors, []);
   } finally {
     await rm(root, { recursive: true, force: true });

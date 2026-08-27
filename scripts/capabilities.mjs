@@ -11,7 +11,7 @@ const CORE = {
     id: 'baseline',
     tier: 'core',
     title: 'Agent-native repository baseline',
-    benefit: 'Keeps management identity, resident skill routing, repository orientation, risk-driven testing policy, review policy, deterministic verification, and safe upgrades available in every managed repository.',
+    benefit: 'Keeps management identity, resident skill routing, repository orientation, human-readable implementation guidance, risk-driven testing policy, review policy, deterministic verification, and safe upgrades available in every managed repository.',
     cost: 'Maintains a small governed surface and ownership manifest.',
     urgency: 'blocking',
     files: [
@@ -41,7 +41,7 @@ const CORE = {
       ['.github/ISSUE_TEMPLATE/feature.md', 'github'],
     ],
     recommendWhen: [],
-    reviewContribution: 'Management identity, resident skill routing, risk-adjusted test evidence, project review policy, documentation orientation, manifest ownership, and the upgrade channel stay coherent.',
+    reviewContribution: 'Management identity, resident skill routing, human-readable implementation, risk-adjusted test evidence, project review policy, documentation orientation, manifest ownership, and the upgrade channel stay coherent.',
     verifyCommands: [
       'node scripts/verify-doc-links.mjs',
       'node scripts/verify-placeholders.mjs',

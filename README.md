@@ -77,7 +77,7 @@ Re-run any time to upgrade: untouched files refresh to the latest templates, **y
 
 ## Progressive capabilities
 
-Core contains resident instructions, architecture/testing docs, risk-triggered Spec, selective decisions, review/governance skills, deterministic gates, postmortems, manifest state, and the upgrade channel. Optional capabilities are proposed only when repository facts make them relevant.
+Core contains resident instructions, human-readable implementation guidance, architecture/testing docs, risk-triggered Spec, selective decisions, review/governance skills, deterministic gates, postmortems, manifest state, and the upgrade channel. Optional capabilities are proposed only when repository facts make them relevant.
 
 | Capability | Adds | Typical signal |
 |---|---|---|

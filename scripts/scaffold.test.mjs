@@ -352,7 +352,20 @@ test('repo-review template carries the two instantiation tokens', async () => {
   );
   assert.ok(tpl.includes('__REVIEW_PROJECT_BLOCKING__'), 'blocking token missing');
   assert.ok(tpl.includes('__REVIEW_PROJECT_CHECKS__'), 'checks token missing');
+  assert.match(tpl, /Human readability/);
+  assert.match(tpl, /signals, not verdicts/);
   assert.ok(!tpl.includes('guidance, not a complete checklist'), 'stale disclaimer must be gone');
+});
+
+test('readability policy is derived from repeated repository evidence', async () => {
+  const repoRoot = path.resolve(process.cwd());
+  const skill = await readFile(path.join(repoRoot, 'SKILL.md'), 'utf8');
+  const standard = await readFile(path.join(repoRoot, 'references', 'review-standard.md'), 'utf8');
+
+  assert.match(skill, /when code exists, sample two or three real entry points/);
+  assert.match(skill, /do not promote one outlier into policy/);
+  assert.match(standard, /only when repeated repository evidence establishes/);
+  assert.match(standard, /Never invent naming conventions or repository vocabulary/);
 });
 
 test('source attribution policy ships across governance surfaces', async () => {

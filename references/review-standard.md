@@ -9,6 +9,7 @@ repo-seed ships *procedure* skills statically (repo-decisions, bound to the MADR
 3. docs/testing.md — regression risks, layer-selection policy, actual test topology, evidence rules, and maintenance budget.
 4. Interview answers, especially Q8 (known pitfalls, review red lines, invariants).
 5. Stack manifests detected in the analysis (language, framework, storage, build).
+6. Representative entry points, modules, and public interfaces sampled during analysis for repeated domain vocabulary, naming idioms, abstraction boundaries, and placement conventions.
 
 ## Derivation procedure
 
@@ -44,9 +45,12 @@ For each selected surface, name the failure mode and where to look; do not write
 
 For a selected risk surface, derive test guidance from the project's testing policy rather than demanding more tests generically. Name the observable contract, its primary test location, and the lowest sufficiently real boundary. Ask for defense in depth only when the impact justifies duplicate evidence, and never turn coverage percentage or test count into a semantic review proxy.
 
+Derive a project-specific readability check only when repeated repository evidence establishes a canonical term, state-transition verb, naming idiom, or boundary. Name the observed convention and where it appears. Do not create a glossary from one example, import an external style preference over local idiom, or turn line counts, parameter counts, duplication, or complexity scores into verdicts. The universal human-readability check owns the fallback when the repository has no stable convention.
+
 ### Composition rules
 
 - Never invent commands or file paths; take them from the analysis or omit.
+- Never invent naming conventions or repository vocabulary; require repeated local evidence.
 - Never copy checks from another repository; the value is project specificity.
 - Keep the universal blocking requirements verbatim; add project items under their own heading.
 - Imperative, present tense; one requirement per numbered item; link the owning doc where one exists.

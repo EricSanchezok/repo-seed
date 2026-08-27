@@ -20,6 +20,10 @@ If automatic skill activation is unavailable, read the linked resident `SKILL.md
 
 See [__ARCHITECTURE_PATH__](__ARCHITECTURE_PATH__) for the module map and seams. Directories named there are the canonical layout; anything else is user code.
 
+## Code readability
+
+Write code for human readers. Keep the primary logic path visible; introduce an abstraction only when it hides more complexity than its indirection adds; choose names that reveal domain meaning, effects, and cost; use one repository term per concept; and keep behavior within its owning boundary.
+
 ## Commands
 
 - Test: `__TEST_COMMAND__`

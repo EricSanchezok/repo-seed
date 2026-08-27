@@ -6,7 +6,7 @@ compatibility: Node >= 18; works in any repository regardless of language or fra
 metadata:
   generator: true
   category: scaffolding
-  version: 0.6.1
+  version: 0.6.2
 allowed-tools: Read Write Edit Bash
 ---
 
@@ -27,6 +27,7 @@ Run the five steps in order. Analysis, interview, and instantiation require mode
 Inspect the target repository (read-only):
 
 - Stack manifests: `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`, `requirements.txt`, `Gemfile`, etc. Detect test/lint commands plus actual unit, integration, end-to-end, fixture, and naming conventions when derivable.
+- Representative implementation: when code exists, sample two or three real entry points, modules, and public interfaces. Identify the repository's canonical domain nouns, state-transition verbs, naming idioms, and abstraction/placement conventions from repeated evidence; do not promote one outlier into policy.
 - Existing files at seeded paths (see the file list in step 4). List every conflict: a file already exists where repo-seed wants to write.
 - Existing governance equivalents: AGENTS/CLAUDE instructions, architecture/testing docs, ADR/RFC systems, postmortems, CI, release/deploy markers, hooks, CODEOWNERS, and external requirement links.
 - Git state: is it a git repository? Is the working tree clean? What is the default branch?
@@ -58,7 +59,7 @@ node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
   --templates <path-to-repo-seed>/references/templates \
   --extensions ci,release \
   --hooks skip \
-  --repo-seed-version 0.6.1
+  --repo-seed-version 0.6.2
 ```
 
 Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--adopt` (reuse detected governance paths in an unmanaged repository), `--hooks install|skip` (default `skip`), `--values k=v` (repeatable), `--extensions <ids>` (legacy compatibility entry), `--capability-state id=enabled|external|deferred|declined` plus reason/assessment hash, `--governance-path kind=relative/path`, `--external-source kind=https://stable-link`, `--user-owned <path>` (repeatable), and `--record-only` (recompute manifest state without touching governed files).
@@ -73,7 +74,7 @@ Three files need composition, not string replacement:
 
 - `docs/architecture.md` — write the target's real module map and seams; never ship the placeholder skeleton.
 - `docs/testing.md` — preserve the Core mission and evidence rules, then state the project's actual risk-to-layer choices, test roots, colocated naming conventions, fixtures, commands, and absent tiers from repository evidence.
-- `.agents/skills/repo-review/SKILL.md` — compose `__REVIEW_PROJECT_BLOCKING__` from AGENTS.md hard rules, interview Q8 red lines, and architecture seams, and `__REVIEW_PROJECT_CHECKS__` from the stack risk catalog in [references/review-standard.md](references/review-standard.md). Procedure skills (repo-decisions) ship static; review policy is instantiated per project. Keep the universal core verbatim; replace an empty token with "None beyond the universal requirements/checks."
+- `.agents/skills/repo-review/SKILL.md` — compose `__REVIEW_PROJECT_BLOCKING__` from AGENTS.md hard rules, interview Q8 red lines, and architecture seams, and `__REVIEW_PROJECT_CHECKS__` from the stack risk catalog plus repeated vocabulary and abstraction evidence in [references/review-standard.md](references/review-standard.md). Procedure skills (repo-decisions) ship static; review policy is instantiated per project. Keep the universal core verbatim, never invent a naming rule or glossary, and replace an empty token with "None beyond the universal requirements/checks."
 
 Compose `__DECISION_INDEX__` and `__POSTMORTEM_INDEX__` from the records that actually exist after the run. Use one relative Markdown link per record, or `None yet.` for an empty postmortem index. These tokens keep user-created records discoverable across upgrades; never reset an existing index to the seed examples.
 
