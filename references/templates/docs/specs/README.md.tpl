@@ -9,7 +9,7 @@ Write and obtain human approval for a spec before implementation when a change a
 ## Lifecycle
 
 - **Draft** — proposed; under discussion. File name: `draft-<title>.md`.
-- **Approved** — reviewed and accepted; implementation may start. Rename to `<NNNN>-<title>.md` (sequential).
+- **Approved** — reviewed and accepted; implementation may start. Rename to `<NNNN>-<title>.md` (unique numeric identity; gaps allowed).
 - **Implemented** — shipped; the spec describes what exists.
 - **Superseded** — replaced by a newer numbered spec; keep both and link the new one from `Status:`.
 
@@ -40,7 +40,7 @@ Pending until implementation. Implemented specs link permanent repository tests,
 ## Rules
 
 - An agent may draft a spec, but a human changes it to Approved.
-- Draft files use `draft-<title>.md`; approved records use sequential `NNNN-<title>.md` names.
+- Draft files use `draft-<title>.md`; approved records use unique `NNNN-<title>.md` names; gaps are allowed.
 - Implemented specs contain at least one relative repository link in Evidence.
 - Existing external requirements may remain the source of truth; set the Spec capability state to `external`, register the stable source link, and do not create a parallel contract.
 - Keep one spec under roughly 200 lines; split independent contracts rather than growing a design essay.

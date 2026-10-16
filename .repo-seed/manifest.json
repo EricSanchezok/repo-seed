@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "repoSeedVersion": "0.6.4",
+  "repoSeedVersion": "0.6.5",
   "lastSyncCommit": null,
   "config": {
     "license": "MIT",
@@ -46,7 +46,7 @@
     },
     {
       "path": "docs/decisions/README.md",
-      "sha256": "5b3a97206cafebb649ae25c1b2e59437b1a314cb848db3da5d8b071c21abf9b6",
+      "sha256": "10bba328f440c4a12f026087fd87ba1073b5b5cb26b5db01bad4892fe8c5b60c",
       "category": "docs",
       "capability": "decisions",
       "userModified": true
@@ -81,9 +81,10 @@
     },
     {
       "path": "docs/postmortems/README.md",
-      "sha256": "cf184d05fb0a9d75ff6d41ef483493b7b47fe976c583164936be10409cbb5e51",
+      "sha256": "5acacde4ca693130f48de43324ac0e792a6be2883ec7426715d2fa1ad83b6157",
       "category": "docs",
-      "capability": "postmortems"
+      "capability": "postmortems",
+      "userModified": true
     },
     {
       "path": ".agents/skills/repo-review/SKILL.md",
@@ -94,13 +95,13 @@
     },
     {
       "path": ".agents/skills/repo-decisions/SKILL.md",
-      "sha256": "b871e064a473c5e117bef302b5b47e9fac6eacda33625a30c554b6bf693aee6d",
+      "sha256": "dbf2b80e462d3bf95b83a03824d074050ab87c190840e07ef3a4b773fb7eed7b",
       "category": "skill",
       "capability": "decisions"
     },
     {
       "path": "scripts/verify-decisions.mjs",
-      "sha256": "2e100efd61d5b16bbd559988f36e205352716c55662ce4d38d6b9933df1e9ac8",
+      "sha256": "576adf85c3bfaf49224b968d8e067de6d2492eacba7a6ff3acdf5ef3b59db79c",
       "category": "gate",
       "capability": "decisions"
     },
@@ -192,7 +193,7 @@
     },
     {
       "path": "docs/specs/README.md",
-      "sha256": "bcdff4346cb7ebb0128a19a2177ddc30269d8f191735b2f22585af2725ab3c69",
+      "sha256": "8be78a47a00645d9e3ab459901eccaf46d2f6dbc06eb119741c50b4e0b2dea9d",
       "category": "docs",
       "capability": "spec"
     },
@@ -228,13 +229,13 @@
     },
     {
       "path": "scripts/verify-specs.mjs",
-      "sha256": "8c92aa03abc3dda851b2033615661f47aad3723142f06e17f21a7c9c9783ee59",
+      "sha256": "951c7e29af4b0b9b0c5e43aaa9c6b0520f25538c3ce45acdd5cb3e5ba39082c8",
       "category": "gate",
       "capability": "spec"
     },
     {
       "path": "scripts/verify-postmortems.mjs",
-      "sha256": "9d8d6332aea3e6010fda2c6d5f0715d62ef08e2b0d54734bf0cdde67dbd0e9a2",
+      "sha256": "ca7f293805914ada56a9656f1595e5a010ab3c7febdf61b5bf9673b91bbbc7cb",
       "category": "gate",
       "capability": "postmortems"
     }

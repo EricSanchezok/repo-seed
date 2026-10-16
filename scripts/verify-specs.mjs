@@ -55,8 +55,10 @@ export async function verifySpecs(repoRoot) {
   for (const entry of markdown) if (!validName.test(entry.name)) errors.push(`${entry.name}: invalid spec filename`);
   const numbered = markdown.filter((entry) => /^\d{4}-/.test(entry.name)).sort((a, b) => a.name.localeCompare(b.name));
   const numbers = numbered.map((entry) => Number(entry.name.slice(0, 4)));
-  for (let index = 0; index < numbers.length; index++) {
-    if (numbers[index] !== index) { errors.push(`spec numbers must be sequential starting at 0; found ${numbered[index].name}`); break; }
+  const seen = new Set();
+  for (const number of numbers) {
+    if (seen.has(number)) errors.push(`duplicate spec number ${String(number).padStart(4, '0')}`);
+    seen.add(number);
   }
   for (const entry of markdown) {
     const rel = path.posix.join(dirRel.split(path.sep).join('/'), entry.name);

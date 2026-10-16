@@ -18,7 +18,7 @@ Every postmortem opens with an **Executive summary**: one short paragraph a busy
 4. `## Root cause`
 5. `## Guardrails`
 
-Name files `NNNN-short-title.md` (sequential number) and put `Artifact-Version: 1` below the title. `## Guardrails` must link at least one permanent repository test, gate, skill, AGENTS.md rule, or decision record. A verbal follow-up without a durable guardrail does not close the incident loop.
+Name files `NNNN-short-title.md` (unique number; gaps allowed) and put `Artifact-Version: 1` below the title. `## Guardrails` must link at least one permanent repository test, gate, skill, AGENTS.md rule, or decision record. A verbal follow-up without a durable guardrail does not close the incident loop.
 
 ## Index
 

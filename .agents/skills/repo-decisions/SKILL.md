@@ -13,7 +13,7 @@ Write or update a decision record when a change chooses among meaningful alterna
 
 ## Procedure: create a new record
 
-1. Find the next sequential number in `docs/decisions/` and take `max + 1`, zero-padded to 4 digits. Numbers are sequential starting at 0 and never change.
+1. Choose the next unused number in `docs/decisions/`, normally `max + 1`, zero-padded to 4 digits. Account for known parallel reservations. IDs never change; gaps are allowed.
 2. Create `docs/decisions/NNNN-kebab-case-title.md`.
 3. Write the required sections in order:
    - `## Status` — first line is the status value; optional `Class: <value>` on the next line.
@@ -43,4 +43,4 @@ The verifier names the violation. Fix the named file:
 - `invalid Class` — use architecture/process/testing/feature/bug-fix/simplification.
 - `required sections missing or out of order` — add or reorder the seven required sections.
 - `superseded target missing` — create the target record or point at an existing number.
-- `numbers must be sequential` — renumber or fix the gap.
+- `duplicate decision number` — choose an unused ID for the unmerged record and update its links; never renumber a published record.

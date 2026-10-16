@@ -31,8 +31,10 @@ export async function verifyPostmortems(repoRoot) {
   const files = entries.filter((entry) => entry.isFile() && entry.name !== 'README.md' && entry.name.endsWith('.md')).sort((a, b) => a.name.localeCompare(b.name));
   for (const entry of files) if (!/^\d{4}-[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(entry.name)) errors.push(`${entry.name}: invalid postmortem filename`);
   const numbers = files.filter((entry) => /^\d{4}-/.test(entry.name)).map((entry) => Number(entry.name.slice(0, 4)));
-  for (let index = 0; index < numbers.length; index++) {
-    if (numbers[index] !== index) { errors.push(`postmortem numbers must be sequential starting at 0; found ${files[index].name}`); break; }
+  const seen = new Set();
+  for (const number of numbers) {
+    if (seen.has(number)) errors.push(`duplicate postmortem number ${String(number).padStart(4, '0')}`);
+    seen.add(number);
   }
   for (const entry of files) {
     const rel = path.posix.join(dirRel.split(path.sep).join('/'), entry.name);

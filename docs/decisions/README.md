@@ -6,7 +6,7 @@ Every durable choice with meaningful alternatives — architecture or process �
 
 The format is **MADR (Markdown Any Decision Records)** with a documented `Class:` extension. Names and structure follow the industry standard so existing MADR tooling keeps working; the extension is ignored by tools that do not know it.
 
-A decision record is a file named `NNNN-title.md` (4-digit zero-padded number, `-`, kebab-case title) directly inside this directory. Numbers are assigned sequentially; the number is the record's identity and never changes.
+A decision record is a file named `NNNN-title.md` (4-digit zero-padded number, `-`, kebab-case title) directly inside this directory. Choose an unused number, normally max plus one, respecting known parallel reservations. The number is an immutable identity; gaps are allowed.
 
 ### Required sections
 
@@ -63,7 +63,7 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 
 ## Verifier
 
-`scripts/verify-decisions.mjs` enforces: file naming, unique sequential numbering, required sections, valid status values, valid `Class:` values when present, and `Superseded by NNNN` targets that exist. It exits non-zero on any violation. `scripts/run-gates.mjs` selects it from the manifest; an explicitly authorized managed hook calls the runner.
+`scripts/verify-decisions.mjs` enforces: file naming, unique numeric identities, required sections, valid status values, valid `Class:` values when present, and `Superseded by NNNN` targets that exist. It exits non-zero on any violation. `scripts/run-gates.mjs` selects it from the manifest; an explicitly authorized managed hook calls the runner.
 
 ## Index
 
@@ -82,3 +82,4 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 - [0012 — Route governance through resident instructions](0012-route-governance-through-resident-instructions.md)
 - [0013 — Embed human readability in existing governance](0013-embed-human-readability-in-existing-governance.md)
 - [0014 — Scope optional governance advice](0014-scope-optional-governance-advice.md)
+- [0015 — Allow gaps in artifact identities](0015-allow-gaps-in-artifact-identities.md)

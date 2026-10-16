@@ -108,12 +108,12 @@ test('verifyDir passes a clean directory', async () => {
   );
 });
 
-test('verifyDir rejects non-sequential numbering', async () => {
+test('verifyDir accepts immutable identities with gaps from parallel branches', async () => {
   await withTempDecisions(
     { '0001-skip-zero.md': VALID_BODY },
     async (decisions) => {
       const errors = await verifyDir(decisions);
-      assert.ok(errors.some((e) => e.includes('sequential')));
+      assert.deepEqual(errors, []);
     },
   );
 });

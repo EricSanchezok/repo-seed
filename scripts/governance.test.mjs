@@ -188,9 +188,13 @@ Run the integration test.
 ## Evidence
 - [Integration test](../../scripts/scaffold.test.mjs)
 `;
-    const specPath = path.join(root, 'docs', 'specs', '0000-change-contract.md');
+    const specPath = path.join(root, 'docs', 'specs', '0009-change-contract.md');
     await writeFile(specPath, valid);
     assert.deepEqual((await verifySpecs(root)).errors, []);
+    const duplicate = path.join(root, 'docs', 'specs', '0009-another.md');
+    await writeFile(duplicate, valid);
+    assert.ok((await verifySpecs(root)).errors.some(error => error.includes('duplicate spec number')));
+    await rm(duplicate);
 
     await writeFile(specPath, valid.replace('Status: Implemented', 'Status: Draft'));
     assert.ok((await verifySpecs(root)).errors.some((error) => error.includes('Draft status')));
@@ -245,9 +249,13 @@ The boundary lacked executable verification.
 ## Guardrails
 - [Regression test](../../scripts/governance.test.mjs)
 `;
-    const postmortem = path.join(root, 'docs', 'postmortems', '0000-incident.md');
+    const postmortem = path.join(root, 'docs', 'postmortems', '0009-incident.md');
     await writeFile(postmortem, valid);
     assert.deepEqual((await verifyPostmortems(root)).errors, []);
+    const duplicate = path.join(root, 'docs', 'postmortems', '0009-another.md');
+    await writeFile(duplicate, valid);
+    assert.ok((await verifyPostmortems(root)).errors.some(error => error.includes('duplicate postmortem number')));
+    await rm(duplicate);
     await writeFile(postmortem, valid.replace('- [Regression test](../../scripts/governance.test.mjs)', 'Add a test later.'));
     assert.ok((await verifyPostmortems(root)).errors.some((error) => error.includes('Guardrails')));
   } finally {
