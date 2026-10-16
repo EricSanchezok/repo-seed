@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "repoSeedVersion": "0.6.2",
+  "repoSeedVersion": "0.6.3",
   "lastSyncCommit": null,
   "config": {
     "license": "MIT",
@@ -46,33 +46,38 @@
     },
     {
       "path": "docs/decisions/README.md",
-      "sha256": "f701a11f687d5ac24ce2ea6e3461206c59125922243545d8ee7487e7d901e7b3",
+      "sha256": "5b3a97206cafebb649ae25c1b2e59437b1a314cb848db3da5d8b071c21abf9b6",
       "category": "docs",
-      "capability": "decisions"
+      "capability": "decisions",
+      "userModified": true
     },
     {
       "path": "docs/decisions/0000-use-markdown-architectural-decision-records.md",
       "sha256": "5dab8edf6c9cc5ae31766c09e02b2abff6a0e36b947c91a8ec123eb07f7e62a3",
       "category": "docs",
-      "capability": "decisions"
+      "capability": "decisions",
+      "userModified": true
     },
     {
       "path": "docs/decisions/0001-repo-seed-is-a-skill-not-a-template.md",
       "sha256": "82d39f1b5df2a612487b138da8bfb7b54ac5816620a145714cabb01a8efe1894",
       "category": "docs",
-      "capability": "decisions"
+      "capability": "decisions",
+      "userModified": true
     },
     {
       "path": "docs/decisions/0002-self-governing-repository-design.md",
       "sha256": "ecb9809c3ae987d6289e7ef1d8267306e33e0e5ee6d269431ec98d140252ea85",
       "category": "docs",
-      "capability": "decisions"
+      "capability": "decisions",
+      "userModified": true
     },
     {
       "path": "docs/decisions/0003-repo-review-instantiated-per-project.md",
       "sha256": "daa4cbd699e1a68136dcf9dbe30b7e4228859bff3d4f8213f81745a919088230",
       "category": "docs",
-      "capability": "decisions"
+      "capability": "decisions",
+      "userModified": true
     },
     {
       "path": "docs/postmortems/README.md",
@@ -193,13 +198,13 @@
     },
     {
       "path": ".agents/skills/repo-governance/SKILL.md",
-      "sha256": "884a9c26f73f07c705e6273cb7bc21ede51917c16a8683e772da61d43ebb90a0",
+      "sha256": "b3fabb95d7b93c6258b59297ad7245b5b16f9ed16c614be7bb394c97215a846c",
       "category": "skill",
       "capability": "baseline"
     },
     {
       "path": "scripts/capabilities.mjs",
-      "sha256": "74fc315d590a4d9c491ff4034f298f1288f649b4e00b3303d07bbb6d28adcc51",
+      "sha256": "5a10706df3211b62365a58e8d2a61f2b6b2b799f31f5b78188f45405fb86dd38",
       "category": "gate",
       "capability": "baseline"
     },
@@ -211,7 +216,7 @@
     },
     {
       "path": "scripts/audit-governance.mjs",
-      "sha256": "9644fe401ba2eba4b81bbccacb8dee86026267597fa50f9c0efd8a0964df79b8",
+      "sha256": "8e3bb2c6aa8b66a2d95a5170c9a8c7ea13eec79fc5de71613441ef17212a6e6c",
       "category": "gate",
       "capability": "baseline"
     },

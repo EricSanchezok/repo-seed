@@ -80,3 +80,5 @@ A decision starts `Proposed`. Once implemented, its status becomes `Accepted` an
 - [0010 — Execute governance gates through one runner and authorize hooks separately](0010-unified-gates-and-authorized-hooks.md)
 - [0011 — Optimize tests for risk-adjusted evidence](0011-optimize-tests-for-risk-adjusted-evidence.md)
 - [0012 — Route governance through resident instructions](0012-route-governance-through-resident-instructions.md)
+- [0013 — Embed human readability in existing governance](0013-embed-human-readability-in-existing-governance.md)
+- [0014 — Scope optional governance advice](0014-scope-optional-governance-advice.md)

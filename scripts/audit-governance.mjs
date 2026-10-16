@@ -17,36 +17,41 @@ async function exists(abs) {
 }
 
 async function countPackageManifests(repoRoot) {
-  let count = 0;
+  const packages = new Set();
+  const excluded = new Set(['node_modules', 'vendor', 'third_party', 'third-party', 'external',
+    'fixtures', '__fixtures__', 'testdata', 'dist', 'build']);
   async function walk(dir, depth) {
     if (depth > 2) return;
     let entries = [];
     try { entries = await readdir(dir, { withFileTypes: true }); } catch { return; }
     for (const entry of entries) {
-      if (entry.name === '.git' || entry.name === 'node_modules' || entry.name === 'vendor' || entry.name === '.env') continue;
+      if (entry.name.startsWith('.') || excluded.has(entry.name)) continue;
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) await walk(full, depth + 1);
-      else if (PACKAGE_MANIFESTS.has(entry.name)) count++;
+      else if (entry.isFile() && PACKAGE_MANIFESTS.has(entry.name)) packages.add(dir);
     }
   }
   await walk(repoRoot, 0);
-  return count;
+  return packages.size;
 }
 
 async function detectTestCommand(repoRoot) {
   try {
+    const agents = await readFile(path.join(repoRoot, 'AGENTS.md'), 'utf8');
+    const declared = agents.match(/^(?:- )?(?:[A-Za-z -]*tests?|Test):\s*`([^`]+)`/mi)?.[1]?.trim();
+    if (declared) return declared;
+  } catch {}
+  try {
     const pkg = JSON.parse(await readFile(path.join(repoRoot, 'package.json'), 'utf8'));
     if (pkg.scripts?.test) return 'npm test';
   } catch {}
-  if (await exists(path.join(repoRoot, 'pyproject.toml'))) return 'pytest';
+  try {
+    const pyproject = await readFile(path.join(repoRoot, 'pyproject.toml'), 'utf8');
+    if (/\[tool\.pytest(?:\.|\])/.test(pyproject)) return 'pytest';
+  } catch {}
   if (await exists(path.join(repoRoot, 'go.mod'))) return 'go test ./...';
   if (await exists(path.join(repoRoot, 'Cargo.toml'))) return 'cargo test';
   if (await exists(path.join(repoRoot, 'Gemfile'))) return 'bundle exec rake test';
-  try {
-    const agents = await readFile(path.join(repoRoot, 'AGENTS.md'), 'utf8');
-    const declared = agents.match(/^- Test:\s*`([^`]+)`\s*$/m)?.[1]?.trim();
-    if (declared) return declared;
-  } catch {}
   return null;
 }
 

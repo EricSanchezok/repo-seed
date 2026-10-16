@@ -296,6 +296,31 @@ test('governance audit is read-only and reports discrete repository facts', asyn
   }
 });
 
+test('ownership advice counts owned package directories, not vendored manifests', async () => {
+  const root = await tmpdir();
+  try {
+    for (const file of ['pyproject.toml', 'requirements.txt', 'third_party/simulator/pyproject.toml',
+      'vendor/library/package.json', 'tests/fixtures/package.json', '.venv/pyproject.toml']) {
+      await mkdir(path.dirname(path.join(root, file)), { recursive: true });
+      await writeFile(path.join(root, file), '');
+    }
+    await writeFile(path.join(root, 'AGENTS.md'), 'Agent tests: `uv run python -m unittest discover -s tests -v`.\n');
+    let result = await auditGovernance(root);
+    assert.equal(result.facts.packageCount, 1);
+    assert.equal(result.facts.testCommand, 'uv run python -m unittest discover -s tests -v');
+    assert.notEqual(result.capabilities.find(item => item.id === 'codeowners').recommendation, 'recommended');
+    await mkdir(path.join(root, 'packages', 'service'), { recursive: true });
+    await writeFile(path.join(root, 'packages', 'service', 'pyproject.toml'), '');
+    result = await auditGovernance(root);
+    assert.equal(result.facts.packageCount, 2);
+    const advice = result.capabilities.find(item => item.id === 'codeowners');
+    assert.equal(advice.recommendation, 'recommended');
+    assert.equal(advice.urgency, 'advisory');
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test('scaffold CLI installs hooks only with explicit authorization; dry-run stays zero-write', async () => {
   const root = await tmpdir();
   try {

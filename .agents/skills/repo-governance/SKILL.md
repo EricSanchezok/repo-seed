@@ -11,9 +11,11 @@ Governance grows with the repository. Do not install every mechanism up front, a
 
 Run `node scripts/audit-governance.mjs --json` and read `.repo-seed/manifest.json`. The audit observes discrete repository facts only; it does not authorize changes.
 
-- A `blocking` recommendation affects the safety boundary of the current work. Raise it before implementation.
+- Check whether a recommendation's observed facts and safety boundary actually apply to the current change. A `blocking` label alone does not make an optional capability a task-wide gate; a confirmed safety dependency blocks only the affected action.
 - An `advisory` recommendation improves maturity without making the current work unsafe. Finish the requested work, then raise it in the handoff.
 - A suppressed recommendation was already declined or deferred against the same facts. Do not ask again until its assessment hash changes.
+
+Missing optional tools or unavailable external evidence do not block independent authorized work. Reuse valid evidence, bound retries, and report the exact unresolved dependency. Do not repeat approval already given for the same scope.
 
 ## Authority boundary
 

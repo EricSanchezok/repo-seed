@@ -162,7 +162,7 @@ const OPTIONAL = {
     title: 'CODEOWNERS',
     benefit: 'Routes protected surfaces to named owners.',
     cost: 'Requires real teams or handles and matching branch protection.',
-    urgency: 'blocking',
+    urgency: 'advisory',
     prerequisites: ['real user or team owner handles'],
     files: [['CODEOWNERS', 'meta']],
     recommendWhen: ['multiplePackages', '!hasCodeowners'],
