@@ -51,7 +51,7 @@ export function slugify(heading) {
   return heading
     .trim()
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
+    .replace(/[^\p{L}\p{N}\p{M}\p{Pc}\s-]/gu, '')
     .replace(/\s+/g, '-');
 }
 

@@ -9,11 +9,11 @@ Prevent optional ownership tooling and vendored packages from blocking unrelated
 
 ## Contract
 
-Package count is the number of owned directories with manifests, not the number of manifest files. Conventional dependency, fixture, build and hidden directories are excluded. A multi-package observation recommends CODEOWNERS as advisory; a concrete safety dependency, not this heuristic, determines whether an action must wait. Declared test commands take precedence over language guesses. Governance instructions reuse existing authority and continue independent work when an external dependency is unavailable.
+Package count is the number of owned directories with manifests, not the number of manifest files. Conventional dependency, fixture, build and hidden directories are excluded. A multi-package observation recommends CODEOWNERS as advisory; a concrete safety dependency, not this heuristic, determines whether an action must wait. Declared test commands take precedence over language guesses. Document anchors preserve Unicode letters so valid non-English links do not become false blockers. Governance instructions reuse existing authority and continue independent work when an external dependency is unavailable.
 
 ## Plan
 
-Correct the upstream audit, capability classification and governance skill template. Release 0.6.3 and upgrade consumers through scaffold, preserving user-owned content and optional capability state.
+Correct the upstream audit, capability classification and governance skill template. Release 0.6.4 and upgrade consumers through scaffold, preserving user-owned content and optional capability state.
 
 ## Verification
 

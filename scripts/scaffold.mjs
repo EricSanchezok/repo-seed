@@ -61,7 +61,7 @@ export function sha256(text) {
   return createHash('sha256').update(text).digest('hex');
 }
 
-export function defaultManifest({ repoSeedVersion = '0.6.3' } = {}) {
+export function defaultManifest({ repoSeedVersion = '0.6.4' } = {}) {
   return {
     version: MANIFEST_VERSION,
     repoSeedVersion,
@@ -718,7 +718,7 @@ async function main() {
   const adopt = flags.has('adopt');
   const userOwned = parseListFlag(flags.get('user-owned'));
   const extensions = resolveExtensions(parseListFlag(flags.get('extensions')));
-  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.6.3';
+  const repoSeedVersion = flags.get('repo-seed-version') ?? '0.6.4';
   const hookMode = flags.get('hooks') || 'skip';
   if (!['install', 'skip'].includes(hookMode)) throw new Error('--hooks must be install or skip');
 

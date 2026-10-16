@@ -321,6 +321,20 @@ test('ownership advice counts owned package directories, not vendored manifests'
   }
 });
 
+test('document links retain Unicode heading anchors', async () => {
+  const root = await tmpdir();
+  try {
+    await mkdir(path.join(root, 'docs'), { recursive: true });
+    await writeFile(path.join(root, 'AGENTS.md'), '[Storage](docs/storage.md#下载使用与归还)\n');
+    await writeFile(path.join(root, 'docs', 'storage.md'), '# 下载、使用与归还\n');
+    assert.deepEqual((await verifyLinks(root)).errors, []);
+    await writeFile(path.join(root, 'AGENTS.md'), '[Missing](docs/storage.md#不存在)\n');
+    assert.equal((await verifyLinks(root)).errors.length, 1);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test('scaffold CLI installs hooks only with explicit authorization; dry-run stays zero-write', async () => {
   const root = await tmpdir();
   try {

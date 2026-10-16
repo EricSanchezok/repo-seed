@@ -6,7 +6,7 @@ compatibility: Node >= 18; works in any repository regardless of language or fra
 metadata:
   generator: true
   category: scaffolding
-  version: 0.6.3
+  version: 0.6.4
 allowed-tools: Read Write Edit Bash
 ---
 
@@ -59,7 +59,7 @@ node <path-to-repo-seed>/scripts/scaffold.mjs <target-dir> \
   --templates <path-to-repo-seed>/references/templates \
   --extensions ci,release \
   --hooks skip \
-  --repo-seed-version 0.6.3
+  --repo-seed-version 0.6.4
 ```
 
 Flags: `--dry-run` (report only), `--no-interview` (non-interactive; preserve user-modified files), `--adopt` (reuse detected governance paths in an unmanaged repository), `--hooks install|skip` (default `skip`), `--values k=v` (repeatable), `--extensions <ids>` (legacy compatibility entry), `--capability-state id=enabled|external|deferred|declined` plus reason/assessment hash, `--governance-path kind=relative/path`, `--external-source kind=https://stable-link`, `--user-owned <path>` (repeatable), and `--record-only` (recompute manifest state without touching governed files).
