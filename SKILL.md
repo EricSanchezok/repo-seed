@@ -2,8 +2,8 @@
 name: repo-seed
 description: "Seed, audit, adopt, and progressively evolve an agent-native repository with risk-triggered specs, durable decisions, resident governance skills, capability state, deterministic gates, and safe upgrades. Use when initializing or upgrading a repository, when an unmanaged repository grows complex, or when delivery, ownership, security, release, or incident signals suggest a governance capability is missing."
 license: MIT
-compatibility: Node >= 18; works in any repository regardless of language or framework
 metadata:
+  compatibility: Node >= 18; works in any repository regardless of language or framework
   generator: true
   category: scaffolding
   version: 0.6.5
